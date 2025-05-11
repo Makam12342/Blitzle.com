@@ -21,18 +21,20 @@ function preload() {
 function create() {
 
     const rows = 8;
-    
-    for(let row; row < rows; row ++){
-        for(let rows; rows < 8; rows ++){
-            
+    const cols = 8;
+    for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+        if((row+col) % 2 === 0 ){
+            const rect = this.add.rectangle(col * 75 + 37.5, row * 75 + 37.5, 75, 75, 0x0000ff);
+        }        
     }
-    }
+}
         
 
 
 
 
-    const rect = this.add.rectangle(400, 300, 200, 100, 0x0000ff);
+    
 
 }
 
