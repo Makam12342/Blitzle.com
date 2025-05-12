@@ -15,7 +15,7 @@ const game = new Phaser.Game(config);
 
 function preload() {
     // Load the black king image from the assets directory
-    this.load.image('blackKing', 'assets/Chess_kdt45.svg');
+    this.load.image('blackKing', 'chessPieces/Chess_kdt45 (1).svg');
 }
 
 function create() {
@@ -28,13 +28,7 @@ function create() {
         for (let col = 0; col < cols; col++) {
             const isDarkSquare = (row + col) % 2 === 1;
             if (isDarkSquare) {
-                this.add.rectangle(
-                    col * squareSize + squareSize / 2,
-                    row * squareSize + squareSize / 2,
-                    squareSize,
-                    squareSize,
-                    0x6b4a34
-                );
+                this.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, 0x6b4a34);
             }
         }
     }
