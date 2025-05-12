@@ -14,8 +14,28 @@ const config = {
 const game = new Phaser.Game(config);
 
 function preload() {
-    // Load the black king image from the assets directory
-    this.load.image('blackKing', 'chessPieces/Chess_kdt45 (1).svg');
+    // Load the pieces from the chess pieces directory
+
+    // White pieces
+    this.load.image('whiteKing', 'chessPieces/Chess_klt45.svg');
+    this.load.image('whiteQueen', 'chessPieces/Chess_qlt45.svg');
+    this.load.image('whiteRook', 'chessPieces/Chess_rlt45.svg');
+    this.load.image('whiteKnight', 'chessPieces/Chess_nlt45.svg');
+    this.load.image('whiteBishop', 'chessPieces/Chess_blt45.svg');
+    this.load.image('whitePawn', 'chessPieces/Chess_plt45.svg');
+
+    // Black pieces
+    this.load.image('blackKing', 'chessPieces/Chess_kdt45.svg');
+    this.load.image('blackQueen', 'chessPieces/Chess_qdt45.svg');
+    this.load.image('blackRook', 'chessPieces/Chess_rdt45.svg');
+    this.load.image('blackKnight', 'chessPieces/Chess_ndt45.svg');
+    this.load.image('blackBishop', 'chessPieces/Chess_bdt45.svg');
+    this.load.image('blackPawn', 'chessPieces/Chess_pdt45.svg');
+
+    let allPieces = [
+        'whiteKing', 'whiteQueen', 'whiteRook', 'whiteKnight', 'whiteBishop', 'whitePawn', 
+        'blackKing', 'blackQueen', 'blackRook', 'blackKnight', 'blackBishop', 'blackPawn', 
+    ]
 }
 
 function create() {
@@ -69,15 +89,24 @@ function create() {
             return [row, col];
         });
     }
+    const scene = this;
+    
+    function bitboardToDisplay(bitboard, image){
+        // takes a bitboard and a image as a input and ouputs the squares that the bitboard corosponds to on the chess board
 
-    // Get piece positions
-    const pieceIndices = hexToSquares(whiteKing);
-    const pieces = numberToRowAndCol(pieceIndices);
+        // Get piece positions
+        const pieceIndices = hexToSquares(bitboard);
+        const pieces = numberToRowAndCol(pieceIndices);
 
-    // Place pieces on the board
-    pieces.forEach(([row, col]) => {
-        this.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2,'blackKing');
+        //places pieces on board
+        pieces.forEach(([row, col]) => {
+        scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image);
     });
+
+    }
+
+    //places the white king on the board
+    bitboardToDisplay(whiteKing, 'whiteRook')
 }
 
 function update() {
