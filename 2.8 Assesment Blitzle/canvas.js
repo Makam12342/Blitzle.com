@@ -25,17 +25,14 @@ function preload() {
     this.load.image('whitePawn', 'chessPieces/Chess_plt45.svg');
 
     // Black pieces
-    this.load.image('blackKing', 'chessPieces/Chess_kdt45.svg');
+    this.load.image('blackKing', 'chessPieces/Chess_kdt45 (1).svg');
     this.load.image('blackQueen', 'chessPieces/Chess_qdt45.svg');
     this.load.image('blackRook', 'chessPieces/Chess_rdt45.svg');
     this.load.image('blackKnight', 'chessPieces/Chess_ndt45.svg');
     this.load.image('blackBishop', 'chessPieces/Chess_bdt45.svg');
     this.load.image('blackPawn', 'chessPieces/Chess_pdt45.svg');
 
-    let allPieces = [
-        'whiteKing', 'whiteQueen', 'whiteRook', 'whiteKnight', 'whiteBishop', 'whitePawn', 
-        'blackKing', 'blackQueen', 'blackRook', 'blackKnight', 'blackBishop', 'blackPawn', 
-    ]
+    
 }
 
 function create() {
@@ -69,6 +66,16 @@ function create() {
     let blackQueen = 0x0800000000000000n;
     let blackRooks = 0x8100000000000000n;
     let blackKing = 0x1000000000000000n;
+
+    let allPiecesHexs = [
+        whiteKing, whiteQueen, whiteRooks, whiteKnights, whiteBishops, whitePawns, 
+        blackKing, blackQueen, blackRooks, blackKnights, blackBishops, blackPawns, 
+    ]
+
+    let allPiecesImages = [
+        'whiteKing', 'whiteQueen', 'whiteRook', 'whiteKnight', 'whiteBishop', 'whitePawn', 
+        'blackKing', 'blackQueen', 'blackRook', 'blackKnight', 'blackBishop', 'blackPawn', 
+    ]
 
     // Convert bitboard to array of occupied squares
     function hexToSquares(bitboard) {
@@ -105,8 +112,13 @@ function create() {
 
     }
 
-    //places the white king on the board
-    bitboardToDisplay(whiteKing, 'whiteRook')
+    // Adds all the pieces to the board
+    for(let i = 0; i< 12; i++) {
+        bitboardToDisplay(allPiecesHexs[i], allPiecesImages[i])
+    }
+
+
+
 }
 
 function update() {
