@@ -63,7 +63,7 @@ function create() {
             if(avalableSquares.includes(squareIndex)) {
             dropzone.setRectangleDropZone(squareSize, squareSize)
             dropzone.setInteractive({dropZone: true});
-            this.add.circle(x, y , 8 ,0x00000, 0.8)
+            this.add.circle(x, y , 10 ,0x00000, 0.8)
             }
         squareIndex ++
         }
@@ -130,7 +130,7 @@ function create() {
 
         //places pieces on board
         pieces.forEach(([row, col]) => {
-        name = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image);
+        name = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);;
         name.setInteractive({ draggable: true, cursor: "pointer" });
 
     });
