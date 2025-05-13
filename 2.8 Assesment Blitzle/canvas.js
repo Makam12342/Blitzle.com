@@ -50,6 +50,29 @@ function create() {
         }
     }
 
+
+    let avalableSquares = [1,2,3,36]
+    squareIndex = 0
+    // creates dropzones
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const x = col * squareSize + squareSize / 2;
+            const y = row * squareSize + squareSize / 2;
+
+            const dropzone = this.add.zone(x,y, squareSize, squareSize)
+            if(avalableSquares.includes(squareIndex)) {
+            dropzone.setRectangleDropZone(squareSize, squareSize)
+            dropzone.setInteractive({dropZone: true});
+            this.add.circle(x, y , 8 ,0x00000, 0.8)
+            }
+        squareIndex ++
+        }
+        }
+    
+
+
+
+
     // Define the bitboard position for each piece type
 
     let whitePawns = 0x000000000000FF00n;
@@ -98,7 +121,7 @@ function create() {
     }
     const scene = this;
     
-    function bitboardToDisplay(bitboard, image){
+    function bitboardToDisplay(bitboard, image, name){
         // takes a bitboard and a image as a input and ouputs the squares that the bitboard corosponds to on the chess board
 
         // Get piece positions
@@ -107,20 +130,30 @@ function create() {
 
         //places pieces on board
         pieces.forEach(([row, col]) => {
-        scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image);
+        name = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image);
+        name.setInteractive({ draggable: true, cursor: "pointer" });
+
     });
 
     }
 
     // Adds all the pieces to the board
     for(let i = 0; i< 12; i++) {
-        bitboardToDisplay(allPiecesHexs[i], allPiecesImages[i])
+        bitboardToDisplay(allPiecesHexs[i], allPiecesImages[i], i)
     }
 
+    this.input.on("drag", (pointer, gameobject, dragX, dragY) => {
+    gameobject.setPosition(dragX, dragY);
+    }   );
 
-
+    //sets the pieces position to the center of the dropzone
+    this.input.on('drop', (pointer, gameobject, dropzone) => {
+        gameobject.setPosition(dropzone.x, dropzone.y)
+    })
 }
-
 function update() {
     // Game update logic (if any)
+
+    
+
 }
