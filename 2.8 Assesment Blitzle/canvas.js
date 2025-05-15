@@ -142,7 +142,7 @@ function create() {
 
         //places pieces on board
         pieces.forEach(([row, col]) => {
-        name = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);;
+        name = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);
         name.setInteractive({ draggable: true, cursor: "pointer" });
 
     });

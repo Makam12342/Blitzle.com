@@ -68,12 +68,12 @@ function create() {
         },
         // All of the black pieces
         blackPieces: {
-        blackKing: 0x0000000000000010n,
-        blackQueen: 0x0000000000000008n,
-        blackRook: 0x0000000000000081n,
-        blackBishop: 0x0000000000000024n,
-        blackKnight: 0x0000000000000042n,
-        blackPawn: 0x000000000000FF00n
+        blackKing: 0x1000000000000000n,
+        blackQueen: 0x0800000000000000n,
+        blackRook: 0x8100000000000000n,
+        blackBishop: 0x2400000000000000n,
+        blackKnight: 0x4200000000000000n,
+        blackPawn: 0x00FF000000000000n
         }
 
     }
@@ -158,11 +158,13 @@ function create() {
     
     // Adds all the pieces to the board
     
-    for(let i; i < 6 ; i++){
-        const blackValue = piecesPosition[whitePieceskeys[i]];
-        const whiteValue = piecesPosition[blackPieceskeysPieceskeys[i]];
+    for(let i = 0; i < 6 ; i++){
+        let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+        let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
         bitboardToDisplay(whiteValue, allPiecesNames[i])
-        bitboardToDisplay(blackValue, allPiecesNames[i+6])
+        bitboardToDisplay(blackValue, allPiecesNames[i+6]) //Plus 6 is ofsets so it selects white pieces(whiteValue, allPiecesNames[i])
+
+        
     }
 }
 function update() {
