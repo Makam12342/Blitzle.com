@@ -167,7 +167,7 @@ function create() {
         let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
         bitboardToDisplay(whiteValue, allPiecesNames[i])
         bitboardToDisplay(blackValue, allPiecesNames[i+6]) //Plus 6 is ofsets so it selects white pieces(whiteValue, allPiecesNames[i])
-
+        
         
     }}
     updateboard()
