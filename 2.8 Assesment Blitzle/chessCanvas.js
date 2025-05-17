@@ -38,7 +38,7 @@ function preload() {
     this.load.image('blackPawn', 'chessPieces/Chess_pdt45.svg');
 
 
-};
+}
 
 function create() {
 
@@ -48,6 +48,7 @@ function create() {
     const cols = 8;
     const squareSize = 75;
     const scene = this;
+
     let pieceType = null;
     let avalablemoves = null;
     let pointerDown = 'select'
@@ -58,7 +59,7 @@ function create() {
     let pieceIcons= [];
 
     //Holds all of the diferent pieces with there corosponding bitboard
-    let piecesPosition = {
+    const piecesPosition = {
         // All of the white pieces
         whitePieces: {
         whiteKing: 0x0000000000000010n,
@@ -150,7 +151,7 @@ function create() {
 
         //places pieces on board
         pieces.forEach(([row, col]) => {
-            let object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);
+            const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);
             object.setInteractive({cursor: "pointer" });
             pieceIcons.push(object)
     });
@@ -171,35 +172,41 @@ function create() {
     }}
     updateboard()
     function validMoves(pieceLocation, moveList) {
-    let validSudoMoves = []
-    for(let i = 0; i< moveList.length; i++) {
-        validSudoMoves.push(pieceLocation + moveList[i])
-    }
-    return(validSudoMoves)
+        return moveList
+            .map(offset => pieceLocation + offset)
+            .filter(target => target >= 0 && target < 64);
     }
 
     this.input.on('pointerdown', function (pointer){
         
             // Takes the square and figures out what piece is on the square
-            let col = Math.floor(pointer.x / squareSize);
-            let row = Math.floor(pointer.y / squareSize);
-            let pointerSquare = (7 - row) * 8 + col;
-
+            const col = Math.floor(pointer.x / squareSize);
+            const row = Math.floor(pointer.y / squareSize);
+            const pointerSquare = (7 - row) * 8 + col;
+            
             if(pointerDown === 'select'){
+                pieceType = null;
                 pieceSquare = pointerSquare
             // cheaks what square it is on eg 54, 32, or 12
             for(let i = 0; i < 6; i ++){
-                    let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
-                    let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
+                    if(turn === "black"){
+                    let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]];
                     if(( blackValue >> BigInt(pointerSquare))& 1n) {
                         pieceType = allPiecesNames[i+6];
                         break
-                    }
+                    }}else if(turn === "white"){
+                         //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+                    let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
                     if(( whiteValue >> BigInt(pointerSquare))& 1n) {
                         pieceType = allPiecesNames[i]
                         break
-                    };
-                };
+                    }};
+                    
+                    }
+                
+            if (!pieceType) return;
+                
+            
 
 
         // returns the sudo valid moves a piece could have 
@@ -227,34 +234,37 @@ function create() {
                         const x = col * squareSize + squareSize / 2;
                         const y = (7-row) * squareSize + squareSize / 2;   
                         if(avalablemoves.includes(squareIndex)) {
-                        object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
+                        let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
                         moveIndicators.push(object)
                         }
                         squareIndex++
                     }
-            pointerDown = 'place'    
-        }} else if(pointerDown === 'place'){
+                }
+                pointerDown = 'place'    
+        } else if(pointerDown === 'place'){
+            
+           
+
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
            
             if(turn === "white"){
                 pieceBitboard = piecesPosition.whitePieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
-                pieceBitboard |= (1n << BigInt(pointerSquare))
-                pieceBitboard &= ~(1n << BigInt(pieceSquare))
+               pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.whitePieces[pieceType] = pieceBitboard;
+                turn = "black"
             }else if(turn === "black"){
                 pieceBitboard = piecesPosition.blackPieces[pieceType];
-                pieceBitboard |= (1n << BigInt(pointerSquare))
-                pieceBitboard &= ~(1n << BigInt(pieceSquare))
+                pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.blackPieces[pieceType] = pieceBitboard;
+                turn = "white"
             }
             // removes old piece and places new piece on selected square when board updates
-           
-            updateboard()
-
-            
+        
+            updateboard();
             pointerDown = 'select';
+            
         };
     
     
