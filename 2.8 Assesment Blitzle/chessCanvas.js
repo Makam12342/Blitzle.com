@@ -59,6 +59,7 @@ function create() {
     let pieceIcons= [];
     let allWhitePiecesBitboard = 0x0000000000000000
     let allBlackPiecesBitboard = 0x0000000000000000
+    let validLocations = []
 
     //Holds all of the diferent pieces with there corosponding bitboard
     const piecesPosition = {
@@ -248,6 +249,7 @@ function create() {
 
             }
             let squareIndex = 0
+            validLocations = []
             for (let row = 0; row < rows; row++) {
                     for (let col = 0; col < cols; col++) {
                         const x = col * squareSize + squareSize / 2;
@@ -258,12 +260,15 @@ function create() {
                             if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
                                 let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
                                 moveIndicators.push(object)
+                                validLocations.push(squareIndex)
+
                             }
 
                             }else{
                                 if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
                                     let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
                                     moveIndicators.push(object)
+                                    validLocations.push(squareIndex)
                                 }
                             }
                             
@@ -274,17 +279,21 @@ function create() {
                 pointerDown = 'place'    
         } else if(pointerDown === 'place'){
             
-           
+           if (!validLocations.includes(pointerSquare)) {
+            return; // Ignore invalid square clicks
+            }
 
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
+
            //updates bitboard depending on move
             if(turn === "white"){
                 pieceBitboard = piecesPosition.whitePieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.whitePieces[pieceType] = pieceBitboard;
                 turn = "black"
+
             }else if(turn === "black"){
                 pieceBitboard = piecesPosition.blackPieces[pieceType];
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
