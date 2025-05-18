@@ -57,6 +57,8 @@ function create() {
     let pieceSquare = null;
     let pieceBitboard = null
     let pieceIcons= [];
+    let allWhitePiecesBitboard = 0x0000000000000000
+    let allBlackPiecesBitboard = 0x0000000000000000
 
     //Holds all of the diferent pieces with there corosponding bitboard
     const piecesPosition = {
@@ -162,19 +164,36 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
     pieceIcons.forEach(sprite => sprite.destroy())
-    for(let i = 0; i < 6 ; i++){
+   
+
+    allWhitePiecesBitboard = 0x0000000000000000
+    allBlackPiecesBitboard = 0x0000000000000000
+    for(let i = 0; i < 6; i ++){
+    // creates a bitboard for the white and black pieces
+    allWhitePiecesBitboard  = BigInt(allWhitePiecesBitboard)  | BigInt(piecesPosition.whitePieces[whitePieceskeys[i]])
+    allBlackPiecesBitboard  = BigInt(allBlackPiecesBitboard)  | BigInt(piecesPosition.blackPieces[blackPieceskeys[i]])
+    }
+    // removes any captured pieces
+    for(let i = 0; i < 6; i ++){
+        if(turn === "black"){
+        piecesPosition.blackPieces[blackPieceskeys[i]] = BigInt(piecesPosition.blackPieces[blackPieceskeys[i]]) & ~ BigInt(allWhitePiecesBitboard)
+        }else{
+        piecesPosition.whitePieces[whitePieceskeys[i]] = BigInt(piecesPosition.whitePieces[whitePieceskeys[i]]) & ~ BigInt(allBlackPiecesBitboard)
+        }
+    }
+     for(let i = 0; i < 6 ; i++){
         let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
         let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
         bitboardToDisplay(whiteValue, allPiecesNames[i])
         bitboardToDisplay(blackValue, allPiecesNames[i+6]) //Plus 6 is ofsets so it selects white pieces(whiteValue, allPiecesNames[i])
-        
-        
-    }}
+    }
+    }
     updateboard()
     function validMoves(pieceLocation, moveList) {
         return moveList
             .map(offset => pieceLocation + offset)
             .filter(target => target >= 0 && target < 64);
+            //.filter(target => target )
     }
 
     this.input.on('pointerdown', function (pointer){
@@ -234,8 +253,20 @@ function create() {
                         const x = col * squareSize + squareSize / 2;
                         const y = (7-row) * squareSize + squareSize / 2;   
                         if(avalablemoves.includes(squareIndex)) {
-                        let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
-                        moveIndicators.push(object)
+                            if(turn === "white"){
+
+                            if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+                                let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
+                                moveIndicators.push(object)
+                            }
+
+                            }else{
+                                if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+                                    let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
+                                    moveIndicators.push(object)
+                                }
+                            }
+                            
                         }
                         squareIndex++
                     }
@@ -248,10 +279,10 @@ function create() {
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
-           
+           //updates bitboard depending on move
             if(turn === "white"){
                 pieceBitboard = piecesPosition.whitePieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
-               pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
+                pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.whitePieces[pieceType] = pieceBitboard;
                 turn = "black"
             }else if(turn === "black"){

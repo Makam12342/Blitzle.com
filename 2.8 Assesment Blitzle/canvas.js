@@ -14,7 +14,7 @@ for(let i = 0; i< 6; i++){
 
 
 // this part of the code makes a bitboard combining each diferent piece type this will be utalised in the update function for captures and in the valid moves function to block pieces
-allwhitepiecesBitboard = 0x0000000000000000
+allWhitePiecesBitboard = 0x0000000000000000
 for(let i = 0; i < 6; i ++){
 allwhitepiecesBitboard = whitepiecesBitboard | pieceBitboard.whitepieces[i]
 }
