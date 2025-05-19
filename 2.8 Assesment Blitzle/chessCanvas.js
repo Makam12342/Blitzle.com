@@ -60,6 +60,7 @@ function create() {
     let allWhitePiecesBitboard = 0x0000000000000000
     let allBlackPiecesBitboard = 0x0000000000000000
     let validLocations = []
+    
 
     //Holds all of the diferent pieces with there corosponding bitboard
     const piecesPosition = {
@@ -89,8 +90,8 @@ function create() {
 
     //Holds all of the names for each piece for image data
     const allPiecesNames = [
-        'whiteKing', 'whiteQueen', 'whiteRook', 'whiteKnight', 'whiteBishop', 'whitePawn', 
-        'blackKing', 'blackQueen', 'blackRook', 'blackKnight', 'blackBishop', 'blackPawn', 
+        'whiteKing', 'whiteQueen', 'whiteRook', 'whiteBishop', 'whiteKnight', 'whitePawn', 
+        'blackKing', 'blackQueen', 'blackRook', 'blackBishop', 'blackKnight', 'blackPawn', 
     ]
 
     //Holds the data for the direction or position each piece would go to if it where to move
@@ -190,12 +191,37 @@ function create() {
     }
     }
     updateboard()
-    function validMoves(pieceLocation, moveList) {
-        return moveList
-            .map(offset => pieceLocation + offset)
-            .filter(target => target >= 0 && target < 64);
-            //.filter(target => target )
+    // intentifies the squares the a piece could move to from a give square
+
+    function validMovesStepper(pieceLocation, moveList) {
+    let validMoves = []
+    moveList.forEach(direction =>{
+        const target = pieceLocation + direction
+         if (target >= 0 && target < 64) {
+                validMoves.push(target);
+            } 
+    })
+
+    return validMoves;
+
     }
+
+    function validMovesSlider(pieceLocation, moveList) {
+    let validMoves = [];
+
+    moveList.forEach(direction => {
+        for (let i = 1; i < 8; i++) {
+            const target = pieceLocation + direction * i;
+            if (target >= 0 && target < 64) {
+                validMoves.push(target);
+            } else {
+                break;
+            }
+        }
+    });
+
+    return validMoves;
+}
 
     this.input.on('pointerdown', function (pointer){
         
@@ -208,6 +234,8 @@ function create() {
                 pieceType = null;
                 pieceSquare = pointerSquare
             // cheaks what square it is on eg 54, 32, or 12
+
+            //asighns the clicked square to a piece type
             for(let i = 0; i < 6; i ++){
                     if(turn === "black"){
                     let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]];
@@ -232,19 +260,19 @@ function create() {
         // returns the sudo valid moves a piece could have 
             if (pieceType){
                     if(pieceType.includes("King")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.stepPieces.kingMovements)
+                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.kingMovements)
                     } else if(pieceType.includes("Queen")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.sliderPieces.queenMovements)
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.queenMovements)
                     } else if(pieceType.includes("Rook")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.sliderPieces.rookMovements)
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.rookMovements)
                     } else if(pieceType.includes("Bishop")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.sliderPieces.bishopMovements)
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.bishopMovements)
                     } else if(pieceType.includes("Knight")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.stepPieces.knightMovements)
+                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.knightMovements)
                     } else if(pieceType.includes("whitePawn")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.stepPieces.pawnMovementsWhite)
+                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsWhite)
                     } else if(pieceType.includes("blackPawn")){
-                        avalablemoves = validMoves(pointerSquare, movedirections.stepPieces.pawnMovementsBlack)
+                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsBlack)
                     }
 
             }
@@ -253,12 +281,13 @@ function create() {
             for (let row = 0; row < rows; row++) {
                     for (let col = 0; col < cols; col++) {
                         const x = col * squareSize + squareSize / 2;
-                        const y = (7-row) * squareSize + squareSize / 2;   
+                        const y = (7-row) * squareSize + squareSize / 2; 
+                        
+                        //calculates if there is a piece of the same color 
                         if(avalablemoves.includes(squareIndex)) {
                             if(turn === "white"){
-
                             if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                                let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
+                                let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
                                 moveIndicators.push(object)
                                 validLocations.push(squareIndex)
 
@@ -266,7 +295,7 @@ function create() {
 
                             }else{
                                 if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                                    let object = scene.add.circle(x, y , 10 ,0x000000, 0.8)
+                                    let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
                                     moveIndicators.push(object)
                                     validLocations.push(squareIndex)
                                 }
