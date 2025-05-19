@@ -60,6 +60,7 @@ function create() {
     let allWhitePiecesBitboard = 0x0000000000000000
     let allBlackPiecesBitboard = 0x0000000000000000
     let validLocations = []
+    let movmentType = null
     
 
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -210,14 +211,16 @@ function create() {
     let validMoves = [];
 
     moveList.forEach(direction => {
+        let directionMoves = []
         for (let i = 1; i < 8; i++) {
             const target = pieceLocation + direction * i;
             if (target >= 0 && target < 64) {
-                validMoves.push(target);
+                directionMoves.push(target);
             } else {
                 break;
             }
         }
+        validMoves.push(directionMoves)
     });
 
     return validMoves;
@@ -261,21 +264,51 @@ function create() {
             if (pieceType){
                     if(pieceType.includes("King")){
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.kingMovements)
+                        movmentType = "stepper"
                     } else if(pieceType.includes("Queen")){
                         avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.queenMovements)
+                        movmentType = "sldier"
                     } else if(pieceType.includes("Rook")){
                         avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.rookMovements)
+                        movmentType = "slider"
                     } else if(pieceType.includes("Bishop")){
                         avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.bishopMovements)
+                        movmentType = "slider"
                     } else if(pieceType.includes("Knight")){
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.knightMovements)
+                        movmentType = "stepper"
                     } else if(pieceType.includes("whitePawn")){
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsWhite)
+                        movmentType = "stepper"
                     } else if(pieceType.includes("blackPawn")){
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsBlack)
+                        movmentType = "stepper"
                     }
 
             }
+            // adds the circles to the board
+            function addCircles(squareIndex, validLocations, x, y){
+            if(avalablemoves.includes(squareIndex)) {
+                if(turn === "white"){   
+                if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+                    let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
+                    moveIndicators.push(object)
+                    validLocations.push(squareIndex)
+
+                }
+
+                }else{
+                    if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+                        let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
+                        moveIndicators.push(object)
+                        validLocations.push(squareIndex)
+                    }
+                }
+            }
+            }
+
+
+
             let squareIndex = 0
             validLocations = []
             for (let row = 0; row < rows; row++) {
@@ -284,27 +317,17 @@ function create() {
                         const y = (7-row) * squareSize + squareSize / 2; 
                         
                         //calculates if there is a piece of the same color 
-                        if(avalablemoves.includes(squareIndex)) {
-                            if(turn === "white"){
-                            if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                                let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
-                                moveIndicators.push(object)
-                                validLocations.push(squareIndex)
-
-                            }
-
-                            }else{
-                                if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                                    let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
-                                    moveIndicators.push(object)
-                                    validLocations.push(squareIndex)
-                                }
-                            }
+                        if (movmentType = "stepper"){ 
+                        addCircles(squareIndex, validLocations,x , y)
+                        squareIndex++
+                    }else{ // piece type is slider
                             
                         }
-                        squareIndex++
-                    }
                 }
+            }
+
+
+                
                 pointerDown = 'place'    
         } else if(pointerDown === 'place'){
             
