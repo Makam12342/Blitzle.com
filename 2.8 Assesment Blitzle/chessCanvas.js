@@ -206,25 +206,61 @@ function create() {
     return validMoves;
 
     }
+    // this function identifys where and how sliding pieces can move
+    function validMovesSlider(pieceLocation, directions, isWhite) {
+    const validMoves = [];
 
-    function validMovesSlider(pieceLocation, moveList) {
-    let validMoves = [];
+    // Determine friendly and enemy pieces based on current turn
+    const friendlyPieces = turn === 'white' ? allWhitePiecesBitboard : allBlackPiecesBitboard;
+    const enemyPieces = turn === 'white' ? allBlackPiecesBitboard : allWhitePiecesBitboard;
 
-    moveList.forEach(direction => {
-        let directionMoves = []
-        for (let i = 1; i < 8; i++) {
-            const target = pieceLocation + direction * i;
-            if (target >= 0 && target < 64) {
-                directionMoves.push(target);
-            } else {
+    const fromRank = Math.floor(pieceLocation / 8);
+    const fromFile = pieceLocation % 8;
+
+    for (const dir of directions) {
+        let i = 1;
+
+        while (true) {
+            const currentSquare = pieceLocation + dir * i;
+
+            if (currentSquare < 0 || currentSquare >= 64) break;
+
+            const toRank = Math.floor(currentSquare / 8);
+            const toFile = currentSquare % 8;
+
+            // Prevent wrap-around between ranks and files
+            const deltaRank = Math.abs(toRank - fromRank);
+            const deltaFile = Math.abs(toFile - fromFile);
+
+            // Only allow the move if it aligns with the intended direction
+            const isHorizontal = dir === 1 || dir === -1;
+            const isVertical = dir === 8 || dir === -8;
+            const isDiagonal = Math.abs(dir) === 7 || Math.abs(dir) === 9;
+
+            if (
+                (isHorizontal && deltaRank !== 0) ||
+                (isVertical && deltaFile !== 0) ||
+                (isDiagonal && deltaRank !== deltaFile)
+            ) {
                 break;
             }
+
+            const currentSquareBit = 1n << BigInt(currentSquare);
+
+            if ((friendlyPieces & currentSquareBit) !== 0n) break;
+
+            validMoves.push(currentSquare);
+
+            if ((enemyPieces & currentSquareBit) !== 0n) break;
+
+            i++;
         }
-        validMoves.push(directionMoves)
-    });
+    }
 
     return validMoves;
 }
+
+    
 
     this.input.on('pointerdown', function (pointer){
         
@@ -266,13 +302,13 @@ function create() {
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.kingMovements)
                         movmentType = "stepper"
                     } else if(pieceType.includes("Queen")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.queenMovements)
-                        movmentType = "sldier"
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.queenMovements, turn === 'white')
+                        movmentType = "slider"
                     } else if(pieceType.includes("Rook")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.rookMovements)
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.rookMovements, turn === 'white')
                         movmentType = "slider"
                     } else if(pieceType.includes("Bishop")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.bishopMovements)
+                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.bishopMovements, turn === 'white')
                         movmentType = "slider"
                     } else if(pieceType.includes("Knight")){
                         avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.knightMovements)
@@ -306,7 +342,7 @@ function create() {
                 }
             }
             }
-
+            
 
 
             let squareIndex = 0
@@ -316,15 +352,16 @@ function create() {
                         const x = col * squareSize + squareSize / 2;
                         const y = (7-row) * squareSize + squareSize / 2; 
                         
-                        //calculates if there is a piece of the same color 
-                        if (movmentType = "stepper"){ 
-                        addCircles(squareIndex, validLocations,x , y)
-                        squareIndex++
-                    }else{ // piece type is slider
+                        //calculates if there is a piece of the same color           
+                        for (let i = 0; i < avalablemoves.length; i++) {
+                            const squareIndex = avalablemoves[i];
+                            const row = 7 - Math.floor(squareIndex / 8);
+                            const col = squareIndex % 8;
+                            const x = col * squareSize + squareSize / 2;
+                            const y = row * squareSize + squareSize / 2;
+                            addCircles(squareIndex, validLocations, x, y);
                             
-                        }
-                }
-            }
+                }}}
 
 
                 
@@ -366,9 +403,6 @@ function create() {
     
     
     });
-
-
-
 }
 function update() {
 }
