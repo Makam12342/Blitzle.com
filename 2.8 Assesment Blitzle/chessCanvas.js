@@ -3,7 +3,7 @@ const config = {
     type: Phaser.AUTO,
     width: 600,
     height: 600,
-    backgroundColor: '#f5c3a2',
+    backgroundColor: '#d6d2cd',
     parent: 'canvas',
     scene: {
         preload: preload,
@@ -61,6 +61,7 @@ function create() {
     let allBlackPiecesBitboard = 0x0000000000000000
     let validLocations = []
     let movmentType = null
+    let moves = null
     
 
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -102,8 +103,8 @@ function create() {
         stepPieces: {
         knightMovements: [15, 17, 6, 10, -10, -6, -17, -15],
         kingMovements: [8, -8, -1, 1, 7, 9, -9, -7],
-        pawnMovementsWhite: [8, 16, 9, 7],
-        pawnMovementsBlack: [-8, -16, -9, -7]
+        pawnMovementsWhite: [8],
+        pawnMovementsBlack: [-8]
         },
         //All the pieces that have sliding movment
         sliderPieces: {
@@ -120,7 +121,7 @@ function create() {
         for (let col = 0; col < cols; col++) {
             const isDarkSquare = (row + col) % 2 === 1; // checks weather or not its a dark square
             if (isDarkSquare) {
-                this.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, 0x6b4a34); // Change colour at the end
+                this.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, 0x6f6f6d); // Change colour at the end
                 
             }
         }
@@ -265,9 +266,9 @@ function create() {
     this.input.on('pointerdown', function (pointer){
         
             // Takes the square and figures out what piece is on the square
-            const col = Math.floor(pointer.x / squareSize);
-            const row = Math.floor(pointer.y / squareSize);
-            const pointerSquare = (7 - row) * 8 + col;
+            let col = Math.floor(pointer.x / squareSize);
+            let row = Math.floor(pointer.y / squareSize);
+            let pointerSquare = (7 - row) * 8 + col;
             
             if(pointerDown === 'select'){
                 pieceType = null;
@@ -299,25 +300,56 @@ function create() {
         // returns the sudo valid moves a piece could have 
             if (pieceType){
                     if(pieceType.includes("King")){
-                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.kingMovements)
+                        moves = movedirections.stepPieces.kingMovements
+                        avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
+
                     } else if(pieceType.includes("Queen")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.queenMovements, turn === 'white')
+                        moves =  movedirections.sliderPieces.queenMovements
+                        avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
+
                     } else if(pieceType.includes("Rook")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.rookMovements, turn === 'white')
+                        moves =  movedirections.sliderPieces.rookMovements
+                        avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
+
                     } else if(pieceType.includes("Bishop")){
-                        avalablemoves = validMovesSlider(pointerSquare, movedirections.sliderPieces.bishopMovements, turn === 'white')
+                        moves = movedirections.sliderPieces.bishopMovements
+                        avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
+
                     } else if(pieceType.includes("Knight")){
-                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.knightMovements)
+                        moves = movedirections.stepPieces.knightMovements
+                        avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
+
                     } else if(pieceType.includes("whitePawn")){
-                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsWhite)
+                        moves = [...movedirections.stepPieces.pawnMovementsWhite];
+                        if(row === 6){
+                        moves.push(16)
+                        }
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n){
+                        moves.push(+9)
+                        }
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n){
+                        moves.push(+7)
+                        }
+                        avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
+
+                        
                     } else if(pieceType.includes("blackPawn")){
-                        avalablemoves = validMovesStepper(pointerSquare, movedirections.stepPieces.pawnMovementsBlack)
+                        moves = [...movedirections.stepPieces.pawnMovementsBlack];
+                        moves.push(-16)
+                        
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n){
+                        moves.push(-9)
+                        }
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n){
+                        moves.push(-7)
+                        }
+                        avalablemoves = validMovesStepper(pointerSquare, moves )
                         movmentType = "stepper"
                     }
 
@@ -325,9 +357,9 @@ function create() {
             // adds the circles to the board
             function addCircles(squareIndex, validLocations, x, y){
             if(avalablemoves.includes(squareIndex)) {
-                if(turn === "white"){   
+                if(turn === "white"){  
                 if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                    let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
+                    let object = scene.add.circle(x, y , 10 ,0xd12f04 , 0.8)
                     moveIndicators.push(object)
                     validLocations.push(squareIndex)
 
@@ -335,7 +367,7 @@ function create() {
 
                 }else{
                     if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                        let object = scene.add.circle(x, y , 10 ,0x5f5138, 0.8)
+                        let object = scene.add.circle(x, y , 10 ,0xd12f04 , 0.8)
                         moveIndicators.push(object)
                         validLocations.push(squareIndex)
                     }
@@ -394,13 +426,7 @@ function create() {
             updateboard();
             pointerDown = 'select';
             
-        };
-    
-    
-    
-    
-    
-    
+        };    
     
     });
 }
