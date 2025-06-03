@@ -103,8 +103,8 @@ function create() {
         stepPieces: {
         knightMovements: [15, 17, 6, 10, -10, -6, -17, -15],
         kingMovements: [8, -8, -1, 1, 7, 9, -9, -7],
-        pawnMovementsWhite: [8],
-        pawnMovementsBlack: [-8]
+        pawnMovementsWhite: [],
+        pawnMovementsBlack: []
         },
         //All the pieces that have sliding movment
         sliderPieces: {
@@ -326,9 +326,17 @@ function create() {
 
                     } else if(pieceType.includes("whitePawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsWhite];
-                        if(row === 6){
-                        moves.push(16)
+                        
+
+                        // foroward moves
+                        if(row === 6 & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
+                        moves.push(+16)
                         }
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
+                        moves.push(+8)
+                        }
+
+
                         if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n){
                         moves.push(+9)
                         }
@@ -341,8 +349,15 @@ function create() {
                         
                     } else if(pieceType.includes("blackPawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
+
+                        // foroward moves
+                        if(row === 1 & ((allWhitePiecesBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n & ((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
                         moves.push(-16)
-                        
+                        }
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
+                        moves.push(-8)
+                        }
+
                         if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n){
                         moves.push(-9)
                         }
