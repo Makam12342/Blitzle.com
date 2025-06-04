@@ -346,6 +346,7 @@ function create() {
                         avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
 
+
                         
                     } else if(pieceType.includes("blackPawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
@@ -432,12 +433,30 @@ function create() {
 
             }else if(turn === "black"){
                 pieceBitboard = piecesPosition.blackPieces[pieceType];
-                pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
+                pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare)); // removes the old piece and shifts it to a new square
                 piecesPosition.blackPieces[pieceType] = pieceBitboard;
                 turn = "white"
             }
             // removes old piece and places new piece on selected square when board updates
-        
+            
+
+            // Promotions
+            if (pieceType.includes("whitePawn")) {
+                if (row === 0) {
+                    pieceBitboard &= ~(1n << BigInt(pointerSquare));  // Remove pawn
+                    piecesPosition.whitePieces[pieceType] = pieceBitboard;
+                    piecesPosition.whitePieces["whiteQueen"] |= (1n << BigInt(pointerSquare)); // Add queen
+                }
+            } else if (pieceType.includes("blackPawn")) {
+                if (row === 7) {
+                    pieceBitboard &= ~(1n << BigInt(pointerSquare));  // Remove pawn
+                    piecesPosition.blackPieces[pieceType] = pieceBitboard;
+                    piecesPosition.blackPieces["blackQueen"] |= (1n << BigInt(pointerSquare)); // Add queen
+                }
+            }
+
+
+
             updateboard();
             pointerDown = 'select';
             
