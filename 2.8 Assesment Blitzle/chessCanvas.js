@@ -101,7 +101,7 @@ function create() {
 
         //All the pieces that dont slide
         stepPieces: {
-        knightMovements: [15, 17, 6, 10, -10, -6, -17, -15],
+        knightMovements: [],
         kingMovements: [8, -8, -1, 1, 7, 9, -9, -7],
         pawnMovementsWhite: [],
         pawnMovementsBlack: []
@@ -320,9 +320,24 @@ function create() {
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Knight")){
-                        moves = movedirections.stepPieces.knightMovements
+                        moves = [...movedirections.stepPieces.knightMovements]
+
+                        if(col+ 1 < 8){
+                            moves.push(+17, -15)
+                        }
+                        if(col - 1 > 0){
+                            moves.push(+6, - 10)
+                        }
+                        if(col + 2 < 8){
+                            moves.push(-6, +10)
+                        }
+                        if(col  > 0){
+                            moves.push(+15, -17)
+                        }
+
                         avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
+
 
                     } else if(pieceType.includes("whitePawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsWhite];
@@ -336,11 +351,11 @@ function create() {
                         moves.push(+8)
                         }
 
-
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n){
+                        // makes sure the piece that i am moving is not edge hopping
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n & col + 1 < 8){
                         moves.push(+9)
                         }
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n){
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n & col - 1 > 0 ){
                         moves.push(+7)
                         }
                         avalablemoves = validMovesStepper(pointerSquare, moves)
@@ -358,11 +373,11 @@ function create() {
                         if(((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
                         moves.push(-8)
                         }
-
-                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n){
+                        // makes sure the piece is not edge hopping
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n& col - 1 > 0 ){
                         moves.push(-9)
                         }
-                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n){
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n & col + 1 < 8){
                         moves.push(-7)
                         }
                         avalablemoves = validMovesStepper(pointerSquare, moves )
