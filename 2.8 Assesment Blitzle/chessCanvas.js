@@ -163,6 +163,34 @@ function create() {
     });
 
     }
+
+    function getPawnMoves(moves, row, col, pointerSquare, x, bitboard) {
+    // foroward moves
+    // x is 1 or -1 depending on direction positive for black negative for white 
+    if(row === 3.5 -2.5*x & ((bitboard >> BigInt(pointerSquare - 16*x)) & 1n) === 0n & ((bitboard >> BigInt(pointerSquare -8*x)) & 1n) === 0n){
+    moves.push(-16*x)
+    }
+    if(((bitboard >> BigInt(pointerSquare -8*x)) & 1n) === 0n){
+    moves.push(-8*x)
+    }
+    // makes sure the piece is not edge hopping
+    if(((bitboard >> BigInt(pointerSquare - 9*x)) & 1n) !== 0n & col - 1 > 0 ){
+    moves.push(-9*x)
+    }
+    
+    if(((bitboard >> BigInt(pointerSquare - 7*x)) & 1n) !== 0n & col + 1 < 8){
+    moves.push(-7*x)
+    }
+
+    // en pusant
+    if(((bitboard >> BigInt(pointerSquare + 1*x)) & 1n) !== 0n & col + 1 < 8){
+    moves.push(-7*x)
+    }
+    if(((bitboard >> BigInt(pointerSquare - 1*x)) & 1n) !== 0n & col - 1 > 0){
+    moves.push(-9*x)
+    }
+    return moves
+}
     
     
     // Adds all the pieces to the board
@@ -341,23 +369,7 @@ function create() {
 
                     } else if(pieceType.includes("whitePawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsWhite];
-                        
-
-                        // foroward moves
-                        if(row === 6 & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
-                        moves.push(+16)
-                        }
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
-                        moves.push(+8)
-                        }
-
-                        // makes sure the piece that i am moving is not edge hopping
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n & col + 1 < 8){
-                        moves.push(+9)
-                        }
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n & col - 1 > 0 ){
-                        moves.push(+7)
-                        }
+                        moves = getPawnMoves(moves, row, col, pointerSquare, -1, allBlackPiecesBitboard)
                         avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
 
@@ -365,21 +377,7 @@ function create() {
                         
                     } else if(pieceType.includes("blackPawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
-
-                        // foroward moves
-                        if(row === 1 & ((allWhitePiecesBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n & ((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
-                        moves.push(-16)
-                        }
-                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
-                        moves.push(-8)
-                        }
-                        // makes sure the piece is not edge hopping
-                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n& col - 1 > 0 ){
-                        moves.push(-9)
-                        }
-                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n & col + 1 < 8){
-                        moves.push(-7)
-                        }
+                        moves = getPawnMoves(moves, row, col, pointerSquare, 1, allWhitePiecesBitboard)
                         avalablemoves = validMovesStepper(pointerSquare, moves )
                         movmentType = "stepper"
                     }
@@ -434,7 +432,7 @@ function create() {
            if (!validLocations.includes(pointerSquare)) {
             return; // Ignore invalid square clicks
             }
-
+            
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
