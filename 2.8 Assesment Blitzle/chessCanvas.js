@@ -382,7 +382,21 @@ function getPawnMoves(moves, row, col, pointerSquare, x, bitboard, enPassant) {
                         
                     } else if(pieceType.includes("blackPawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
-                        moves = getPawnMoves(moves, row, col, pointerSquare, 1, allWhitePiecesBitboard)
+
+                        // foroward moves
+                        if(row === 1 & ((allWhitePiecesBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n & ((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
+                        moves.push(-16)
+                        }
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
+                        moves.push(-8)
+                        }
+                        // makes sure the piece is not edge hopping
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 9)) & 1n) !== 0n& col - 1 > 0 ){
+                        moves.push(-9)
+                        }
+                        if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n & col + 1 < 8){
+                        moves.push(-7)
+                        }
                         avalablemoves = validMovesStepper(pointerSquare, moves )
                         movmentType = "stepper"
                     }
@@ -437,7 +451,7 @@ function getPawnMoves(moves, row, col, pointerSquare, x, bitboard, enPassant) {
            if (!validLocations.includes(pointerSquare)) {
             return; // Ignore invalid square clicks
             }
-            
+
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
