@@ -163,6 +163,8 @@ function create() {
     });
 
     }
+<<<<<<< HEAD
+=======
 function getPawnMoves(moves, row, col, pointerSquare, x, bitboard, enPassant) {
     // Forward move
     if (row === (x === 1 ? 6 : 1)) {
@@ -196,6 +198,7 @@ function getPawnMoves(moves, row, col, pointerSquare, x, bitboard, enPassant) {
     return moves;
 }
 
+>>>>>>> 117de1ba443914c1abdc8510adbff5ebc1bfea8a
     
     
     // Adds all the pieces to the board
@@ -374,7 +377,27 @@ function getPawnMoves(moves, row, col, pointerSquare, x, bitboard, enPassant) {
 
                     } else if(pieceType.includes("whitePawn")){
                         moves = [...movedirections.stepPieces.pawnMovementsWhite];
+<<<<<<< HEAD
+                        
+
+                        // foroward moves
+                        if(row === 6 & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
+                        moves.push(+16)
+                        }
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
+                        moves.push(+8)
+                        }
+
+                        // makes sure the piece that i am moving is not edge hopping
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n & col + 1 < 8){
+                        moves.push(+9)
+                        }
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n & col - 1 > 0 ){
+                        moves.push(+7)
+                        }
+=======
                         moves = getPawnMoves(moves, row, col, pointerSquare, -1, allBlackPiecesBitboard), 
+>>>>>>> 117de1ba443914c1abdc8510adbff5ebc1bfea8a
                         avalablemoves = validMovesStepper(pointerSquare, moves)
                         movmentType = "stepper"
 
