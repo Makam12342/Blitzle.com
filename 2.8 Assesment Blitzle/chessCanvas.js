@@ -262,7 +262,7 @@ function create() {
     }
 
 function isInCheck(color) {
-    console.log(`\n🔍 Checking if ${color} king is in check...`);
+    
     
     const enemyPieces = color === 'white' ? piecesPosition.blackPieces : piecesPosition.whitePieces;
     const kingIndex = (color === 'white'
@@ -270,17 +270,16 @@ function isInCheck(color) {
         : hexToSquares(piecesPosition.blackPieces.blackKing)
     )[0];
 
-    console.log(`👑 ${color} king is at square ${kingIndex}`);
-    console.log(`🎯 Looking for enemy pieces that can attack it...\n`);
+    
 
     // Check if we have valid data
     if (!enemyPieces || Object.keys(enemyPieces).length === 0) {
-        console.log("❌ ERROR: No enemy pieces found!");
+        
         return false;
     }
 
     if (kingIndex === undefined || kingIndex === null) {
-        console.log("❌ ERROR: King position not found!");
+        
         return false;
     }
 
@@ -290,22 +289,14 @@ function isInCheck(color) {
         const pieceType = Object.keys(enemyPieces)[i];
         const bitboard = enemyPieces[pieceType];
         
-        console.log(`\n--- 🔎 Analyzing ${pieceType} ---`);
-        
-        if (!bitboard || bitboard === 0n) {
-            console.log(`   ⚪ No ${pieceType} pieces on the board`);
-            continue;
-        }
 
         const pieceIndices = hexToSquares(bitboard);
-        console.log(`   📍 Found ${pieceType} at squares: ${pieceIndices}`);
-
         for (const index of pieceIndices) {
             let moves = [];
             const col = index % 8;
             const row = Math.floor(index / 8);
 
-            console.log(`\n   🎯 ${pieceType} at square ${index} (row ${row}, col ${col}):`);
+
 
             // Determine if the piece is white or black
             const isWhite = pieceType.toLowerCase().includes("white");
@@ -348,26 +339,19 @@ function isInCheck(color) {
              
             // Show where this piece can move
             if (moves && moves.length > 0) {
-                console.log(`      ✅ Can move to squares: ${moves.join(', ')}`);
-                
                 // Check if any move attacks the king
                 if (moves.includes(kingIndex)) {
-                    console.log(`      🚨 *** ATTACKING THE KING! ${pieceType} at ${index} can reach king at ${kingIndex} ***`);
                     foundCheck = true;
-                } else {
-                    console.log(`      ⚫ Not attacking the king (king is at ${kingIndex})`);
                 }
-            } else {
-                console.log(`      ❌ Cannot move anywhere`);
             }
         }
     }
 
     if (foundCheck) {
-        console.log(`\n🚨 RESULT: ${color} king IS IN CHECK! 🚨`);
+        console.log("king IS IN CHECK!");
         return true;
     } else {
-        console.log(`\n✅ RESULT: ${color} king is safe (not in check)`);
+        console.log("king is safe (not in check)");
         return false;
     }
 }
@@ -444,13 +428,16 @@ function isCheckmate(color) {
             // Test each possible move to see if it gets out of check
             for (const toSquare of possibleMoves) {
                 if (isLegalMove(fromSquare, toSquare, color, pieceKey)) {
+                    console.log("cheak")
                     return false; // Found a legal move, not checkmate
+                    
                 }
             }
         }
     }
-
+    console.log("checkmate")
     return true; // No legal moves found, it's checkmate
+
 }
 
 // Helper function to test if a move is legal (doesn't leave king in check)
@@ -478,7 +465,7 @@ function isLegalMove(fromSquare, toSquare, color, pieceKey) {
     // Place piece on new square
     piecesPosition[colorPieces][pieceKey] |= (1n << BigInt(toSquare));
     
-    // Update global bitboards (you'll need to implement updateGlobalBitboards function)
+    
     updateGlobalBitboards();
     
     // Check if still in check
@@ -492,7 +479,7 @@ function isLegalMove(fromSquare, toSquare, color, pieceKey) {
     return !stillInCheck;
 }
 
-// You'll need to implement this function to update your global bitboards
+
 function updateGlobalBitboards() {
     allWhitePiecesBitboard = 0n;
     allBlackPiecesBitboard = 0n;
