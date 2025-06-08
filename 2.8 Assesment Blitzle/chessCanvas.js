@@ -212,8 +212,8 @@ function create() {
     const validMoves = [];
 
     // Determine friendly and enemy pieces based on current turn
-    const friendlyPieces = turn === 'white' ? allWhitePiecesBitboard : allBlackPiecesBitboard;
-    const enemyPieces = turn === 'white' ? allBlackPiecesBitboard : allWhitePiecesBitboard;
+    const friendlyPieces = isWhite  ? allWhitePiecesBitboard : allBlackPiecesBitboard;
+    const enemyPieces = isWhite  ? allBlackPiecesBitboard : allWhitePiecesBitboard;
 
     const fromRank = Math.floor(pieceLocation / 8);
     const fromFile = pieceLocation % 8;
@@ -261,50 +261,124 @@ function create() {
     return validMoves;
     }
 
-    function isInCheck(color) {
+function isInCheck(color) {
+    console.log(`\n🔍 Checking if ${color} king is in check...`);
+    
+    const enemyPieces = color === 'white' ? piecesPosition.blackPieces : piecesPosition.whitePieces;
+    const kingIndex = (color === 'white'
+        ? hexToSquares(piecesPosition.whitePieces.whiteKing)
+        : hexToSquares(piecesPosition.blackPieces.blackKing)
+    )[0];
 
-        const enemyPieces = color === 'white' ? piecesPosition.blackPieces : piecesPosition.whitePieces;
-        const kingIndex = (color === 'white' ? hexToSquares(piecesPosition.whitePieces.whiteKing) : hexToSquares(piecesPosition.blackPieces.blackKing))[0];
+    console.log(`👑 ${color} king is at square ${kingIndex}`);
+    console.log(`🎯 Looking for enemy pieces that can attack it...\n`);
 
-        //loops through each atacking peice type
-        for (let i = 0; i < 6; i++){
-            const pieceType = Object.keys(enemyPieces)[i];
-            const bitboard = enemyPieces[pieceType];
-            const pieceIndices = hexToSquares(bitboard); // creates a list of all the pieces 
-
-            for (const index of pieceIndices) {
-                let moves = [];
-
-                if (pieceType.includes("Queen")) {
-                    moves = validMovesSlider(index, movedirections.sliderPieces.queenMovements, color !== "white"); // oposing color
-                } else if (pieceType.includes("Rook")) {
-                    moves = validMovesSlider(index, movedirections.sliderPieces.rookMovements, color !== "white");
-                } else if (pieceType.includes("Bishop")) {
-                    moves = validMovesSlider(index, movedirections.sliderPieces.bishopMovements, color !== "white");
-                } else if (pieceType.includes("Knight")) {
-                    const knightMoves = [];
-                    const col = index % 8;
-                    if(col + 1 < 8) knightMoves.push(index + 17, index - 15);
-                    if(col - 1 >= 0) knightMoves.push(index + 15, index - 17);
-                    if(col + 2 < 8) knightMoves.push(index + 10, index - 6);
-                    if(col - 2 >= 0) knightMoves.push(index + 6, index - 10);
-                    moves = validMovesStepper(index, knightMoves);
-                } else if (pieceType.includes("Pawn")) {
-                    const pawnDir = color === "white" ? -1 : 1;
-                    const col = index % 8;
-                    if (col + 1 < 8) moves.push(index + pawnDir * 9);
-                    if (col - 1 >= 0) moves.push(index + pawnDir * 7);
-
-                } else if (pieceType.includes("King")) {
-                    moves = validMovesStepper(index, movedirections.stepPieces.kingMovements);
-                }
-                if (moves.includes(kingIndex)) return true;
-            }
-        }
+    // Check if we have valid data
+    if (!enemyPieces || Object.keys(enemyPieces).length === 0) {
+        console.log("❌ ERROR: No enemy pieces found!");
         return false;
     }
 
-   function isCheckmate(color) {
+    if (kingIndex === undefined || kingIndex === null) {
+        console.log("❌ ERROR: King position not found!");
+        return false;
+    }
+
+    let foundCheck = false;
+
+    for (let i = 0; i < Object.keys(enemyPieces).length; i++) {
+        const pieceType = Object.keys(enemyPieces)[i];
+        const bitboard = enemyPieces[pieceType];
+        
+        console.log(`\n--- 🔎 Analyzing ${pieceType} ---`);
+        
+        if (!bitboard || bitboard === 0n) {
+            console.log(`   ⚪ No ${pieceType} pieces on the board`);
+            continue;
+        }
+
+        const pieceIndices = hexToSquares(bitboard);
+        console.log(`   📍 Found ${pieceType} at squares: ${pieceIndices}`);
+
+        for (const index of pieceIndices) {
+            let moves = [];
+            const col = index % 8;
+            const row = Math.floor(index / 8);
+
+            console.log(`\n   🎯 ${pieceType} at square ${index} (row ${row}, col ${col}):`);
+
+            // Determine if the piece is white or black
+            const isWhite = pieceType.toLowerCase().includes("white");
+
+            if (pieceType.includes("Queen")) {
+                moves = validMovesSlider(index, movedirections.sliderPieces.queenMovements, isWhite);
+            } else if (pieceType.includes("Rook")) {
+                moves = validMovesSlider(index, movedirections.sliderPieces.rookMovements, isWhite);
+            } else if (pieceType.includes("Bishop")) {
+                moves = validMovesSlider(index, movedirections.sliderPieces.bishopMovements, isWhite);
+            } else if (pieceType.includes("Knight")) {
+                const knightMoves = [];
+                if (col + 1 < 8) knightMoves.push(index + 17, index - 15);
+                if (col - 1 >= 0) knightMoves.push(index + 15, index - 17);
+                if (col + 2 < 8) knightMoves.push(index + 10, index - 6);
+                if (col - 2 >= 0) knightMoves.push(index + 6, index - 10);
+                moves = validMovesStepper(index, knightMoves);
+            } else if (pieceType.includes("Pawn")) {
+                if (pieceType.includes("white")) {
+                    moves = [...movedirections.stepPieces.pawnMovementsWhite];
+                    if (((allBlackPiecesBitboard >> BigInt(index + 9)) & 1n) !== 0n && col + 1 < 8) {
+                        moves.push(9);
+                    }
+                    if (((allBlackPiecesBitboard >> BigInt(index + 7)) & 1n) !== 0n && col - 1 >= 0) {
+                        moves.push(7);
+                    }
+                } else if (pieceType.includes("black")) {
+                    moves = [...movedirections.stepPieces.pawnMovementsBlack];
+                    if (((allWhitePiecesBitboard >> BigInt(index - 9)) & 1n) !== 0n && col - 1 >= 0) {
+                        moves.push(-9);
+                    }
+                    if (((allWhitePiecesBitboard >> BigInt(index - 7)) & 1n) !== 0n && col + 1 < 8) {
+                        moves.push(-7);
+                    }
+                }
+                moves = validMovesStepper(index, moves);
+            } else if (pieceType.includes("King")) {
+                moves = validMovesStepper(index, movedirections.stepPieces.kingMovements);
+            }
+             
+            // Show where this piece can move
+            if (moves && moves.length > 0) {
+                console.log(`      ✅ Can move to squares: ${moves.join(', ')}`);
+                
+                // Check if any move attacks the king
+                if (moves.includes(kingIndex)) {
+                    console.log(`      🚨 *** ATTACKING THE KING! ${pieceType} at ${index} can reach king at ${kingIndex} ***`);
+                    foundCheck = true;
+                } else {
+                    console.log(`      ⚫ Not attacking the king (king is at ${kingIndex})`);
+                }
+            } else {
+                console.log(`      ❌ Cannot move anywhere`);
+            }
+        }
+    }
+
+    if (foundCheck) {
+        console.log(`\n🚨 RESULT: ${color} king IS IN CHECK! 🚨`);
+        return true;
+    } else {
+        console.log(`\n✅ RESULT: ${color} king is safe (not in check)`);
+        return false;
+    }
+}
+
+
+function isCheckmate(color) {
+    // First check if the king is actually in check
+    if (!isInCheck(color)) {
+        return false; // Can't be checkmate if not in check
+    }
+
     const pieceSet = color === "white" ? piecesPosition.whitePieces : piecesPosition.blackPieces;
     const keys = Object.keys(pieceSet);
 
@@ -334,76 +408,103 @@ function create() {
                 const direction = color === "white" ? 1 : -1;
                 const row = Math.floor(fromSquare / 8);
                 const col = fromSquare % 8;
-
+                const enemyBitboard = color === "white" ? allBlackPiecesBitboard : allWhitePiecesBitboard;
                 const blockers = allWhitePiecesBitboard | allBlackPiecesBitboard;
 
+                // Forward moves
                 const forwardOne = fromSquare + direction * 8;
-                const forwardTwo = fromSquare + direction * 16;
-
-                if (((blockers >> BigInt(forwardOne)) & 1n) === 0n && forwardOne >= 0 && forwardOne < 64) {
+                if (forwardOne >= 0 && forwardOne < 64 && ((blockers >> BigInt(forwardOne)) & 1n) === 0n) {
                     possibleMoves.push(forwardOne);
-                }
-                if ((color === "white" && row === 1 || color === "black" && row === 6) &&
-                    ((blockers >> BigInt(forwardTwo)) & 1n) === 0n) {
-                    possibleMoves.push(forwardTwo);
+                    
+                    // Two squares forward from starting position
+                    if ((color === "white" && row === 1) || (color === "black" && row === 6)) {
+                        const forwardTwo = fromSquare + direction * 16;
+                        if (((blockers >> BigInt(forwardTwo)) & 1n) === 0n) {
+                            possibleMoves.push(forwardTwo);
+                        }
+                    }
                 }
 
-                // Captures
+                // Diagonal captures
                 const captureLeft = fromSquare + direction * 7;
                 const captureRight = fromSquare + direction * 9;
-                if (col > 0 && captureLeft >= 0 && captureLeft < 64) {
+                
+                if (col > 0 && captureLeft >= 0 && captureLeft < 64 && 
+                    ((enemyBitboard >> BigInt(captureLeft)) & 1n) !== 0n) {
                     possibleMoves.push(captureLeft);
                 }
-                if (col < 7 && captureRight >= 0 && captureRight < 64) {
+                if (col < 7 && captureRight >= 0 && captureRight < 64 && 
+                    ((enemyBitboard >> BigInt(captureRight)) & 1n) !== 0n) {
                     possibleMoves.push(captureRight);
                 }
             } else if (pieceKey.includes("King")) {
-                const kingMoves = validMovesStepper(fromSquare, movedirections.stepPieces.kingMovements);
-
-                // Filter out illegal king moves (into check)
-                possibleMoves = kingMoves.filter(toSquare => {
-                    const tempPieces = {
-                        whitePieces: { ...piecesPosition.whitePieces },
-                        blackPieces: { ...piecesPosition.blackPieces }
-                    };
-
-                    tempPieces[color + "Pieces"][pieceKey] &= ~(1n << BigInt(fromSquare));
-                    tempPieces[color + "Pieces"][pieceKey] |= (1n << BigInt(toSquare));
-
-                    const original = piecesPosition[color + "Pieces"];
-                    piecesPosition[color + "Pieces"] = tempPieces[color + "Pieces"];
-                    const stillInCheck = isInCheck(color);
-                    piecesPosition[color + "Pieces"] = original;
-
-                    return !stillInCheck;
-                });
+                possibleMoves = validMovesStepper(fromSquare, movedirections.stepPieces.kingMovements);
             }
 
-            // Test each possible move for legality
+            // Test each possible move to see if it gets out of check
             for (const toSquare of possibleMoves) {
-                const tempPieces = {
-                    whitePieces: { ...piecesPosition.whitePieces },
-                    blackPieces: { ...piecesPosition.blackPieces }
-                };
-
-                tempPieces[color + "Pieces"][pieceKey] &= ~(1n << BigInt(fromSquare));
-                tempPieces[color + "Pieces"][pieceKey] |= (1n << BigInt(toSquare));
-
-                const original = piecesPosition[color + "Pieces"];
-                piecesPosition[color + "Pieces"] = tempPieces[color + "Pieces"];
-                const stillInCheck = isInCheck(color);
-                piecesPosition[color + "Pieces"] = original;
-
-                if (!stillInCheck) {
-                    return false; // At least one legal move exists
+                if (isLegalMove(fromSquare, toSquare, color, pieceKey)) {
+                    return false; // Found a legal move, not checkmate
                 }
             }
         }
     }
 
-    return true; // No legal moves found, and king is in check
+    return true; // No legal moves found, it's checkmate
 }
 
+// Helper function to test if a move is legal (doesn't leave king in check)
+function isLegalMove(fromSquare, toSquare, color, pieceKey) {
+    // Save original position
+    const originalPiecesPosition = JSON.parse(JSON.stringify(piecesPosition));
+    const originalAllWhite = allWhitePiecesBitboard;
+    const originalAllBlack = allBlackPiecesBitboard;
+    
+    // Make the move temporarily
+    const colorPieces = color + "Pieces";
+    const enemyColorPieces = (color === "white" ? "black" : "white") + "Pieces";
+    
+    // Remove piece from original square
+    piecesPosition[colorPieces][pieceKey] &= ~(1n << BigInt(fromSquare));
+    
+    // Handle captures - remove enemy piece if present
+    for (const enemyPieceKey of Object.keys(piecesPosition[enemyColorPieces])) {
+        if ((piecesPosition[enemyColorPieces][enemyPieceKey] >> BigInt(toSquare)) & 1n) {
+            piecesPosition[enemyColorPieces][enemyPieceKey] &= ~(1n << BigInt(toSquare));
+            break;
+        }
+    }
+    
+    // Place piece on new square
+    piecesPosition[colorPieces][pieceKey] |= (1n << BigInt(toSquare));
+    
+    // Update global bitboards (you'll need to implement updateGlobalBitboards function)
+    updateGlobalBitboards();
+    
+    // Check if still in check
+    const stillInCheck = isInCheck(color);
+    
+    // Restore original position
+    piecesPosition = originalPiecesPosition;
+    allWhitePiecesBitboard = originalAllWhite;
+    allBlackPiecesBitboard = originalAllBlack;
+    
+    return !stillInCheck;
+}
+
+// You'll need to implement this function to update your global bitboards
+function updateGlobalBitboards() {
+    allWhitePiecesBitboard = 0n;
+    allBlackPiecesBitboard = 0n;
+    
+    for (const piece of Object.values(piecesPosition.whitePieces)) {
+        allWhitePiecesBitboard |= piece;
+    }
+    
+    for (const piece of Object.values(piecesPosition.blackPieces)) {
+        allBlackPiecesBitboard |= piece;
+    }
+}
     
 
     this.input.on('pointerdown', function (pointer){
@@ -494,11 +595,11 @@ function create() {
                         moves.push(+8)
                         }
 
-                        // makes sure the piece that i am moving is not edge hopping
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) && 1n) !== 0n & col + 1 < 8){
+                        // makes sure the piece that the pawn is not edge hopping
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 9)) & 1n) !== 0n & col + 1 < 8){
                         moves.push(+9)
                         }
-                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) && 1n) !== 0n & col - 1 > 0 ){
+                        if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n & col - 1 > 0 ){
                         moves.push(+7)
                         }
                         avalablemoves = validMovesStepper(pointerSquare, moves)
@@ -617,11 +718,13 @@ function create() {
             updateboard();
             pointerDown = 'select';
             // Check for check or checkmate after the move
+            console.log("test2")
             if (isInCheck(turn)) {
+                console.log("test1")
                 if (isCheckmate(turn)) {
-                    scene.add.rectangle( 200, 300, 50, 50, 0xfcba03);
+                    console.log("CHECKMATE")
                 } else {
-                    scene.add.rectangle( 200, 300, 50, 50, 0xc0318);
+                    console.log("CHECK")
                 }
             }
             
