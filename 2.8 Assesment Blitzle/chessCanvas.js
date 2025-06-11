@@ -697,6 +697,9 @@ function updateGlobalBitboards() {
                 pointerDown = 'place'    
         } else if(pointerDown === 'place'){
             if (!validLocations.includes(pointerSquare)) {
+            moveIndicators.forEach(circle => circle.destroy());
+            moveIndicators = [];
+            pointerDown = 'select'
             return; // Ignore invalid square clicks
             }
 
@@ -739,6 +742,7 @@ function updateGlobalBitboards() {
 
             updateboard();
             pointerDown = 'select';
+            updateboard();
             // Check for check or checkmate after the move
             if (isInCheck(turn)) {
                 if (isCheckmate(turn)) {
