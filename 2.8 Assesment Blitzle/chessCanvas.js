@@ -319,10 +319,10 @@ function create() {
                     moves = validMovesSlider(index, movedirections.sliderPieces.bishopMovements, isWhite);
                 } else if (pieceType.includes("Knight")) {
                     const knightMoves = [];
-                    if (col + 1 < 8) knightMoves.push(index + 17, index - 15);
-                    if (col - 1 >= 0) knightMoves.push(index + 15, index - 17);
-                    if (col + 2 < 8) knightMoves.push(index + 10, index - 6);
-                    if (col - 2 >= 0) knightMoves.push(index + 6, index - 10);
+                    if (col + 1 < 8) knightMoves.push(+17, -15);
+                    if (col - 1 >= 0) knightMoves.push(+15, -17);
+                    if (col + 2 < 8) knightMoves.push(+10, -6);
+                    if (col - 2 >= 0) knightMoves.push(+6, -10);
                     moves = validMovesStepper(index, knightMoves, isWhite);
                 } else if (pieceType.includes("Pawn")) {
                     if (pieceType.includes("white")) {
@@ -398,10 +398,10 @@ function create() {
                 } else if (pieceKey.includes("Knight")) {
                     const col = fromSquare % 8;
                     const knightMoves = [];
-                    if (col + 1 < 8) knightMoves.push(fromSquare + 17, fromSquare - 15);
-                    if (col - 1 >= 0) knightMoves.push(fromSquare + 15, fromSquare - 17);
-                    if (col + 2 < 8) knightMoves.push(fromSquare + 10, fromSquare - 6);
-                    if (col - 2 >= 0) knightMoves.push(fromSquare + 6, fromSquare - 10);
+                    if (col + 1 < 8) knightMoves.push(+17, -15);
+                    if (col - 1 >= 0) knightMoves.push(+15, -17);
+                    if (col + 2 < 8) knightMoves.push(+10, -6);
+                    if (col - 2 >= 0) knightMoves.push(+6, -10);
                     possibleMoves = validMovesStepper(fromSquare, knightMoves , isWhite);
 
                 } else if (pieceKey.includes("Pawn")) {
@@ -588,18 +588,18 @@ function updateGlobalBitboards() {
                     } else if(pieceType.includes("Knight")){
                         moves = [...movedirections.stepPieces.knightMovements]
 
-                        if(col+ 1 < 8){
-                            moves.push(+17, -15)
-                        }
-                        if(col - 1 > 0){
-                            moves.push(+6, - 10)
-                        }
-                        if(col + 2 < 8){
-                            moves.push(-6, +10)
-                        }
-                        if(col  >= 0){
-                            moves.push(+15, -17)
-                        }
+                            if(col+ 1 < 8){
+                                moves.push(+17, -15)
+                            }
+                            if(col - 1 > 0){
+                                moves.push(+6, - 10)
+                            }
+                            if(col + 2 < 8){
+                                moves.push(-6, +10)
+                            }
+                            if(col  >= 0){
+                                moves.push(+15, -17)
+                            }
 
                         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white')
                         movmentType = "stepper"
