@@ -1,9 +1,18 @@
+
+//Game colors: 
+
+const lightSquaresColor = 0xfcf1df
+const darkSquaresColor = 0x376681
+const indicatorsColor = 0x96BCD8
+
+
+
 // All of the game data
 const config = {
     type: Phaser.AUTO,
     width: 600,
     height: 600,
-    backgroundColor: '#d6d2cd',
+    backgroundColor: lightSquaresColor,
     parent: 'canvas',
     scene: {
         preload: preload,
@@ -121,12 +130,30 @@ function create() {
         for (let col = 0; col < cols; col++) {
             const isDarkSquare = (row + col) % 2 === 1; // checks weather or not its a dark square
             if (isDarkSquare) {
-                this.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, 0x6f6f6d); // Change colour at the end
+                this.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, darkSquaresColor); // Change colour at the end
                 
             }
         }
     }
 
+    // The win screen for the players
+    function winScreenWhite() {
+        const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
+        border.setDepth(10)
+        const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
+        box.setDepth(11)
+        const text = scene.add.text(258,300,"white wins")
+        text.setDepth(12)
+    }
+
+    function winScreenBlack() {
+        const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
+        border.setDepth(10)
+        const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
+        box.setDepth(11)
+        const text = scene.add.text(260,300,"cheakmate",)
+        text.setDepth(12)
+    }
 
     // Convert bitboard to array of occupied squares
     function hexToSquares(bitboard) {
@@ -411,9 +438,10 @@ function create() {
                     const pointerSquare = fromSquare;
                     const moves = isWhite ? [...movedirections.stepPieces.pawnMovementsWhite] : [...movedirections.stepPieces.pawnMovementsBlack];
                     const enemyBitboard = isWhite ? allBlackPiecesBitboard : allWhitePiecesBitboard;
+                    const friendlyBitboard = !isWhite ? allBlackPiecesBitboard : allWhitePiecesBitboard;
 
                     if (isWhite) {
-                        if (row === 6 && ((enemyBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n && ((enemyBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n) {
+                        if (row === 6 && ((enemyBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n && ((enemyBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n && ((friendlyBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n) {
                             moves.push(16);
                         }
                         if (((enemyBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n) {
@@ -426,7 +454,7 @@ function create() {
                             moves.push(7);
                         }
                     } else {
-                        if (row === 1 && ((enemyBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n && ((enemyBitboard >> BigInt(pointerSquare - 8)) & 1n) === 0n) {
+                        if (row === 1 && ((enemyBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n && ((enemyBitboard >> BigInt(pointerSquare - 8)) & 1n) === 0n && ((friendlyBitboard >> BigInt(pointerSquare - 8)) & 1n) === 0n) {
                             moves.push(-16);
                         }
                         if (((enemyBitboard >> BigInt(pointerSquare - 8)) & 1n) === 0n) {
@@ -610,7 +638,7 @@ function updateGlobalBitboards() {
                         
 
                         // foroward moves
-                        if(row === 6 & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n && ((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
+                        if(row === 6 & ((allBlackPiecesBitboard >> BigInt(pointerSquare + 16)) & 1n) === 0n && ((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n  && ((allWhitePiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n ){
                         moves.push(+16)
                         }
                         if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 8)) & 1n) === 0n){
@@ -633,7 +661,7 @@ function updateGlobalBitboards() {
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
 
                         // foroward moves
-                        if(row === 1 & ((allWhitePiecesBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n && ((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
+                        if(row === 1 & ((allWhitePiecesBitboard >> BigInt(pointerSquare - 16)) & 1n) === 0n && ((allBlackPiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n && ((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
                         moves.push(-16)
                         }
                         if(((allWhitePiecesBitboard >> BigInt(pointerSquare -8)) & 1n) === 0n){
@@ -651,12 +679,16 @@ function updateGlobalBitboards() {
                     }
 
             }
+
+
+
+
             // adds the circles to the board
             function addCircles(squareIndex, validLocations, x, y){
             if(avalablemoves.includes(squareIndex)) {
                 if(turn === "white"){  
                 if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                    let object = scene.add.circle(x, y , 10 ,0xd12f04 , 0.8)
+                    let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
                     moveIndicators.push(object)
                     validLocations.push(squareIndex)
 
@@ -664,7 +696,7 @@ function updateGlobalBitboards() {
 
                 }else{
                     if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                        let object = scene.add.circle(x, y , 10 ,0xd12f04 , 0.8)
+                        let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
                         moveIndicators.push(object)
                         validLocations.push(squareIndex)
                     }
@@ -681,6 +713,11 @@ function updateGlobalBitboards() {
                         const x = col * squareSize + squareSize / 2;
                         const y = (7-row) * squareSize + squareSize / 2; 
                         
+                        // After you get the pseudolegal moves for the selected piece:
+                        avalablemoves = avalablemoves.filter(toSquare => 
+                            isLegalMove(pieceSquare, toSquare, turn, pieceType)
+                        );
+
                         //calculates if there is a piece of the same color           
                         for (let i = 0; i < avalablemoves.length; i++) {
                             const squareIndex = avalablemoves[i];
@@ -747,6 +784,11 @@ function updateGlobalBitboards() {
             if (isInCheck(turn)) {
                 if (isCheckmate(turn)) {
                     console.log("CHECKMATE")
+                    if(turn === "white"){
+                        winScreenBlack()
+                    }else{
+                        winScreenWhite()
+                    }
                 } else {
                     console.log("CHECK")
                 }
