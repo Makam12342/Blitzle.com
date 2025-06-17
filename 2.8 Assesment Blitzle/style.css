@@ -97,3 +97,50 @@ border-radius: 10px;
   background: var(--forgroundColor);
   border-radius: 10px;
 }
+
+.product-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--fontColor);
+  padding: 12px;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: var(--forgroundColor);
+  margin: 200px;
+}
+
+.product-card img {
+  width: 150px;
+  height: auto;
+  margin-right: 20%;
+  border-radius: 6px;
+  border: 2px solid var(--acentColor);
+}
+
+.product-info {
+  flex: 1;
+  
+}
+.product-info h2 {
+  margin: 0 0 10px;
+  color: var(--fontColor);
+}
+.product-info p {
+  margin: 0 0 10px;
+  color: var(--fontColor);
+}
+
+.product-info button {
+  background-color: var(--hoverColor);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.product-info button:hover {
+  background-color: var(--acentColor);
+  border: 1px solid var(--fontColor);
+}
