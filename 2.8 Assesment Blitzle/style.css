@@ -2,7 +2,7 @@
 :root{
   --backgroundColor: #1b2125;
   --forgroundColor: #2a4450;
-  --acentColor: #6389C6;
+  --acentColor: #479dbf;
   --hoverColor: #367185;
   --fontColor: #fcf1df;
 
@@ -89,6 +89,7 @@ border-radius: 10px;
   height: 600px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
+  margin-left: 5%;
 }
 #top-bar{
   position: absolute;
@@ -151,18 +152,20 @@ border-radius: 10px;
 .product-info p {
   margin: 0 0 10px;
   color: var(--fontColor);
+  padding-bottom: 10px;
 }
 
-.product-info button {
+.button {
   background-color: var(--hoverColor);
   color: white;
   padding: 10px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.product-info button:hover {
+.button:hover {
   background-color: var(--acentColor);
   border: 1px solid var(--fontColor);
 }
@@ -176,4 +179,55 @@ border-radius: 10px;
   height: 600px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
+  margin-left: 6%;
+}
+
+.main-discription-section{
+  display: flex;
+  margin-top: 5%;
+}
+.micro-discription-section{
+  display: flex;
+}
+.main-discription{
+  padding: 2.5%;
+  background-color: var(--hoverColor);
+  border: 2px solid var(--fontColor);
+  border-radius: 10px;
+  margin: 1%
+
+}
+.extra-info{
+  padding: 2.5%;
+  background-color: var(--forgroundColor);
+  border: 2px solid var(--fontColor);
+  border-radius: 10px;
+  margin: 1%
+} 
+.local-play{
+  padding: 2.5%;
+  background-color: var(--forgroundColor);
+  border: 2px solid var(--fontColor);
+  border-radius: 10px;
+  margin: 1%
+}
+.live-play{
+  padding: 2.5%;
+  background-color: var(--forgroundColor);
+  border: 2px solid var(--fontColor);
+  border-radius: 10px;
+  margin: 1%
+}
+.ai-play{
+  padding: 2.5%;
+  background-color: var(--hoverColor);
+  border: 2px solid var(--fontColor);
+  border-radius: 10px;
+  margin: 1%
+}
+.content p {
+  color: var(--fontColor);
+}
+.content h2 {
+  color: var(--fontColor);
 }
