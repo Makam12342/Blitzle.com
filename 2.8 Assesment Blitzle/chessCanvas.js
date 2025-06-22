@@ -71,6 +71,9 @@ function create() {
     let validLocations = []
     let movmentType = null
     let moves = null
+    const checkSound = new Audio('check.mp3');
+    const moveSound = new Audio('move.mp3')
+    const checkmateSound = new Audio('checkmate.mp3')
     
 
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -784,6 +787,8 @@ function updateGlobalBitboards() {
             if (isInCheck(turn)) {
                 if (isCheckmate(turn)) {
                     console.log("CHECKMATE")
+                    checkmateSound.currentTime = 0; // Rewind to start
+                    checkmateSound.play();
                     if(turn === "white"){
                         winScreenBlack()
                     }else{
@@ -791,7 +796,12 @@ function updateGlobalBitboards() {
                     }
                 } else {
                     console.log("CHECK")
+                    checkSound.currentTime = 0; // Rewind to start
+                    checkSound.play();
                 }
+            } else{
+                moveSound.currentTime = 0; // Rewind to start
+                moveSound.play();
             }
             
         };    
