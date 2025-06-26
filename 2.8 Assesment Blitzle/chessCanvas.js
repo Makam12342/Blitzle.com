@@ -761,15 +761,13 @@ function updateGlobalBitboards() {
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.whitePieces[pieceType] = pieceBitboard;
                 turn = "black"
-                turnStart = Date.now()
-                whiteTime = remaining
+                
             }else if(turn === "black"){
                 pieceBitboard = piecesPosition.blackPieces[pieceType];
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare)); // removes the old piece and shifts it to a new square
                 piecesPosition.blackPieces[pieceType] = pieceBitboard;
                 turn = "white"
-                turnStart = Date.now()
-                blackTime = remaining
+                
             }
             // removes old piece and places new piece on selected square when board updates
             
@@ -845,7 +843,27 @@ function updateGlobalBitboards() {
     } else {
         console.log(remaining.toFixed(1));
     }
-    }, 1000);
+    // inline DOM update:
+            const displayTimeWhiteMin = Math.floor(whiteTime/60)
+            const displayTimeWhiteSec = Math.floor((whiteTime % 60)*10)/10
+
+            const displayTimeBlackMin = Math.floor(blackTime/60)
+            const displayTimeBlackSec = Math.floor((blackTime % 60)*10)/10
+
+            const whiteTimer = document.getElementById("whiteTimer");
+            whiteTimer.innerHTML = `${displayTimeWhiteMin}:${displayTimeWhiteSec}`;
+            const blackTimer = document.getElementById("blackTimer");
+            blackTimer.innerHTML = `${displayTimeBlackMin}:${displayTimeBlackSec}`;
+
+    if(turn === "black"){
+    turnStart = Date.now()
+    blackTime = remaining
+    } else{
+    turnStart = Date.now()
+    whiteTime = remaining
+    }
+    }, 100);
+
 
 }
 function update() {
