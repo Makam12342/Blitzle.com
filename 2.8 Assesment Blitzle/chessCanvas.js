@@ -71,9 +71,16 @@ function create() {
     let validLocations = []
     let movmentType = null
     let moves = null
+    let pieceNotation = null
+    let moveHistory = []
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h" ]
     const checkSound = new Audio('check.mp3');
     const moveSound = new Audio('move.mp3')
     const checkmateSound = new Audio('checkmate.mp3')
+    let turnStart = Date.now()
+    let whiteTime = 60*3
+    let blackTime = 60*3 
+    let remaining = 60*3
     
 
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -158,7 +165,7 @@ function create() {
         text.setDepth(12)
     }
 
-    // Convert bitboard to array of occupied squares
+    
     function hexToSquares(bitboard) {
         const pieceIndexes = [];
         for (let i = 0n; i < 64n; i++) {
@@ -198,7 +205,6 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
     pieceIcons.forEach(sprite => sprite.destroy())
-   
 
     allWhitePiecesBitboard = 0x0000000000000000
     allBlackPiecesBitboard = 0x0000000000000000
@@ -386,15 +392,9 @@ function create() {
                 }
             }
         }
-        console.log("White King Bitboard:", piecesPosition.whitePieces.whiteKing.toString(16));
-        console.log("Black King Bitboard:", piecesPosition.blackPieces.blackKing.toString(16));
         if (foundCheck) {
-            console.log("king IS IN CHECK!");
-            console.log(`${kingIndex}`)
             return true;
-        } else {
-            console.log("king is safe (not in check)");
-            console.log(`${kingIndex}`)
+        } else { 
             return false;
         }
     }
@@ -540,7 +540,6 @@ function isLegalMove(fromSquare, toSquare, color, pieceKey) {
     allWhitePiecesBitboard = originalAllWhite;
     allBlackPiecesBitboard = originalAllBlack;
     updateGlobalBitboards();
-    console.log()
     return !stillInCheck;
 }
 
@@ -561,6 +560,8 @@ function updateGlobalBitboards() {
     
  
     this.input.on('pointerdown', function (pointer){
+        
+
             updateboard()
             // Takes the square and figures out what piece is on the square
             let col = Math.floor(pointer.x / squareSize);
@@ -597,26 +598,31 @@ function updateGlobalBitboards() {
         // returns the sudo valid moves a piece could have 
             if (pieceType){
                     if(pieceType.includes("King")){
+                        pieceNotation = "K"
                         moves = movedirections.stepPieces.kingMovements
                         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white')
                         movmentType = "stepper"
 
                     } else if(pieceType.includes("Queen")){
+                        pieceNotation = "Q"
                         moves =  movedirections.sliderPieces.queenMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Rook")){
+                        pieceNotation = "R"
                         moves =  movedirections.sliderPieces.rookMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Bishop")){
+                        pieceNotation = "B"
                         moves = movedirections.sliderPieces.bishopMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Knight")){
+                        pieceNotation = "N"
                         moves = [...movedirections.stepPieces.knightMovements]
 
                             if(col+ 1 < 8){
@@ -637,6 +643,7 @@ function updateGlobalBitboards() {
 
 
                     } else if(pieceType.includes("whitePawn")){
+                        pieceNotation = "P"
                         moves = [...movedirections.stepPieces.pawnMovementsWhite];
                         
 
@@ -661,6 +668,7 @@ function updateGlobalBitboards() {
 
                         
                     } else if(pieceType.includes("blackPawn")){
+                        pieceNotation = "P"
                         moves = [...movedirections.stepPieces.pawnMovementsBlack];
 
                         // foroward moves
@@ -680,9 +688,9 @@ function updateGlobalBitboards() {
                         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white' )
                         movmentType = "stepper"
                     }
-
+                    
+            
             }
-
 
 
 
@@ -731,8 +739,8 @@ function updateGlobalBitboards() {
                             addCircles(squareIndex, validLocations, x, y);
                             
                 }}}
-
-        
+            
+            fromSquareNotation = `${files[col]}${8-row}`
                 
                 pointerDown = 'place'    
         } else if(pointerDown === 'place'){
@@ -746,19 +754,22 @@ function updateGlobalBitboards() {
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
-
+            
            //updates bitboard depending on move
             if(turn === "white"){
                 pieceBitboard = piecesPosition.whitePieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
                 piecesPosition.whitePieces[pieceType] = pieceBitboard;
                 turn = "black"
-
+                turnStart = Date.now()
+                whiteTime = remaining
             }else if(turn === "black"){
                 pieceBitboard = piecesPosition.blackPieces[pieceType];
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare)); // removes the old piece and shifts it to a new square
                 piecesPosition.blackPieces[pieceType] = pieceBitboard;
                 turn = "white"
+                turnStart = Date.now()
+                blackTime = remaining
             }
             // removes old piece and places new piece on selected square when board updates
             
@@ -778,6 +789,22 @@ function updateGlobalBitboards() {
                 }
             }
 
+            // Displaying the move history in console 
+            toSquareNotation = `${files[col]}${8-row}`
+            let algabraicNotation= `${pieceNotation}${fromSquareNotation}-${toSquareNotation}`
+            console.log(algabraicNotation)
+            moveHistory.push(algabraicNotation)
+            console.log(moveHistory)
+
+            // inline DOM update:
+            const ul = document.getElementById('moveHistoryList');
+            const li = document.createElement('li');
+            li.textContent = algabraicNotation;       // set the move text
+            ul.appendChild(li);          // add the new move to the list
+            // optional scroll:
+            li.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            
+            
 
 
             updateboard();
@@ -786,7 +813,6 @@ function updateGlobalBitboards() {
             // Check for check or checkmate after the move
             if (isInCheck(turn)) {
                 if (isCheckmate(turn)) {
-                    console.log("CHECKMATE")
                     checkmateSound.currentTime = 0; // Rewind to start
                     checkmateSound.play();
                     if(turn === "white"){
@@ -795,7 +821,6 @@ function updateGlobalBitboards() {
                         winScreenWhite()
                     }
                 } else {
-                    console.log("CHECK")
                     checkSound.currentTime = 0; // Rewind to start
                     checkSound.play();
                 }
@@ -809,6 +834,19 @@ function updateGlobalBitboards() {
     
 
     });
+    const clockInterval = setInterval(() => {
+    let now = Date.now();
+    let elapsed = (now - turnStart) / 1000;  // seconds since turn began
+
+    remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
+    if (remaining <= 0) {
+        console.log(`${turn.charAt(0).toUpperCase() + turn.slice(1)} ran out of time!`);
+        clearInterval(clockInterval);
+    } else {
+        console.log(remaining.toFixed(1));
+    }
+    }, 1000);
+
 }
 function update() {
 }
