@@ -844,16 +844,33 @@ function updateGlobalBitboards() {
         console.log(remaining.toFixed(1));
     }
     // inline DOM update:
-            const displayTimeWhiteMin = Math.floor(whiteTime/60)
-            const displayTimeWhiteSec = Math.floor((whiteTime % 60)*10)/10
+            
+            const displayTimeWhiteMin = Math.floor(whiteTime / 60);
+            const displayTimeWhiteSec = Math.floor((whiteTime % 60) * 10) / 10;
 
-            const displayTimeBlackMin = Math.floor(blackTime/60)
-            const displayTimeBlackSec = Math.floor((blackTime % 60)*10)/10
+            const displayTimeBlackMin = Math.floor(blackTime / 60);
+            const displayTimeBlackSec = Math.floor((blackTime % 60) * 10) / 10;
+
+            
+            const mmWhite = displayTimeWhiteMin.toString().padStart(2, '0');
+
+            
+            const ssWhite = displayTimeWhiteSec
+            .toFixed(1)        
+            .padStart(4, '0'); 
+
+            const mmBlack = displayTimeBlackMin.toString().padStart(2, '0');
+            const ssBlack = displayTimeBlackSec
+            .toFixed(1)
+            .padStart(4, '0');
+
+            const whiteTimeString = `${mmWhite}:${ssWhite}`; 
+            const blackTimeString = `${mmBlack}:${ssBlack}`;
 
             const whiteTimer = document.getElementById("whiteTimer");
-            whiteTimer.innerHTML = `${displayTimeWhiteMin}:${displayTimeWhiteSec}`;
+            whiteTimer.innerHTML = blackTimeString;
             const blackTimer = document.getElementById("blackTimer");
-            blackTimer.innerHTML = `${displayTimeBlackMin}:${displayTimeBlackSec}`;
+            blackTimer.innerHTML = whiteTimeString;
 
     if(turn === "black"){
     turnStart = Date.now()

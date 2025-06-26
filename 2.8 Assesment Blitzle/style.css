@@ -235,7 +235,7 @@ border-radius: 10px;
 
 .moveHistory{
   padding: 5%;
-  background-color: var(--hoverColor);
+  background-color: var(--acentColor);
   border-radius: 10px;
   margin:10px;
 }
@@ -256,4 +256,32 @@ border-radius: 10px;
   flex-wrap: wrap;
   overflow: auto;
   align-content: flex-start;
+}
+
+.game-timers{
+  width:60%;
+  display: flex;
+  position: fixed;
+  top: 74%;
+  
+}
+.game-timers h1{
+  padding: 10px 20px;
+  background-color: var(--fontColor);
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.timer-words{
+  width:60%;
+  display: flex;
+  position: fixed;
+  top: 67%;
+}
+.timer-words h2{
+  
+  padding: 10px 52px 10px 52px;
+  margin: 10px;
+  background-color: var(--backgroundColor);
+  border-radius: 5px;
 }
