@@ -81,6 +81,10 @@ function create() {
     let whiteTime = 60*3
     let blackTime = 60*3 
     let remaining = 60*3
+    let blackCanCastleQueenSide = false
+    let blackCanCastleKingSide = false
+    let whiteCanCastleQueenSide = false
+    let whiteCanCastleKingSide = false
     
 
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -105,6 +109,7 @@ function create() {
         }
 
     }
+    
     // A list of all the key names
     const whitePieceskeys = Object.keys(piecesPosition.whitePieces);
     const blackPieceskeys = Object.keys(piecesPosition.blackPieces);
@@ -771,6 +776,55 @@ function updateGlobalBitboards() {
             }
             // removes old piece and places new piece on selected square when board updates
             
+            //Cheaks if player can castle
+
+            function canCastle(){
+
+
+
+                /* Some of the bitboards are fliped so if you ar debugging these bitboards are jsut like
+                this and dont change but all bitboards start with bottom left conner except kings for some reson */
+
+                // Black Queenside
+                blackCanCastleQueenSide = true
+                if ((allBlackPiecesBitboard >> BigInt(57)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleQueenSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(58)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleQueenSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(59)) & 1n || (allWhitePiecesBitboard >> BigInt(59)) & 1n){ blackCanCastleQueenSide = false }
+                if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false }
+                if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n) { blackCanCastleQueenSide = false } 
+                console.log(`Black Queenside : ${blackCanCastleQueenSide}`)
+
+                // Black Kingside
+                blackCanCastleKingSide = true
+                if ((allBlackPiecesBitboard >> BigInt(62)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleKingSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(61)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleKingSide = false }
+                if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false }
+                if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n) { blackCanCastleKingSide = false;} 
+                console.log(`Black Kingside : ${blackCanCastleKingSide}`)
+
+                // White Queenside
+                whiteCanCastleQueenSide = true
+                if ((allBlackPiecesBitboard >> BigInt(1)) & 1n || (allWhitePiecesBitboard >> BigInt(1)) & 1n){ whiteCanCastleQueenSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(2)) & 1n || (allWhitePiecesBitboard >> BigInt(2)) & 1n){ whiteCanCastleQueenSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(3)) & 1n || (allWhitePiecesBitboard >> BigInt(3)) & 1n){ whiteCanCastleQueenSide = false }
+                if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false }
+                if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n) { whiteCanCastleQueenSide = false } 
+                console.log(`White Queenside : ${whiteCanCastleQueenSide}`)
+
+                // White Kingside
+                whiteCanCastleKingSide = true
+                if ((allBlackPiecesBitboard >> BigInt(6)) & 1n || (allWhitePiecesBitboard >> BigInt(6)) & 1n){ whiteCanCastleKingSide = false }
+                if ((allBlackPiecesBitboard >> BigInt(5)) & 1n || (allWhitePiecesBitboard >> BigInt(5)) & 1n){ whiteCanCastleKingSide = false }
+                if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false }
+                if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n) { whiteCanCastleKingSide = false;} 
+                console.log(`White Kingside : ${whiteCanCastleKingSide}`)
+
+
+            }
+            canCastle()
+            
+
+
 
             // Promotions
             if (pieceType.includes("whitePawn")) {
@@ -839,9 +893,8 @@ function updateGlobalBitboards() {
     remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
     if (remaining <= 0) {
         console.log(`${turn.charAt(0).toUpperCase() + turn.slice(1)} ran out of time!`);
+        turn === 'white' ? winScreenBlack() : winScreenWhite()
         clearInterval(clockInterval);
-    } else {
-        console.log(remaining.toFixed(1));
     }
     // inline DOM update:
             
