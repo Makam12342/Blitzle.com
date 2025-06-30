@@ -411,7 +411,7 @@ function create() {
     function isCheckmate(color) {
         if (!isInCheck(color)) {
             // Could be stalemate if no legal moves but not in check — handle separately
-            return false;
+            return false; 
         }
         let isWhite =  color === "white" ? true : false
         const pieceSet = color === "white" ? piecesPosition.whitePieces : piecesPosition.blackPieces;
@@ -633,6 +633,26 @@ function canCastle(turn){
     
 
 }
+// adds the circles to the board
+function addCircles(squareIndex, validLocations, x, y){
+if(avalablemoves.includes(squareIndex)) {
+    if(turn === "white"){  
+    if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+        let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+        moveIndicators.push(object)
+        validLocations.push(squareIndex)
+
+    }
+
+    }else{
+        if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
+            let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+            moveIndicators.push(object)
+            validLocations.push(squareIndex)
+        }
+    }
+}
+}
     
  
     this.input.on('pointerdown', function (pointer){
@@ -783,29 +803,10 @@ function canCastle(turn){
                     
             
             }
+ 
 
 
-
-            // adds the circles to the board
-            function addCircles(squareIndex, validLocations, x, y){
-            if(avalablemoves.includes(squareIndex)) {
-                if(turn === "white"){  
-                if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                    let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
-                    moveIndicators.push(object)
-                    validLocations.push(squareIndex)
-
-                }
-
-                }else{
-                    if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-                        let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
-                        moveIndicators.push(object)
-                        validLocations.push(squareIndex)
-                    }
-                }
-            }
-            }
+            
             
 
 
@@ -834,14 +835,32 @@ function canCastle(turn){
             
             fromSquareNotation = `${files[col]}${8-row}`
                 
-                pointerDown = 'place'    
+            pointerDown = 'place'
+            
+            
+        // When placing a piece    
         } else if(pointerDown === 'place'){
+            //invalid squares
             if (!validLocations.includes(pointerSquare)) {
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
             pointerDown = 'select'
             return; // Ignore invalid square clicks
             }
+
+            if(pieceNotation === "K" & pointerSquare === 6){  
+                piecesPosition.whitePieces.whiteRook = (piecesPosition.whitePieces.whiteRook & ~(1n << BigInt(7))) | (1n << BigInt(5));
+            }
+            if(pieceNotation === "K" & pointerSquare === 2){
+                piecesPosition.whitePieces.whiteRook = (piecesPosition.whitePieces.whiteRook & ~(1n << BigInt(0))) | (1n << BigInt(3));
+            }
+            if(pieceNotation === "K" & pointerSquare === 62){
+                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(63))) | (1n << BigInt(61));  
+            }
+            if(pieceNotation === "K" & pointerSquare === 58){
+                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));   
+            }
+
 
             // removes the circles
             moveIndicators.forEach(circle => circle.destroy());
@@ -969,6 +988,8 @@ function canCastle(turn){
             const blackTimer = document.getElementById("blackTimer");
             blackTimer.innerHTML = whiteTimeString;
 
+
+    // for timers 
     if(turn === "black"){
     turnStart = Date.now()
     blackTime = remaining
