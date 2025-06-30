@@ -85,7 +85,10 @@ function create() {
     let blackCanCastleKingSide = false
     let whiteCanCastleQueenSide = false
     let whiteCanCastleKingSide = false
-    
+    let blackKingsideRookMoved = false
+    let blackQueensideRookMoved = false
+    let whiteKingsideRookMoved = false
+    let whiteQueensideRookMoved = false  
 
     //Holds all of the diferent pieces with there corosponding bitboard
     const piecesPosition = {
@@ -562,6 +565,74 @@ function updateGlobalBitboards() {
         allBlackPiecesBitboard |= piece;
     }
 }
+
+function canCastle(turn){
+    /* Some of the bitboards are fliped so if you ar debugging these bitboards are jsut like
+    this and dont change but all bitboards start with bottom left conner except kings for some reson */
+
+    let blackCanCastleQueenSide = false
+    let blackCanCastleKingSide = false
+    let whiteCanCastleQueenSide = false
+    let whiteCanCastleKingSide = false
+    
+    if(turn != "white"){
+    // Black Queenside
+    blackCanCastleQueenSide = true
+    if ((allBlackPiecesBitboard >> BigInt(57)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleQueenSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(58)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleQueenSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(59)) & 1n || (allWhitePiecesBitboard >> BigInt(59)) & 1n){ blackCanCastleQueenSide = false }
+    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false }
+    if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n) { blackCanCastleQueenSide = false
+         blackQueensideRookMoved = true;}
+    if(blackQueensideRookMoved === true){
+        blackCanCastleQueenSide = false
+    }
+    console.log(`Black Queenside : ${blackCanCastleQueenSide}`)
+
+    // Black Kingside
+    blackCanCastleKingSide = true
+    if ((allBlackPiecesBitboard >> BigInt(62)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleKingSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(61)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleKingSide = false }
+    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false }
+    if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n) { blackCanCastleKingSide = false
+         blackKingsideRookMoved = true;}
+    if(blackKingsideRookMoved === true){
+        blackCanCastleKingSide = false
+    } 
+    console.log(`Black Kingside : ${blackCanCastleKingSide}`)
+    }
+    if(turn === "white"){
+    // White Queenside
+    whiteCanCastleQueenSide = true
+    if ((allBlackPiecesBitboard >> BigInt(1)) & 1n || (allWhitePiecesBitboard >> BigInt(1)) & 1n){ whiteCanCastleQueenSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(2)) & 1n || (allWhitePiecesBitboard >> BigInt(2)) & 1n){ whiteCanCastleQueenSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(3)) & 1n || (allWhitePiecesBitboard >> BigInt(3)) & 1n){ whiteCanCastleQueenSide = false }
+    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false }
+    if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n) { whiteCanCastleQueenSide = false
+         whiteQueensideRookMoved = true;}
+    if(whiteQueensideRookMoved === true){
+        whiteCanCastleQueenSide = false
+    }
+    console.log(`White Queenside : ${whiteCanCastleQueenSide}`)
+
+    // White Kingside
+    whiteCanCastleKingSide = true
+    if ((allBlackPiecesBitboard >> BigInt(6)) & 1n || (allWhitePiecesBitboard >> BigInt(6)) & 1n){ whiteCanCastleKingSide = false }
+    if ((allBlackPiecesBitboard >> BigInt(5)) & 1n || (allWhitePiecesBitboard >> BigInt(5)) & 1n){ whiteCanCastleKingSide = false }
+    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false }
+    if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n) { whiteCanCastleKingSide = false
+         whiteKingsideRookMoved = true;}
+     if(whiteKingsideRookMoved === true){
+        whiteCanCastleKingSide = false
+    } 
+    console.log(`White Kingside : ${whiteCanCastleKingSide}`)
+    }
+     
+    
+   
+    
+
+}
     
  
     this.input.on('pointerdown', function (pointer){
@@ -601,10 +672,23 @@ function updateGlobalBitboards() {
 
 
         // returns the sudo valid moves a piece could have 
+            canCastle(turn)
             if (pieceType){
                     if(pieceType.includes("King")){
                         pieceNotation = "K"
                         moves = movedirections.stepPieces.kingMovements
+                        if( turn === "white" && whiteCanCastleKingSide === true ){
+                            moves.push(2)
+                        }
+                        if( turn === "white" && whiteCanCastleQueenSide === true ){
+                            moves.push(-2)
+                        }
+                        if( turn === "black" && blackCanCastleKingSide === true ){
+                            moves.push(2)
+                        }
+                        if( turn === "black" && blackCanCastleQueenSide === true ){
+                            moves.push(-2)
+                        }
                         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white')
                         movmentType = "stepper"
 
@@ -778,50 +862,7 @@ function updateGlobalBitboards() {
             
             //Cheaks if player can castle
 
-            function canCastle(){
-
-
-
-                /* Some of the bitboards are fliped so if you ar debugging these bitboards are jsut like
-                this and dont change but all bitboards start with bottom left conner except kings for some reson */
-
-                // Black Queenside
-                blackCanCastleQueenSide = true
-                if ((allBlackPiecesBitboard >> BigInt(57)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleQueenSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(58)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleQueenSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(59)) & 1n || (allWhitePiecesBitboard >> BigInt(59)) & 1n){ blackCanCastleQueenSide = false }
-                if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false }
-                if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n) { blackCanCastleQueenSide = false } 
-                console.log(`Black Queenside : ${blackCanCastleQueenSide}`)
-
-                // Black Kingside
-                blackCanCastleKingSide = true
-                if ((allBlackPiecesBitboard >> BigInt(62)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleKingSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(61)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleKingSide = false }
-                if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false }
-                if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n) { blackCanCastleKingSide = false;} 
-                console.log(`Black Kingside : ${blackCanCastleKingSide}`)
-
-                // White Queenside
-                whiteCanCastleQueenSide = true
-                if ((allBlackPiecesBitboard >> BigInt(1)) & 1n || (allWhitePiecesBitboard >> BigInt(1)) & 1n){ whiteCanCastleQueenSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(2)) & 1n || (allWhitePiecesBitboard >> BigInt(2)) & 1n){ whiteCanCastleQueenSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(3)) & 1n || (allWhitePiecesBitboard >> BigInt(3)) & 1n){ whiteCanCastleQueenSide = false }
-                if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false }
-                if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n) { whiteCanCastleQueenSide = false } 
-                console.log(`White Queenside : ${whiteCanCastleQueenSide}`)
-
-                // White Kingside
-                whiteCanCastleKingSide = true
-                if ((allBlackPiecesBitboard >> BigInt(6)) & 1n || (allWhitePiecesBitboard >> BigInt(6)) & 1n){ whiteCanCastleKingSide = false }
-                if ((allBlackPiecesBitboard >> BigInt(5)) & 1n || (allWhitePiecesBitboard >> BigInt(5)) & 1n){ whiteCanCastleKingSide = false }
-                if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false }
-                if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n) { whiteCanCastleKingSide = false;} 
-                console.log(`White Kingside : ${whiteCanCastleKingSide}`)
-
-
-            }
-            canCastle()
+            
             
 
 
