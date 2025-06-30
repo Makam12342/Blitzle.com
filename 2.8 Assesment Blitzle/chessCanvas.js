@@ -570,10 +570,10 @@ function canCastle(turn){
     /* Some of the bitboards are fliped so if you ar debugging these bitboards are jsut like
     this and dont change but all bitboards start with bottom left conner except kings for some reson */
 
-    let blackCanCastleQueenSide = false
-    let blackCanCastleKingSide = false
-    let whiteCanCastleQueenSide = false
-    let whiteCanCastleKingSide = false
+    blackCanCastleQueenSide = false
+    blackCanCastleKingSide = false
+    whiteCanCastleQueenSide = false
+    whiteCanCastleKingSide = false
     
     if(turn != "white"){
     // Black Queenside
@@ -672,21 +672,24 @@ function canCastle(turn){
 
 
         // returns the sudo valid moves a piece could have 
-            canCastle(turn)
+            
             if (pieceType){
+                canCastle(turn)
                     if(pieceType.includes("King")){
                         pieceNotation = "K"
                         moves = movedirections.stepPieces.kingMovements
-                        if( turn === "white" && whiteCanCastleKingSide === true ){
+                        
+                        if( turn === "white" & whiteCanCastleKingSide === true ){
                             moves.push(2)
+                            console.log("yes")
                         }
-                        if( turn === "white" && whiteCanCastleQueenSide === true ){
+                        if( turn === "white" & whiteCanCastleQueenSide === true ){
                             moves.push(-2)
                         }
-                        if( turn === "black" && blackCanCastleKingSide === true ){
+                        if( turn === "black" & blackCanCastleKingSide === true ){
                             moves.push(2)
                         }
-                        if( turn === "black" && blackCanCastleQueenSide === true ){
+                        if( turn === "black" & blackCanCastleQueenSide === true ){
                             moves.push(-2)
                         }
                         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white')
