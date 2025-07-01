@@ -89,6 +89,8 @@ function create() {
     let blackQueensideRookMoved = false
     let whiteKingsideRookMoved = false
     let whiteQueensideRookMoved = false  
+    let whiteKingMoved = false
+    let blackKingMoved = false
 
     //Holds all of the diferent pieces with there corosponding bitboard
     const piecesPosition = {
@@ -581,9 +583,11 @@ function canCastle(turn){
     if ((allBlackPiecesBitboard >> BigInt(57)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(58)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(59)) & 1n || (allWhitePiecesBitboard >> BigInt(59)) & 1n){ blackCanCastleQueenSide = false }
-    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false }
+    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false 
+        blackKingMoved = true;
+    }
     if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n) { blackCanCastleQueenSide = false
-         blackQueensideRookMoved = true;}
+        blackQueensideRookMoved = true;}
     if(blackQueensideRookMoved === true){
         blackCanCastleQueenSide = false
     }
@@ -593,7 +597,9 @@ function canCastle(turn){
     blackCanCastleKingSide = true
     if ((allBlackPiecesBitboard >> BigInt(62)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleKingSide = false }
     if ((allBlackPiecesBitboard >> BigInt(61)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleKingSide = false }
-    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false }
+    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false 
+        blackKingMoved = true;
+    }
     if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n) { blackCanCastleKingSide = false
          blackKingsideRookMoved = true;}
     if(blackKingsideRookMoved === true){
@@ -607,11 +613,17 @@ function canCastle(turn){
     if ((allBlackPiecesBitboard >> BigInt(1)) & 1n || (allWhitePiecesBitboard >> BigInt(1)) & 1n){ whiteCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(2)) & 1n || (allWhitePiecesBitboard >> BigInt(2)) & 1n){ whiteCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(3)) & 1n || (allWhitePiecesBitboard >> BigInt(3)) & 1n){ whiteCanCastleQueenSide = false }
-    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false }
+    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false 
+        whiteKingMoved = true;
+    }
     if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n) { whiteCanCastleQueenSide = false
          whiteQueensideRookMoved = true;}
     if(whiteQueensideRookMoved === true){
         whiteCanCastleQueenSide = false
+    }
+    if(blackKingMoved === true){
+        blackCanCastleKingSide = false
+        blackCanCastleQueenSide = false
     }
     console.log(`White Queenside : ${whiteCanCastleQueenSide}`)
 
@@ -619,12 +631,18 @@ function canCastle(turn){
     whiteCanCastleKingSide = true
     if ((allBlackPiecesBitboard >> BigInt(6)) & 1n || (allWhitePiecesBitboard >> BigInt(6)) & 1n){ whiteCanCastleKingSide = false }
     if ((allBlackPiecesBitboard >> BigInt(5)) & 1n || (allWhitePiecesBitboard >> BigInt(5)) & 1n){ whiteCanCastleKingSide = false }
-    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false }
+    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false 
+        whiteKingMoved = true;
+    }
     if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n) { whiteCanCastleKingSide = false
          whiteKingsideRookMoved = true;}
      if(whiteKingsideRookMoved === true){
         whiteCanCastleKingSide = false
-    } 
+    }
+    if(whiteKingMoved === true){
+        whiteCanCastleKingSide = false
+        whiteCanCastleQueenSide = false
+    }
     console.log(`White Kingside : ${whiteCanCastleKingSide}`)
     }
      
@@ -855,10 +873,12 @@ if(avalablemoves.includes(squareIndex)) {
                 piecesPosition.whitePieces.whiteRook = (piecesPosition.whitePieces.whiteRook & ~(1n << BigInt(0))) | (1n << BigInt(3));
             }
             if(pieceNotation === "K" & pointerSquare === 62){
-                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(63))) | (1n << BigInt(61));  
+                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(63))) | (1n << BigInt(61));
+                
             }
             if(pieceNotation === "K" & pointerSquare === 58){
-                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));   
+                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));
+   
             }
 
 
