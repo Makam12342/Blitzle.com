@@ -583,29 +583,19 @@ function canCastle(turn){
     if ((allBlackPiecesBitboard >> BigInt(57)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(58)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(59)) & 1n || (allWhitePiecesBitboard >> BigInt(59)) & 1n){ blackCanCastleQueenSide = false }
-    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleQueenSide = false 
-        blackKingMoved = true;
-    }
-    if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n) { blackCanCastleQueenSide = false
-        blackQueensideRookMoved = true;}
-    if(blackQueensideRookMoved === true){
-        blackCanCastleQueenSide = false
-    }
-    console.log(`Black Queenside : ${blackCanCastleQueenSide}`)
+    if (((piecesPosition.blackPieces.blackKing >> 60n) & 1n) === 0n){ blackCanCastleQueenSide = false, blackKingMoved = true;}
+    if (((piecesPosition.blackPieces.blackRook >> 56n) & 1n) === 0n){ blackCanCastleQueenSide = false,blackQueensideRookMoved = true;}
+    if(blackQueensideRookMoved === true){blackCanCastleQueenSide = false}
+    
 
     // Black Kingside
     blackCanCastleKingSide = true
     if ((allBlackPiecesBitboard >> BigInt(62)) & 1n || (allWhitePiecesBitboard >> BigInt(57)) & 1n){ blackCanCastleKingSide = false }
     if ((allBlackPiecesBitboard >> BigInt(61)) & 1n || (allWhitePiecesBitboard >> BigInt(58)) & 1n){ blackCanCastleKingSide = false }
-    if (((piecesPosition.blackPieces.blackKing >> 4n) & 1n) === 1n){ blackCanCastleKingSide = false 
-        blackKingMoved = true;
-    }
-    if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n) { blackCanCastleKingSide = false
-         blackKingsideRookMoved = true;}
-    if(blackKingsideRookMoved === true){
-        blackCanCastleKingSide = false
-    } 
-    console.log(`Black Kingside : ${blackCanCastleKingSide}`)
+    if (((piecesPosition.blackPieces.blackKing >> 60n) & 1n) === 0n){ blackCanCastleKingSide = false, blackKingMoved = true;}
+    if (((piecesPosition.blackPieces.blackRook >> 63n) & 1n) === 0n){ blackCanCastleKingSide = false, blackKingsideRookMoved = true;}
+    if(blackKingsideRookMoved === true){blackCanCastleKingSide = false}
+    
     }
     if(turn === "white"){
     // White Queenside
@@ -613,42 +603,23 @@ function canCastle(turn){
     if ((allBlackPiecesBitboard >> BigInt(1)) & 1n || (allWhitePiecesBitboard >> BigInt(1)) & 1n){ whiteCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(2)) & 1n || (allWhitePiecesBitboard >> BigInt(2)) & 1n){ whiteCanCastleQueenSide = false }
     if ((allBlackPiecesBitboard >> BigInt(3)) & 1n || (allWhitePiecesBitboard >> BigInt(3)) & 1n){ whiteCanCastleQueenSide = false }
-    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleQueenSide = false 
-        whiteKingMoved = true;
-    }
-    if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n) { whiteCanCastleQueenSide = false
-         whiteQueensideRookMoved = true;}
-    if(whiteQueensideRookMoved === true){
-        whiteCanCastleQueenSide = false
-    }
-    if(blackKingMoved === true){
-        blackCanCastleKingSide = false
-        blackCanCastleQueenSide = false
-    }
-    console.log(`White Queenside : ${whiteCanCastleQueenSide}`)
+    if (((piecesPosition.whitePieces.whiteKing >> 4n) & 1n) === 0n){ whiteCanCastleQueenSide = false, whiteKingMoved = true;}
+    if (((piecesPosition.whitePieces.whiteRook >> 0n) & 1n) === 0n){ whiteCanCastleQueenSide = false, whiteQueensideRookMoved = true;}
+    if(whiteQueensideRookMoved === true){ whiteCanCastleQueenSide = false}
+    if(blackKingMoved === true){ blackCanCastleKingSide = false, blackCanCastleQueenSide = false}
+    
 
     // White Kingside
     whiteCanCastleKingSide = true
     if ((allBlackPiecesBitboard >> BigInt(6)) & 1n || (allWhitePiecesBitboard >> BigInt(6)) & 1n){ whiteCanCastleKingSide = false }
     if ((allBlackPiecesBitboard >> BigInt(5)) & 1n || (allWhitePiecesBitboard >> BigInt(5)) & 1n){ whiteCanCastleKingSide = false }
-    if (((piecesPosition.whitePieces.whiteKing >> 60n) & 1n) === 1n){ whiteCanCastleKingSide = false 
-        whiteKingMoved = true;
-    }
-    if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n) { whiteCanCastleKingSide = false
-         whiteKingsideRookMoved = true;}
-     if(whiteKingsideRookMoved === true){
-        whiteCanCastleKingSide = false
-    }
-    if(whiteKingMoved === true){
-        whiteCanCastleKingSide = false
-        whiteCanCastleQueenSide = false
-    }
-    console.log(`White Kingside : ${whiteCanCastleKingSide}`)
+    if (((piecesPosition.whitePieces.whiteKing >> 4n) & 1n) === 0n){ whiteCanCastleKingSide = false, whiteKingMoved = true;}
+    if (((piecesPosition.whitePieces.whiteRook >> 7n) & 1n) === 0n){ whiteCanCastleKingSide = false, whiteKingsideRookMoved = true;}
+    if(whiteKingsideRookMoved === true){whiteCanCastleKingSide = false}
+    if(whiteKingMoved === true){whiteCanCastleKingSide = false, whiteCanCastleQueenSide = false}
     }
      
-    
-   
-    
+    return blackCanCastleKingSide, blackCanCastleQueenSide, whiteCanCastleKingSide, whiteCanCastleQueenSide 
 
 }
 // adds the circles to the board
@@ -712,10 +683,11 @@ if(avalablemoves.includes(squareIndex)) {
         // returns the sudo valid moves a piece could have 
             
             if (pieceType){
-                canCastle(turn)
+                
                     if(pieceType.includes("King")){
+                        blackCanCastleKingSide, blackCanCastleQueenSide, whiteCanCastleKingSide, whiteCanCastleQueenSide  = canCastle(turn)
                         pieceNotation = "K"
-                        moves = movedirections.stepPieces.kingMovements
+                        let moves = [...movedirections.stepPieces.kingMovements]
                         
                         if( turn === "white" & whiteCanCastleKingSide === true ){
                             moves.push(2)
@@ -735,25 +707,25 @@ if(avalablemoves.includes(squareIndex)) {
 
                     } else if(pieceType.includes("Queen")){
                         pieceNotation = "Q"
-                        moves =  movedirections.sliderPieces.queenMovements
+                        let moves =  movedirections.sliderPieces.queenMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Rook")){
                         pieceNotation = "R"
-                        moves =  movedirections.sliderPieces.rookMovements
+                        let moves =  movedirections.sliderPieces.rookMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Bishop")){
                         pieceNotation = "B"
-                        moves = movedirections.sliderPieces.bishopMovements
+                        let moves = movedirections.sliderPieces.bishopMovements
                         avalablemoves = validMovesSlider(pointerSquare, moves, turn === 'white')
                         movmentType = "slider"
 
                     } else if(pieceType.includes("Knight")){
                         pieceNotation = "N"
-                        moves = [...movedirections.stepPieces.knightMovements]
+                        let moves = [...movedirections.stepPieces.knightMovements]
 
                             if(col+ 1 < 8){
                                 moves.push(+17, -15)
@@ -774,7 +746,7 @@ if(avalablemoves.includes(squareIndex)) {
 
                     } else if(pieceType.includes("whitePawn")){
                         pieceNotation = "P"
-                        moves = [...movedirections.stepPieces.pawnMovementsWhite];
+                        let moves = [...movedirections.stepPieces.pawnMovementsWhite];
                         
 
                         // foroward moves
