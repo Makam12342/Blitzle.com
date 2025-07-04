@@ -285,3 +285,29 @@ border-radius: 10px;
   background-color: var(--backgroundColor);
   border-radius: 5px;
 }
+
+/* This section is for the join or create page for online games*/
+
+#join-box{
+  position: absolute;
+  background-color: var(--forgroundColor);
+  left: 12%;
+  top: 13.5%;
+  width: 600px;
+  height: 600px;
+  border-radius: 10px;
+  border: 1px, solid, var(--fontColor);
+  margin-left: 6%;
+}
+
+#create-box{
+  position: absolute;
+  background-color: var(--forgroundColor);
+  left: 60%;
+  top: 13.5%;
+  width: 400px;
+  height: 600px;
+  border-radius: 10px;
+  border: 1px, solid, var(--fontColor);
+  margin-left: 6%;
+}
