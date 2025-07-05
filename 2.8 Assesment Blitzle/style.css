@@ -296,7 +296,7 @@ border-radius: 10px;
   width: 600px;
   height: 600px;
   border-radius: 10px;
-  border: 1px, solid, var(--fontColor);
+  border: 1px solid var(--fontColor);
   margin-left: 6%;
 }
 
@@ -310,4 +310,30 @@ border-radius: 10px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
   margin-left: 6%;
+}
+
+.tag {
+  display: flex;  
+  background: var(--backgroundColor); 
+  padding: 0.2% 2%;
+  border-radius: 10px;
+  margin: 5px;
+  gap: 10%;
+}
+
+.tag a{
+  display: inline-block;
+  vertical-align: middle; /* or top */
+  line-height: 1;
+  text-decoration: none; /* optional: removes underline */
+  padding: 2% 10%;
+  background-color: var(--fontColor);
+  margin: 2%;
+  border-radius: 10px;
+}
+
+.tag p{
+  padding: 2% 0%;
+  font-size: small;
+  width: 400px;
 }
