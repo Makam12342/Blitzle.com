@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blitzle.com</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="sidebar">
+        <a class="active" href="index.html">Home</a>
+        <a href="hostjoin.html">Host / Join</a>
+        <a href="gamePage.html">Local Game</a>
+        <a href="gameInfo.html">Game Info</a>
+    </div>
+    <!--Cards for diferent-->
+    <div class="content">
+        <div id="top-bar"></div>
+        <div class="cards">
+        <div class="product-card">
+        <img src="ProductCard.png" alt="Image of chess board">
+        <div class="product-info">
+            <h2>Online play</h2>
+            <p>Play online with friends</p>
+            <a href = "gamePage.html" class ="button">Play Now</a>
+        </div>
+        </div>
+
+        <div class="product-card">
+        <img src="ProductCard.png" alt="Image of chess board">
+        <div class="product-info">
+            <h2>Local Play</h2>
+            <p>Play against a friend on the same device</p>
+            <a href = "gamePage.html" class ="button">Play Now</a>
+        </div>
+        </div>  
+
+        <div class="product-card">
+        <img src="ProductCard.png" alt="Image of chess board">
+        <div class="product-info">
+            <h2>Play AI</h2>
+            <p>Play Against a computer</p>
+            <a href = "gamePage.html" class ="button">Play Now</a>
+        </div>
+        </div>
+        </div>
+        <div id="home-container"></div>
+        <div id="bottom-bar"></div>
+
+    </div>
+
+</body>
+</html>
