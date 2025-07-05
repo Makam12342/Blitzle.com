@@ -1,4 +1,4 @@
-
+// Takes a input of a dictonary and outputs a tag for the create/join page
 function createRoomTag(room) {
   const joinBox = document.getElementById('join-box');
 
@@ -34,7 +34,7 @@ const roomNameInput = document.getElementById('roomName');
 // Listen for form submission
 form.addEventListener('submit', function(e) {
   e.preventDefault(); // Prevent the page from refreshing
-  //Cretes a new tag
+  //Cretes a new tag 
   
   let roomTag = {
     name:  roomNameInput.value,
@@ -45,6 +45,6 @@ form.addEventListener('submit', function(e) {
   }
   console.log(`Genorated Link ${roomTag.link}`)
   createRoomTag(roomTag);
+  socket.emit('roomCreated', roomTag)
 });
-
 
