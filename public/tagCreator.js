@@ -1,9 +1,12 @@
-// Takes a input of a dictonary and outputs a tag for the create/join page
-function createRoomTag(room) {
-  const joinBox = document.getElementById('join-box');
 
+const joinBox = document.getElementById('join-box');
+
+// Create a room tag in the lobby UI
+function createRoomTag(room) {
+  if (findRoomTag(room.name)) return; // Already exists
   const tagDiv = document.createElement('div');
   tagDiv.classList.add('tag');
+  tagDiv.setAttribute('data-room', room.name);
 
   const roomNameP = document.createElement('p');
   roomNameP.innerText = room.name;
@@ -15,6 +18,7 @@ function createRoomTag(room) {
 
   const playersP = document.createElement('p');
   playersP.innerText = `${room.currentPlayers}/${room.maxPlayers}`;
+  playersP.classList.add('players-count');
   tagDiv.appendChild(playersP);
 
   const joinLink = document.createElement('a');
@@ -25,26 +29,76 @@ function createRoomTag(room) {
   joinBox.appendChild(tagDiv);
 }
 
+// Find a room tag element by room name
+function findRoomTag(roomName) {
+  return joinBox.querySelector(`.tag[data-room="${roomName}"]`);
+}
 
-// Gets inputs from html
+// Update the player count displayed in the tag
+function updateRoomPlayerCount(roomName, currentPlayers, maxPlayers = 2) {
+  const tag = findRoomTag(roomName);
+  if (tag) {
+    const playersP = tag.querySelector('.players-count');
+    playersP.innerText = `${currentPlayers}/${maxPlayers}`;
+  }
+}
+// removes the tag from the list so that when user refreshes it dosent show up again
+function removeRoomFromList(roomName) {
+  const index = allRooms.findIndex(room => room.name === roomName);
+  if (index !== -1) {
+    allRooms.splice(index, 1);
+  }
+}
+
+
+// Remove a room tag from the lobby UI
+function removeRoomTag(roomName) {
+  const tag = findRoomTag(roomName);
+  if (tag) {
+    tag.remove();
+    
+  }
+}
+
+
+
+// Socket event listeners
+socket.on('roomCreated', (room) => {
+  createRoomTag(room);
+});
+
+socket.on('existingRooms', (allRooms) => {
+  for (const room of allRooms) {
+    createRoomTag(room);
+  }
+});
+
+socket.on('roomUpdated', (data) => {
+  updateRoomPlayerCount(data.roomId, data.currentPlayers);
+});
+
+socket.on('roomFull', (roomId) => {
+  removeRoomTag(roomId);
+});
+
+// Form submission handler to create new rooms
 const form = document.getElementById('createRoom');
 const usernameInput = document.getElementById('username');
 const roomNameInput = document.getElementById('roomName');
 
-// Listen for form submission
-form.addEventListener('submit', function(e) {
-  e.preventDefault(); // Prevent the page from refreshing
-  //Cretes a new tag 
-  
-  let roomTag = {
-    name:  roomNameInput.value,
-    host:  usernameInput.value,
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  console.log("Form submitted");
+
+  const roomTag = {
+    name: roomNameInput.value,
+    host: usernameInput.value,
     currentPlayers: 1,
     maxPlayers: 2,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
-  }
-  console.log(`Genorated Link ${roomTag.link}`)
-  createRoomTag(roomTag);
-  socket.emit('roomCreated', roomTag)
-});
+  };
 
+  socket.emit('roomCreated', roomTag);
+  createRoomTag(roomTag);  // Optionally add immediately to UI
+});

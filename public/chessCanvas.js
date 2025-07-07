@@ -1,4 +1,15 @@
 
+// Gamemode
+const urlParams = new URLSearchParams(window.location.search);
+const isOnline = urlParams.has('username') && urlParams.has('room');
+
+if (isOnline) {
+    const roomId = urlParams.get("room");
+    socket.emit('joinRoom', roomId); // Tell the server what room we're joining
+}
+
+
+
 //Game colors: 
 
 const lightSquaresColor = 0xfcf1df
@@ -642,11 +653,7 @@ if(avalablemoves.includes(squareIndex)) {
     }
 }
 }
-    
- 
-    this.input.on('pointerdown', function (pointer){
-        
-
+    function gameLogic(pointer){
             updateboard()
             // Takes the square and figures out what piece is on the square
             let col = Math.floor(pointer.x / squareSize);
@@ -657,7 +664,7 @@ if(avalablemoves.includes(squareIndex)) {
                 pieceType = null;
                 pieceSquare = pointerSquare
             // cheaks what square it is on eg 54, 32, or 12
-
+                
             //asighns the clicked square to a piece type
             for(let i = 0; i < 6; i ++){
                     if(turn === "black"){
@@ -666,7 +673,7 @@ if(avalablemoves.includes(squareIndex)) {
                         pieceType = allPiecesNames[i+6];
                         break
                     }}else if(turn === "white"){
-                         //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+                        //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
                     let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
                     if(( whiteValue >> BigInt(pointerSquare))& 1n) {
                         pieceType = allPiecesNames[i]
@@ -793,7 +800,7 @@ if(avalablemoves.includes(squareIndex)) {
                     
             
             }
- 
+
 
 
             
@@ -850,7 +857,7 @@ if(avalablemoves.includes(squareIndex)) {
             }
             if(pieceNotation === "K" & pointerSquare === 58){
                 piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));
-   
+
             }
 
 
@@ -858,7 +865,7 @@ if(avalablemoves.includes(squareIndex)) {
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
             
-           //updates bitboard depending on move
+        //updates bitboard depending on move
             if(turn === "white"){
                 pieceBitboard = piecesPosition.whitePieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(pointerSquare));
@@ -940,7 +947,17 @@ if(avalablemoves.includes(squareIndex)) {
         
     
 
-    });
+}
+ 
+    this.input.on('pointerdown', function (pointer){
+        //all of the game logic
+        if(isOnline === true){
+            
+        }
+        gameLogic(pointer)
+
+        });
+
     const clockInterval = setInterval(() => {
     let now = Date.now();
     let elapsed = (now - turnStart) / 1000;  // seconds since turn began
@@ -990,8 +1007,6 @@ if(avalablemoves.includes(squareIndex)) {
     whiteTime = remaining
     }
     }, 100);
-
-
 }
 function update() {
 }

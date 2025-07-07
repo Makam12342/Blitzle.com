@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blitzle.com</title>
-    
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+    const socket = io();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.js"></script>
     <script src='chessCanvas.js'></script>
     <link rel="stylesheet" href="style.css">
-    <script src="/socket.io/socket.io.js"></script>
+    
     <script src="main.js"></script>
 </head>
 <body>  
     <div class="sidebar">
         <a class="active" href="index.html">Home</a>
-        <a href="hostjoin.html">Host / Join</a>
+        <a href="hostJoin.html">Host / Join</a>
         <a href="gamePage.html">Local Game</a>
         <a href="gameInfo.html">Game Info</a>
     </div>
