@@ -105,7 +105,7 @@ function create() {
     let blackKingMoved = false
 
     //Holds all of the diferent pieces with there corosponding bitboard
-    const piecesPosition = {
+    let piecesPosition = {
         // All of the white pieces
         whitePieces: {
         whiteKing: 0x0000000000000010n,
@@ -949,18 +949,39 @@ function gameLogic(pointer){
     
 
 }
+function serializeBigInts(obj) {
+    return JSON.parse(JSON.stringify(obj, (_, val) =>
+        typeof val === 'bigint' ? val.toString() : val
+    ));
+}
+function materializeBigInts(obj) {
+    for (const group in obj) {
+        for (const piece in obj[group]) {
+            obj[group][piece] = BigInt(obj[group][piece]);
+        }
+    }
+    return obj;
+}
+
     socket.on('turnFliperReseve', (playersTurn) => {
-            turn = playersTurn
+            turn = playersTurn     
         })
+    socket.on('positionDataReseve', (enemyPiecesPosition) => {
+        piecesPosition = materializeBigInts(enemyPiecesPosition)
+        console.log(piecesPosition)
+    })
 
     this.input.on('pointerdown', function (pointer){
         
         //all of the game logic
         if(isOnline === true){
+            updateboard()
             if(playersColor === turn){
                 gameLogic(pointer)
                 playersTurn = turn 
                 socket.emit("turnFliperSend", playersTurn)
+                const piecesPositionSerialized = serializeBigInts(piecesPosition);
+                socket.emit("positionDataSend", piecesPositionSerialized)
             }
         }else {
             gameLogic(pointer)
