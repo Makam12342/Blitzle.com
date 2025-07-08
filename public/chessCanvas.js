@@ -74,6 +74,7 @@ function create() {
     let pointerDown = 'select'
     let moveIndicators = []
     let turn = "white"
+    let playersTurn = null;
     let pieceSquare = null;
     let pieceBitboard = null
     let pieceIcons= [];
@@ -653,7 +654,7 @@ if(avalablemoves.includes(squareIndex)) {
     }
 }
 }
-    function gameLogic(pointer){
+function gameLogic(pointer){
             updateboard()
             // Takes the square and figures out what piece is on the square
             let col = Math.floor(pointer.x / squareSize);
@@ -948,14 +949,22 @@ if(avalablemoves.includes(squareIndex)) {
     
 
 }
- 
+    socket.on('turnFliperReseve', (playersTurn) => {
+            turn = playersTurn
+        })
+
     this.input.on('pointerdown', function (pointer){
+        
         //all of the game logic
         if(isOnline === true){
-            
+            if(playersColor === turn){
+                gameLogic(pointer)
+                playersTurn = turn 
+                socket.emit("turnFliperSend", playersTurn)
+            }
+        }else {
+            gameLogic(pointer)
         }
-        gameLogic(pointer)
-
         });
 
     const clockInterval = setInterval(() => {

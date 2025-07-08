@@ -59,7 +59,9 @@ io.on('connection', socket => {
                     allRooms.splice(index, 1);
                }
           }
-
+          socket.on('turnFliperSend', (playersTurn) =>{
+               io.emit('turnFliperReseve', playersTurn)
+          })
 
           // Example: if room is full (2 players), emit an event to start the game
           if (playerCount === 2) {
