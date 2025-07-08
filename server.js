@@ -37,11 +37,15 @@ io.on('connection', socket => {
      
      });
      socket.on('joinRoom', (room) => {
+          
           socket.join(room);
 
           // Get the room info from Socket.IO's adapter
           const roomInfo = io.sockets.adapter.rooms.get(room);
           const playerCount = roomInfo ? roomInfo.size : 0;
+
+          let color = playerCount === 1 ? "white" : "black"
+          socket.emit('colorAssigned', color)
 
           console.log(`Room "${room}" has ${playerCount} player(s).`);
 

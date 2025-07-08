@@ -29,6 +29,16 @@ function createRoomTag(room) {
   joinBox.appendChild(tagDiv);
 }
 
+// Creates the tags while user is on page
+socket.on('roomCreated', (roomTag) => {
+  createRoomTag(roomTag);
+});
+// Creates tags when a user joins
+socket.on('existingRooms', (allRooms) => {
+  for(let i = 0; i < allRooms.length; i++){
+    createRoomTag(allRooms[i]);
+  }
+});
 // Find a room tag element by room name
 function findRoomTag(roomName) {
   return joinBox.querySelector(`.tag[data-room="${roomName}"]`);
