@@ -971,6 +971,11 @@ function materializeBigInts(obj) {
         console.log(piecesPosition)
     })
 
+    setInterval(() =>{
+        updateboard()
+    },100)
+
+
     this.input.on('pointerdown', function (pointer){
         
         //all of the game logic
