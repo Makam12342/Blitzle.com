@@ -58,7 +58,10 @@ function positionEvaluation(piecesPosition) {
     console.log(`Total Black Pieces value: ${blackEval}`)
     console.log(`Total white Pieces value: ${whiteEval}`)
     console.log(`Final Eval: ${finalEval}`)
+    return finalEval
 }
 
-
+function looping(piecesPosition){
+}
 positionEvaluation(piecesPosition)
+looping(piecesPosition)

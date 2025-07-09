@@ -82,7 +82,6 @@ function create() {
     let allBlackPiecesBitboard = 0x0000000000000000
     let validLocations = []
     let movmentType = null
-    let moves = null
     let pieceNotation = null
     let moveHistory = []
     const files = ["a", "b", "c", "d", "e", "f", "g", "h" ]
@@ -103,6 +102,7 @@ function create() {
     let whiteQueensideRookMoved = false  
     let whiteKingMoved = false
     let blackKingMoved = false
+    let highlight = null
 
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
@@ -227,7 +227,9 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
     pieceIcons.forEach(sprite => sprite.destroy())
-
+    if(highlight){
+        highlight.destroy()
+    }
     allWhitePiecesBitboard = 0x0000000000000000
     allBlackPiecesBitboard = 0x0000000000000000
     for(let i = 0; i < 6; i ++){
@@ -664,6 +666,9 @@ function gameLogic(pointer){
             if(pointerDown === 'select'){
                 pieceType = null;
                 pieceSquare = pointerSquare
+
+                let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
+                highlight.setAlpha(0.5); // 0 = fully transparent, 1 = fully opaque
             // cheaks what square it is on eg 54, 32, or 12
                 
             //asighns the clicked square to a piece type
@@ -972,7 +977,9 @@ function materializeBigInts(obj) {
     })
 
     setInterval(() =>{
-        updateboard()
+        if(pointerDown === "select"){
+            updateboard()
+        }
     },100)
 
 
@@ -1029,8 +1036,17 @@ function materializeBigInts(obj) {
 
             const whiteTimer = document.getElementById("whiteTimer");
             whiteTimer.innerHTML = blackTimeString;
+            
             const blackTimer = document.getElementById("blackTimer");
             blackTimer.innerHTML = whiteTimeString;
+
+            if(turn === "white"){
+            whiteTimer.style.color = '#479dbf';
+            blackTimer.style.color = 'black';
+            } else{
+            whiteTimer.style.color = 'black';
+            blackTimer.style.color = '#479dbf';
+            }
 
 
     // for timers 
