@@ -37,10 +37,12 @@ body {
 
 /*Active links */
 .sidebar a.active{
-    background-color: var(--acentColor);
-    color:rgb(255, 255, 255)
+    background-color: var(--fontColor);
 }
-
+.sidebar img{
+  padding: 0%;
+  margin: 0%;
+}
 /*Links when mouse is over*/
 .sidebar a:hover:not(.active){
     background-color: var(--hoverColor);
