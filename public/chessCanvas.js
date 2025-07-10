@@ -73,6 +73,7 @@ function create() {
     let avalablemoves = null;
     let pointerDown = 'select'
     let moveIndicators = []
+    let highlights = []
     let turn = "white"
     let playersTurn = null;
     let pieceSquare = null;
@@ -218,7 +219,8 @@ function create() {
         pieces.forEach(([row, col]) => {
             const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);
             object.setInteractive({cursor: "pointer" });
-            pieceIcons.push(object)
+            object.setDepth(2);
+            pieceIcons.push(object);
     });
 
     }
@@ -227,9 +229,7 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
     pieceIcons.forEach(sprite => sprite.destroy())
-    if(highlight){
-        highlight.destroy()
-    }
+    highlights.forEach(rectangle => rectangle.destroy())
     allWhitePiecesBitboard = 0x0000000000000000
     allBlackPiecesBitboard = 0x0000000000000000
     for(let i = 0; i < 6; i ++){
@@ -642,6 +642,7 @@ if(avalablemoves.includes(squareIndex)) {
     if(turn === "white"){  
     if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
         let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+        object.setDepth(5)
         moveIndicators.push(object)
         validLocations.push(squareIndex)
 
@@ -650,6 +651,7 @@ if(avalablemoves.includes(squareIndex)) {
     }else{
         if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
             let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+            object.setDepth(5)
             moveIndicators.push(object)
             validLocations.push(squareIndex)
         }
@@ -667,8 +669,7 @@ function gameLogic(pointer){
                 pieceType = null;
                 pieceSquare = pointerSquare
 
-                let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
-                highlight.setAlpha(0.5); // 0 = fully transparent, 1 = fully opaque
+                
             // cheaks what square it is on eg 54, 32, or 12
                 
             //asighns the clicked square to a piece type
@@ -697,6 +698,9 @@ function gameLogic(pointer){
             
             if (pieceType){
                 
+                let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
+                highlight.setAlpha(0.5); // 0 = fully transparent, 1 = fully opaque
+                highlights.push(highlight)
                     if(pieceType.includes("King")){
                         blackCanCastleKingSide, blackCanCastleQueenSide, whiteCanCastleKingSide, whiteCanCastleQueenSide  = canCastle(turn)
                         pieceNotation = "K"
@@ -843,6 +847,7 @@ function gameLogic(pointer){
             
         // When placing a piece    
         } else if(pointerDown === 'place'){
+            
             //invalid squares
             if (!validLocations.includes(pointerSquare)) {
             moveIndicators.forEach(circle => circle.destroy());
@@ -868,6 +873,7 @@ function gameLogic(pointer){
 
 
             // removes the circles
+            highlights.forEach(rectangle => rectangle.destroy());
             moveIndicators.forEach(circle => circle.destroy());
             moveIndicators = [];
             
