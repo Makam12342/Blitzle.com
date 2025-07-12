@@ -68,18 +68,6 @@ io.on('connection', socket => {
                console.log(room)
                io.to(room).emit('positionDataReseve', piecesPosition);
           });
-
-          // Example: if room is full (2 players), emit an event to start the game
-          if (playerCount === 2) {
-               io.to(room).emit('startGame');
-               io.emit('roomFull', room); // to remove from lobby UI, optional
-          }
-
-          // Optionally, update all clients with the current player counts
-          io.emit('roomUpdated', {
-               roomId: room,
-               currentPlayers: playerCount,
-          });
      });
 
      socket.on('mouseInput', (data) => {

@@ -103,7 +103,7 @@ function create() {
     let whiteQueensideRookMoved = false  
     let whiteKingMoved = false
     let blackKingMoved = false
-    let highlight = null
+    let gameStart = false
 
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
@@ -976,7 +976,9 @@ function materializeBigInts(obj) {
     
     
 
-
+    
+        
+   
     socket.on('turnFliperReseve', (playersTurn) => {
             turn = playersTurn
             console.log('test2')  
@@ -992,82 +994,94 @@ function materializeBigInts(obj) {
         }
     },100)
 
+    socket.on('startGame', () =>{
+        gameStart = true
+    })
 
     this.input.on('pointerdown', function (pointer){
         
         //all of the game logic
-        if(isOnline === true){
-            updateboard()
-            if(playersColor === turn){
-                gameLogic(pointer)
-                playersTurn = turn 
-                socket.emit("turnFliperSend", { room: roomId, playersTurn });
-                const piecesPositionSerialized = serializeBigInts(piecesPosition);
-                socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
-
-            }
+        if(isOnline === true ){
+                if(gameStart === true || turn === "black"){
+                    updateboard()
+                    if(playersColor === turn){
+                        gameLogic(pointer)
+                        playersTurn = turn 
+                        socket.emit("turnFliperSend", { room: roomId, playersTurn });
+                        const piecesPositionSerialized = serializeBigInts(piecesPosition);
+                        socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
+                    }
+                }
         }else {
             gameLogic(pointer)
         }
         });
+    let StartTimer = false
+
+    
 
     const clockInterval = setInterval(() => {
-    let now = Date.now();
-    let elapsed = (now - turnStart) / 1000;  // seconds since turn began
+        if(turn === "black"){
+        StartTimer = true
+        }
+        if(StartTimer === true){
+            let now = Date.now();
+            let elapsed = (now - turnStart) / 1000;  // seconds since turn began
 
-    remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
-    if (remaining <= 0) {
-        console.log(`${turn.charAt(0).toUpperCase() + turn.slice(1)} ran out of time!`);
-        turn === 'white' ? winScreenBlack() : winScreenWhite()
-        clearInterval(clockInterval);
-    }
-    // inline DOM update:
-            
-            const displayTimeWhiteMin = Math.floor(whiteTime / 60);
-            const displayTimeWhiteSec = Math.floor((whiteTime % 60) * 10) / 10;
-
-            const displayTimeBlackMin = Math.floor(blackTime / 60);
-            const displayTimeBlackSec = Math.floor((blackTime % 60) * 10) / 10;
-
-            
-            const mmWhite = displayTimeWhiteMin.toString().padStart(2, '0');
-
-            
-            const ssWhite = displayTimeWhiteSec
-            .toFixed(1)        
-            .padStart(4, '0'); 
-
-            const mmBlack = displayTimeBlackMin.toString().padStart(2, '0');
-            const ssBlack = displayTimeBlackSec
-            .toFixed(1)
-            .padStart(4, '0');
-
-            const whiteTimeString = `${mmWhite}:${ssWhite}`; 
-            const blackTimeString = `${mmBlack}:${ssBlack}`;
-
-            const whiteTimer = document.getElementById("whiteTimer");
-            whiteTimer.innerHTML = blackTimeString;
-            
-            const blackTimer = document.getElementById("blackTimer");
-            blackTimer.innerHTML = whiteTimeString;
-
-            if(turn === "white"){
-            whiteTimer.style.color = '#479dbf';
-            blackTimer.style.color = 'black';
-            } else{
-            whiteTimer.style.color = 'black';
-            blackTimer.style.color = '#479dbf';
+            remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
+            if (remaining <= 0) {
+                console.log(`${turn.charAt(0).toUpperCase() + turn.slice(1)} ran out of time!`);
+                turn === 'white' ? winScreenBlack() : winScreenWhite()
+                clearInterval(clockInterval);
             }
+            // inline DOM update:
+                    
+                    const displayTimeWhiteMin = Math.floor(whiteTime / 60);
+                    const displayTimeWhiteSec = Math.floor((whiteTime % 60) * 10) / 10;
+
+                    const displayTimeBlackMin = Math.floor(blackTime / 60);
+                    const displayTimeBlackSec = Math.floor((blackTime % 60) * 10) / 10;
+
+                    
+                    const mmWhite = displayTimeWhiteMin.toString().padStart(2, '0');
+
+                    
+                    const ssWhite = displayTimeWhiteSec
+                    .toFixed(1)        
+                    .padStart(4, '0'); 
+
+                    const mmBlack = displayTimeBlackMin.toString().padStart(2, '0');
+                    const ssBlack = displayTimeBlackSec
+                    .toFixed(1)
+                    .padStart(4, '0');
+
+                    const whiteTimeString = `${mmWhite}:${ssWhite}`; 
+                    const blackTimeString = `${mmBlack}:${ssBlack}`;
+
+                    const whiteTimer = document.getElementById("whiteTimer");
+                    whiteTimer.innerHTML = blackTimeString;
+                    
+                    const blackTimer = document.getElementById("blackTimer");
+                    blackTimer.innerHTML = whiteTimeString;
+
+                    if(turn === "white"){
+                    whiteTimer.style.color = '#479dbf';
+                    blackTimer.style.color = 'black';
+                    } else{
+                    whiteTimer.style.color = 'black';
+                    blackTimer.style.color = '#479dbf';
+                    }
 
 
-    // for timers 
-    if(turn === "black"){
-    turnStart = Date.now()
-    blackTime = remaining
-    } else{
-    turnStart = Date.now()
-    whiteTime = remaining
-    }
+            // for timers 
+            if(turn === "black"){
+            turnStart = Date.now()
+            blackTime = remaining
+            } else{
+            turnStart = Date.now()
+            whiteTime = remaining
+            }
+        }
     }, 100);
 }
 function update() {
