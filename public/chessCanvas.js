@@ -856,17 +856,17 @@ function gameLogic(pointer){
             return; // Ignore invalid square clicks
             }
 
-            if(pieceNotation === "K" & pointerSquare === 6){  
+            if(pieceNotation === "K" & pointerSquare === 6 & whiteCanCastleKingSide === true){  
                 piecesPosition.whitePieces.whiteRook = (piecesPosition.whitePieces.whiteRook & ~(1n << BigInt(7))) | (1n << BigInt(5));
             }
-            if(pieceNotation === "K" & pointerSquare === 2){
+            if(pieceNotation === "K" & pointerSquare === 2 & whiteCanCastleQueenSide === true){
                 piecesPosition.whitePieces.whiteRook = (piecesPosition.whitePieces.whiteRook & ~(1n << BigInt(0))) | (1n << BigInt(3));
             }
-            if(pieceNotation === "K" & pointerSquare === 62){
+            if(pieceNotation === "K" & pointerSquare === 62 & blackCanCastleKingSide === true){
                 piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(63))) | (1n << BigInt(61));
                 
             }
-            if(pieceNotation === "K" & pointerSquare === 58){
+            if(pieceNotation === "K" & pointerSquare === 58 & blackCanCastleQueenSide === true){
                 piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));
 
             }
