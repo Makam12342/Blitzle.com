@@ -2,9 +2,9 @@
 // Gamemode
 const urlParams = new URLSearchParams(window.location.search);
 const isOnline = urlParams.has('username') && urlParams.has('room');
-
+let roomId = null;
 if (isOnline) {
-    const roomId = urlParams.get("room");
+    roomId = urlParams.get("room");
     socket.emit('joinRoom', roomId); // Tell the server what room we're joining
 }
 
@@ -973,9 +973,13 @@ function materializeBigInts(obj) {
     }
     return obj;
 }
+    
+    
+
 
     socket.on('turnFliperReseve', (playersTurn) => {
-            turn = playersTurn     
+            turn = playersTurn
+            console.log('test2')  
         })
     socket.on('positionDataReseve', (enemyPiecesPosition) => {
         piecesPosition = materializeBigInts(enemyPiecesPosition)
@@ -997,9 +1001,10 @@ function materializeBigInts(obj) {
             if(playersColor === turn){
                 gameLogic(pointer)
                 playersTurn = turn 
-                socket.emit("turnFliperSend", playersTurn)
+                socket.emit("turnFliperSend", { room: roomId, playersTurn });
                 const piecesPositionSerialized = serializeBigInts(piecesPosition);
-                socket.emit("positionDataSend", piecesPositionSerialized)
+                socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
+
             }
         }else {
             gameLogic(pointer)

@@ -37,13 +37,14 @@ io.on('connection', socket => {
      
      });
      socket.on('joinRoom', (room) => {
-          
           socket.join(room);
-
+          
+          
+                         
           // Get the room info from Socket.IO's adapter
           const roomInfo = io.sockets.adapter.rooms.get(room);
           const playerCount = roomInfo ? roomInfo.size : 0;
-
+          socket.emit('roomJoined', room);
           let color = playerCount === 1 ? "white" : "black"
           socket.emit('colorAssigned', color)
 
@@ -59,12 +60,14 @@ io.on('connection', socket => {
                     allRooms.splice(index, 1);
                }
           }
-          socket.on('turnFliperSend', (playersTurn) =>{
-               io.emit('turnFliperReseve', playersTurn)
-          })
-          socket.on('positionDataSend', (piecesPosition) =>{
-               io.emit('positionDataReseve', piecesPosition)
-          })
+          socket.on('turnFliperSend', ({ room, playersTurn }) => {
+               console.log(room)
+               io.to(room).emit('turnFliperReseve', playersTurn);
+          });
+          socket.on('positionDataSend', ({ room, piecesPosition }) => {
+               console.log(room)
+               io.to(room).emit('positionDataReseve', piecesPosition);
+          });
 
           // Example: if room is full (2 players), emit an event to start the game
           if (playerCount === 2) {
