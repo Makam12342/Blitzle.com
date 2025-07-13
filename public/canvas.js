@@ -1,2 +1,3 @@
-/// tasks: when somone inputs room have it auto clear, fix castiling bug, change timer color, fix move history so it shows both players moves add iccons
+/// tasks: when somone inputs room have it auto clear, fix castiling bug, fix move history so it shows both players moves, add iccons
 /// clean up:make video, post website, write up feedback
+// win lose and draw screen tidy up

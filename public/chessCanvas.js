@@ -867,7 +867,7 @@ function gameLogic(pointer){
                 
             }
             if(pieceNotation === "K" & pointerSquare === 58 & blackCanCastleQueenSide === true){
-                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(55))) | (1n << BigInt(58));
+                piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(56))) | (1n << BigInt(59));
 
             }
 
