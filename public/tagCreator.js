@@ -105,7 +105,7 @@ form.addEventListener('submit', (e) => {
   const roomTag = {
     name: roomNameInput.value,
     host: usernameInput.value,
-    currentPlayers: 1,
+    currentPlayers: 0,
     maxPlayers: 2,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
   };
