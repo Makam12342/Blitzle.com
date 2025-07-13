@@ -27,6 +27,7 @@ function createRoomTag(room) {
   tagDiv.appendChild(joinLink);
 
   joinBox.appendChild(tagDiv);
+  
 }
 
 // Creates the tags while user is on page
@@ -110,5 +111,6 @@ form.addEventListener('submit', (e) => {
   };
 
   socket.emit('roomCreated', roomTag);
+  document.getElementById('createRoom').reset();
   createRoomTag(roomTag);  // Optionally add immediately to UI
 });
