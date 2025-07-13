@@ -89,7 +89,7 @@ function create() {
     const checkSound = new Audio('check.mp3');
     const moveSound = new Audio('move.mp3')
     const checkmateSound = new Audio('checkmate.mp3')
-    let turnStart = Date.now()
+    let turnStart = 0
     let whiteTime = 60*3
     let blackTime = 60*3 
     let remaining = 60*3
@@ -1017,12 +1017,17 @@ function materializeBigInts(obj) {
         }
         });
     let StartTimer = false
-
+    //formats timmer at start
+    const whiteTimer = document.getElementById("whiteTimer");
+    whiteTimer.innerHTML = "03:00.0";
+    const blackTimer = document.getElementById("blackTimer");
+    blackTimer.innerHTML = "03:00.0";
     
 
     const clockInterval = setInterval(() => {
-        if(turn === "black"){
+        if(turn === "black" & StartTimer === false){
         StartTimer = true
+        turnStart = Date.now()
         }
         if(StartTimer === true){
             let now = Date.now();
