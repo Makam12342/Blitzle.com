@@ -1070,11 +1070,11 @@ function materializeBigInts(obj) {
                     blackTimer.innerHTML = whiteTimeString;
 
                     if(turn === "white"){
-                    whiteTimer.style.color = '#479dbf';
+                    whiteTimer.style.color = '#d67327';
                     blackTimer.style.color = 'black';
                     } else{
                     whiteTimer.style.color = 'black';
-                    blackTimer.style.color = '#479dbf';
+                    blackTimer.style.color = '#d67327';
                     }
 
 
