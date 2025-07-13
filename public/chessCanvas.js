@@ -13,8 +13,8 @@ if (isOnline) {
 //Game colors: 
 
 const lightSquaresColor = 0xfcf1df
-const darkSquaresColor = 0x376681
-const indicatorsColor = 0x96BCD8
+const darkSquaresColor = 0x393E46
+const indicatorsColor = 0xd67327
 
 
 
