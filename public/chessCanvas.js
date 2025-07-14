@@ -989,10 +989,12 @@ function materializeBigInts(obj) {
    
     socket.on('turnFliperReseve', (playersTurn) => {
             turn = playersTurn
+            
              
         })
     socket.on('positionDataReseve', (enemyPiecesPosition) => {
         piecesPosition = materializeBigInts(enemyPiecesPosition)
+        updateboard()
         
     })
 
@@ -1012,12 +1014,7 @@ function materializeBigInts(obj) {
 
         })
 
-    setInterval(() =>{
-        if(pointerDown === "select"){
-            updateboard()
-        }
-    },100)
-
+   
     socket.on('startGame', () =>{
         gameStart = true
     })
