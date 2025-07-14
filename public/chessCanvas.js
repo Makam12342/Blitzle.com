@@ -171,6 +171,7 @@ function create() {
 
     // The win screen for the players
     function winScreenWhite() {
+        scene.input.enabled = false;
         const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
         border.setDepth(10)
         const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
@@ -180,6 +181,7 @@ function create() {
     }
 
     function winScreenBlack() {
+        scene.input.enabled = false;
         const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
         border.setDepth(10)
         const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
@@ -1060,6 +1062,7 @@ function materializeBigInts(obj) {
             if (remaining <= 0) {
                 
                 turn === 'white' ? winScreenBlack() : winScreenWhite()
+                
                 clearInterval(clockInterval);
             }
             // inline DOM update:

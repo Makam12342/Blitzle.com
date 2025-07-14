@@ -7,8 +7,6 @@
     // flip the board, mouse inut, and icons sepritly 
 //Add player count to tags
     // Task 2
-//Add info to the info page
-    //Task 1
 //Make the timer a global asset so the time is the same on each side
     //Task 4
 //Disable game when finished 
