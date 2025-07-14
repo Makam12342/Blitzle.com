@@ -18,8 +18,7 @@ const io = socketIo(server)
 app.use(express.static(path.join(__dirname, 'public')));
 //run when a clinet connects to server
 io.on('connection', socket => {
-     
-     console.log('New connection...');
+
      
      // Sends all existing rooms to the new user
      socket.emit('existingRooms', allRooms);
@@ -48,8 +47,7 @@ io.on('connection', socket => {
           let color = playerCount === 1 ? "white" : "black"
           socket.emit('colorAssigned', color)
 
-          console.log(`Room "${room}" has ${playerCount} player(s).`);
-
+          
           if (playerCount === 2) {
                io.to(room).emit('startGame');
                io.emit('roomFull', room); // to remove from lobby UI
@@ -61,13 +59,18 @@ io.on('connection', socket => {
                }
           }
           socket.on('turnFliperSend', ({ room, playersTurn }) => {
-               console.log(room)
                io.to(room).emit('turnFliperReseve', playersTurn);
           });
           socket.on('positionDataSend', ({ room, piecesPosition }) => {
-               console.log(room)
+               
                io.to(room).emit('positionDataReseve', piecesPosition);
           });
+          socket.on('algabraicSend', ({ room, algabraicNotation }) => {
+               console.log(algabraicNotation)
+               io.to(room).emit('algabraicReseve', algabraicNotation);
+          });
+
+     
      });
 
      socket.on('mouseInput', (data) => {

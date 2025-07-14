@@ -708,7 +708,7 @@ function gameLogic(pointer){
                         
                         if( turn === "white" & whiteCanCastleKingSide === true ){
                             moves.push(2)
-                            console.log("yes")
+                            
                         }
                         if( turn === "white" & whiteCanCastleQueenSide === true ){
                             moves.push(-2)
@@ -918,17 +918,23 @@ function gameLogic(pointer){
             // Displaying the move history in console 
             toSquareNotation = `${files[col]}${8-row}`
             let algabraicNotation= `${pieceNotation}${fromSquareNotation}-${toSquareNotation}`
-            console.log(algabraicNotation)
             moveHistory.push(algabraicNotation)
-            console.log(moveHistory)
+            
 
             // inline DOM update:
             const ul = document.getElementById('moveHistoryList');
             const li = document.createElement('li');
+
+            if(isOnline){
+                
+                socket.emit("algabraicSend", { room: roomId, algabraicNotation });
+                
+            }else{
             li.textContent = algabraicNotation;       // set the move text
             ul.appendChild(li);          // add the new move to the list
             // optional scroll:
             li.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
             
             
 
@@ -981,12 +987,28 @@ function materializeBigInts(obj) {
    
     socket.on('turnFliperReseve', (playersTurn) => {
             turn = playersTurn
-            console.log('test2')  
+             
         })
     socket.on('positionDataReseve', (enemyPiecesPosition) => {
         piecesPosition = materializeBigInts(enemyPiecesPosition)
-        console.log(piecesPosition)
+        
     })
+
+    socket.on('algabraicReseve', (notation) => {
+            console.log(notation)
+            moveHistory.push(notation)
+            console.log(moveHistory)
+
+            // inline DOM update:
+            const ul = document.getElementById('moveHistoryList');
+            const li = document.createElement('li');
+
+            li.textContent = notation;       // set the move text
+            ul.appendChild(li);          // add the new move to the list
+            // optional scroll:
+            li.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+        })
 
     setInterval(() =>{
         if(pointerDown === "select"){
@@ -1010,6 +1032,7 @@ function materializeBigInts(obj) {
                         socket.emit("turnFliperSend", { room: roomId, playersTurn });
                         const piecesPositionSerialized = serializeBigInts(piecesPosition);
                         socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
+
                     }
                 }
         }else {
@@ -1035,7 +1058,7 @@ function materializeBigInts(obj) {
 
             remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
             if (remaining <= 0) {
-                console.log(`${turn.charAt(0).toUpperCase() + turn.slice(1)} ran out of time!`);
+                
                 turn === 'white' ? winScreenBlack() : winScreenWhite()
                 clearInterval(clockInterval);
             }
