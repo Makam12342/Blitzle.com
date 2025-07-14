@@ -1,4 +1,5 @@
-
+let allRoomsId = null
+let lastroomCeatedTime = Date.now()
 const joinBox = document.getElementById('join-box');
 
 // Create a room tag in the lobby UI
@@ -30,16 +31,6 @@ function createRoomTag(room) {
   
 }
 
-// Creates the tags while user is on page
-socket.on('roomCreated', (roomTag) => {
-  createRoomTag(roomTag);
-});
-// Creates tags when a user joins
-socket.on('existingRooms', (allRooms) => {
-  for(let i = 0; i < allRooms.length; i++){
-    createRoomTag(allRooms[i]);
-  }
-});
 // Find a room tag element by room name
 function findRoomTag(roomName) {
   return joinBox.querySelector(`.tag[data-room="${roomName}"]`);
@@ -76,12 +67,15 @@ function removeRoomTag(roomName) {
 // Socket event listeners
 socket.on('roomCreated', (room) => {
   createRoomTag(room);
+  lastroomCeatedTime = Date.now()
 });
 
 socket.on('existingRooms', (allRooms) => {
-  for (const room of allRooms) {
+  console.log(allRooms)
+  allRoomsId = allRooms
+  allRooms.forEach(room => {
     createRoomTag(room);
-  }
+  });
 });
 
 socket.on('roomUpdated', (data) => {
@@ -114,3 +108,13 @@ form.addEventListener('submit', (e) => {
   document.getElementById('createRoom').reset();
   createRoomTag(roomTag);  // Optionally add immediately to UI
 });
+
+
+/* Add latter removes rooms
+setInterval(() =>{
+  if(Date.now() - lastroomCeatedTime >1000){
+  allRoomsId.forEach(roomId => {
+    removeRoomTag(roomId);
+  });
+}},100)
+*/

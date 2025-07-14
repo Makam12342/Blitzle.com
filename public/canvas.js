@@ -13,8 +13,6 @@
     // Task 5
 //Improve end screens 
     // Task 6
-// fix mouse flickering 
-    // Task 7
 // add timer options
     // Task 8
 //Better icons
