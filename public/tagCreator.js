@@ -28,7 +28,7 @@ function createRoomTag(room) {
   tagDiv.appendChild(hostP);
 
   const timerP = document.createElement('p');
-  timerP.innerText = timerName;
+  timerP.innerText = room.timeN;
   tagDiv.appendChild(timerP);
 
   const playersP = document.createElement('p');
@@ -114,6 +114,7 @@ form.addEventListener('submit', (e) => {
     name: roomNameInput.value,
     host: usernameInput.value,
     time: timerOption,
+    timeN: timerName,
     currentPlayers: 0,
     maxPlayers: 2,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
