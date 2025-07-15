@@ -176,7 +176,7 @@ border-radius: 10px;
   padding-bottom: 10px;
 }
 
-.button {
+.select button {
   background-color: var(--hoverColor);
   color: white;
   padding: 10px 16px;
@@ -365,33 +365,57 @@ border-radius: 10px;
   box-sizing: border-box;
   padding: 3%;
   border-radius: 10px;
-  margin: 10%;
+  margin: 5% 10%;
   display: flex;
   flex-direction: column;   
   align-items: center;     
   gap: 10px;                
 }
 #create-box h1{
- 
-  
   padding: 3%;
   border-radius: 10px;
-  margin: 10%;
+  margin: 10% 10% 5% 10%;
   display: flex;
   flex-direction: column;   
   align-items: center;      
   gap: 10px;   
   background-color: var(--fontColor);         
 }
-#create-box button{
+.submit{
  
   width: 80%;
   padding: 3%;
   border-radius: 10px;
-  margin: 10%;
+  margin: 5% 10%;
   display: flex;
   flex-direction: column;   
   align-items: center;      
   gap: 10px;   
   background-color: var(--fontColor);         
+}
+
+.timerButtons button{
+  width: 27%;
+  height: 40px;
+  border-radius: 10px;
+  margin: 10px 5px;    
+  gap: 10px;   
+  background-color: var(--hoverColor);  
+  color: var(--fontColor);
+}
+button:hover{
+  background-color: var(--backgroundColor);  
+  color: var(--fontColor);
+}
+.timerButtons{
+  width: 76%;
+  padding: 2%;
+  border-radius: 10px;
+  margin: 5% 10%;
+  display: flexbox;
+  flex-direction: row;   
+  align-content: center;
+  gap: 10px;   
+  background-color: var(--fontColor);
+  height: 20%;
 }
