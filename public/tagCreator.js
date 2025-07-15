@@ -118,3 +118,12 @@ setInterval(() =>{
   });
 }},100)
 */
+
+const buttons = document.querySelectorAll('button.btn');
+
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    console.log(`Button Clicked ${button.dataset.value}`)
+  })
+  
+});
