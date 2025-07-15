@@ -1044,9 +1044,9 @@ function materializeBigInts(obj) {
     let StartTimer = false
     //formats timmer at start
     const whiteTimer = document.getElementById("whiteTimer");
-    whiteTimer.innerHTML = "03:00.0";
+    whiteTimer.innerHTML = ".Ready.";
     const blackTimer = document.getElementById("blackTimer");
-    blackTimer.innerHTML = "03:00.0";
+    blackTimer.innerHTML = "Waiting";
     
 
     const clockInterval = setInterval(() => {
