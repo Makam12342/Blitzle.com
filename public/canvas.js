@@ -13,8 +13,6 @@
     // Task 5
 //Improve end screens 
     // Task 6
-// add timer options
-    // Task 8
 //Better icons
     // Task 9
 //Show removed pieces

@@ -30,7 +30,10 @@
 
 
 body {
-    background-color: var(--backgroundColor);
+  min-height: 100%;
+  background-image: linear-gradient(rgb(65, 64, 61),  rgb(37, 34, 31) );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 

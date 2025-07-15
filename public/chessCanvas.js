@@ -910,7 +910,7 @@ function gameLogic(pointer){
                     piecesPosition.whitePieces["whiteQueen"] |= (1n << BigInt(pointerSquare)); // Add queen
                 }
             } else if (pieceType.includes("blackPawn")) {
-                if (row === 7) {
+                if (row === 7) { 
                     pieceBitboard &= ~(1n << BigInt(pointerSquare));  // Remove pawn
                     piecesPosition.blackPieces[pieceType] = pieceBitboard;
                     piecesPosition.blackPieces["blackQueen"] |= (1n << BigInt(pointerSquare)); // Add queen
