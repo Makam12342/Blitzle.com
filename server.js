@@ -1,6 +1,7 @@
 
 // start server is npm run dev
 const allRooms = []
+let roomData = null
 const path = require('path')
 const http = require('http')
 const express = require('express')
@@ -14,7 +15,7 @@ const io = socketIo(server)
 
 
 
-// Sets static folder as the home page 
+// Sets static folder as the home page 4
 app.use(express.static(path.join(__dirname, 'public')));
 //run when a clinet connects to server
 io.on('connection', socket => {
@@ -27,13 +28,12 @@ io.on('connection', socket => {
      // exacutes when new room is created
      socket.on('roomCreated', (roomTag) => {
           console.log(`Room created: ${roomTag.name} by ${roomTag.host}`);
-
+          roomData = roomTag
           allRooms.push(roomTag); // Saves room tag in the global room list
 
           // Sends the room to everyone except the creator otherwise creator gets two copies
           socket.broadcast.emit('roomCreated', roomTag);
 
-     
      });
      socket.on('joinRoom', (room) => {
           socket.join(room);
@@ -49,8 +49,11 @@ io.on('connection', socket => {
 
           
           if (playerCount === 2) {
-               console.log(room)
-               io.to(room).emit('startGame', roomTag.time);
+               console.log(roomData)
+               console.log(roomData.time)
+               setTimeout(() =>{
+               io.to(room).emit('startGame', roomData.time);
+               }, 50);
                io.emit('roomFull', room); // to remove from lobby UI
 
                // Remove the full room from the server list

@@ -1030,7 +1030,7 @@ function materializeBigInts(obj) {
                     updateboard()
                     if(playersColor === turn){
                         gameLogic(pointer)
-                        playersTurn = turn 
+                        playersTurn = turn  
                         socket.emit("turnFliperSend", { room: roomId, playersTurn });
                         const piecesPositionSerialized = serializeBigInts(piecesPosition);
                         socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
