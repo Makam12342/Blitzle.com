@@ -49,7 +49,8 @@ io.on('connection', socket => {
 
           
           if (playerCount === 2) {
-               io.to(room).emit('startGame');
+               console.log(room)
+               io.to(room).emit('startGame', roomTag.time);
                io.emit('roomFull', room); // to remove from lobby UI
 
                // Remove the full room from the server list

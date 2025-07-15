@@ -91,7 +91,7 @@ function create() {
     const checkmateSound = new Audio('checkmate.mp3')
     let turnStart = 0
     let whiteTime = 60*3
-    let blackTime = 60*3 
+    let blackTime = 60*3
     let remaining = 60*3
     let blackCanCastleQueenSide = false
     let blackCanCastleKingSide = false
@@ -1015,8 +1015,11 @@ function materializeBigInts(obj) {
         })
 
    
-    socket.on('startGame', () =>{
+    socket.on('startGame', (time) =>{
         gameStart = true
+        blackTime = time
+        whiteTime = time
+        console.log(`Time reseved ${time}`)
     })
 
     this.input.on('pointerdown', function (pointer){

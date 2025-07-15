@@ -1,9 +1,19 @@
 let allRoomsId = null
+let timerOption = null
+let timerName = null
 let lastroomCeatedTime = Date.now()
 const joinBox = document.getElementById('join-box');
 
 // Create a room tag in the lobby UI
 function createRoomTag(room) {
+  if(timerOption){
+    console.log(`Timer mode ${timerOption}`)
+  } else{
+    console.log("You did not select a timed mode so timer is set to 5 min")
+    timerOption = 300
+    timerName = "5 min"
+  }
+  
   if (findRoomTag(room.name)) return; // Already exists
   const tagDiv = document.createElement('div');
   tagDiv.classList.add('tag');
@@ -16,6 +26,10 @@ function createRoomTag(room) {
   const hostP = document.createElement('p');
   hostP.innerText = room.host;
   tagDiv.appendChild(hostP);
+
+  const timerP = document.createElement('p');
+  timerP.innerText = timerName;
+  tagDiv.appendChild(timerP);
 
   const playersP = document.createElement('p');
   playersP.innerText = `${room.currentPlayers}/${room.maxPlayers}`;
@@ -99,14 +113,16 @@ form.addEventListener('submit', (e) => {
   const roomTag = {
     name: roomNameInput.value,
     host: usernameInput.value,
+    time: timerOption,
     currentPlayers: 0,
     maxPlayers: 2,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
   };
+  console.log(roomTag.time)
 
   socket.emit('roomCreated', roomTag);
   document.getElementById('createRoom').reset();
-  createRoomTag(roomTag);  // Optionally add immediately to UI
+  createRoomTag(roomTag);  
 });
 
 
@@ -123,7 +139,8 @@ const buttons = document.querySelectorAll('button.btn');
 
 buttons.forEach(button => {
   button.addEventListener('click', () => {
-    console.log(`Button Clicked ${button.dataset.value}`)
+    timerOption = button.dataset.value
+    timerName = button.textContent
+    
   })
-  
 });
