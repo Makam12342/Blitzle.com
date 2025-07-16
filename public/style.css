@@ -1,10 +1,10 @@
 
 :root{
   --backgroundColor: #201e1c;
-  --forgroundColor: #393E46;
-  --acentColor: #d67327;
+  --forgroundColor: #393E465F;
+  --acentColor: #856953;
   --hoverColor: #5e686e;
-  --fontColor: #fcf1df;
+  --fontColor:  #ece5da;
 
 }
 
@@ -31,7 +31,7 @@
 
 body {
   min-height: 100%;
-  background-image: linear-gradient(rgb(65, 64, 61),  rgb(37, 34, 31) );
+  background-image: linear-gradient(#513b19, var(--backgroundColor));
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
@@ -47,6 +47,7 @@ body {
     overflow: auto;
     border-radius: 10px;
     border: 1px, solid, var(--fontColor);
+    opacity: 0.9;
 }
 
 /* Sidebar links */
@@ -403,8 +404,16 @@ border-radius: 10px;
   border-radius: 10px;
   margin: 10px 5px;    
   gap: 10px;   
-  background-color: var(--hoverColor);  
-  color: var(--fontColor);
+  background-color: var(--acentColor);  
+  color: var(--backgroundColor);
+}
+.product-info a {
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 10px 5px;    
+  
+  background-color: var(--acentColor);  
+  color: var(--backgroundColor);
 }
 button:hover{
   background-color: var(--backgroundColor);  
