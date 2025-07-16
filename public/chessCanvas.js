@@ -854,6 +854,7 @@ function gameLogic(pointer){
             //invalid squares
             if (!validLocations.includes(pointerSquare)) {
             moveIndicators.forEach(circle => circle.destroy());
+            highlights.forEach(rectangle => rectangle.destroy());
             moveIndicators = [];
             pointerDown = 'select'
             return; // Ignore invalid square clicks
