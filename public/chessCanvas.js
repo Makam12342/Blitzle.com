@@ -74,6 +74,8 @@ function create() {
     let pointerDown = 'select'
     let moveIndicators = []
     let highlights = []
+    let highlight = null
+    let prevouseMoveIndicators = []
     let turn = "white"
     let playersTurn = null;
     let pieceSquare = null;
@@ -873,11 +875,18 @@ function gameLogic(pointer){
 
             }
 
-
+            
             // removes the circles
             highlights.forEach(rectangle => rectangle.destroy());
             moveIndicators.forEach(circle => circle.destroy());
+            prevouseMoveIndicators.forEach(rectangle => rectangle.destroy());
             moveIndicators = [];
+            if(isOnline === false){
+                let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
+                prevouseMoveIndicators.push(highlight)
+            }else{
+                socket.emit("moveHighlights", {room: roomId, row: row, col: col})
+            }
             
         //updates bitboard depending on move
             if(turn === "white"){
@@ -893,6 +902,7 @@ function gameLogic(pointer){
                 turn = "white"
                 
             }
+            
             // removes old piece and places new piece on selected square when board updates
             
             //Cheaks if player can castle
@@ -997,6 +1007,12 @@ function materializeBigInts(obj) {
         updateboard()
         
     })
+    socket.on('moveHighlightsReseve', (data) => {
+        if(highlight){
+                    highlight.destroy();
+                };
+        highlight = scene.add.rectangle( data.col * squareSize + squareSize / 2, data.row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
+    })
 
     socket.on('algabraicReseve', (notation) => {
             console.log(notation)
@@ -1023,6 +1039,8 @@ function materializeBigInts(obj) {
     })
 
     this.input.on('pointerdown', function (pointer){
+        
+        
         
         //all of the game logic
         if(isOnline === true ){

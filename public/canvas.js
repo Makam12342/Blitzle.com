@@ -13,8 +13,6 @@
     // Task 5
 //Improve end screens 
     // Task 6
-//Better icons
-    // Task 9
 //Show removed pieces
     // Task 10
 //Add chat

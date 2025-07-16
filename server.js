@@ -79,7 +79,9 @@ io.on('connection', socket => {
                console.log(algabraicNotation)
                io.to(room).emit('algabraicReseve', algabraicNotation);
           });
-
+          socket.on('moveHighlights', ({room, row, col}) => {
+               io.to(room).emit('moveHighlightsReseve', {row, col});
+          });
      
      });
 
@@ -89,10 +91,10 @@ io.on('connection', socket => {
 
      // messages show up in console for now
      socket.emit('message', 'Welcome to Blitzle.com');
-     socket.broadcast.emit('message', 'A user has joined the chat');
+     socket.broadcast.emit( 'message', 'A user has joined the chat');
 
 
-     socket.on('disconnecting', () => {
+     socket.on('disconnecting', () => { 
           // `socket.rooms` is a Set containing all rooms this socket is currently in,
           // including its own socket ID (which we ignore)
           for (const room of socket.rooms) {
