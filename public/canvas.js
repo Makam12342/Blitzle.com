@@ -9,8 +9,6 @@
     // Task 2
 //Make the timer a global asset so the time is the same on each side
     //Task 4
-//Add some better indication on whose turn it is
-    // Task 5
 //Improve end screens 
     // Task 6
 //Show removed pieces

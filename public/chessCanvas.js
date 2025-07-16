@@ -233,7 +233,6 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
     pieceIcons.forEach(sprite => sprite.destroy())
-    highlights.forEach(rectangle => rectangle.destroy())
     allWhitePiecesBitboard = 0x0000000000000000
     allBlackPiecesBitboard = 0x0000000000000000
     for(let i = 0; i < 6; i ++){
