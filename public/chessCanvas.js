@@ -630,9 +630,12 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white' )
         movmentType = "stepper"
     }
+    return avalablemoves;
 }
 
 function isLegalMove(fromSquare, toSquare, color, pieceKey) {
+    console.log(fromSquare, toSquare, color, pieceKey)
+    
     // Deep clone using BigInt-safe method
     const cloneBitboards = (bitboards) => {
         const clone = {};
@@ -652,7 +655,9 @@ function isLegalMove(fromSquare, toSquare, color, pieceKey) {
     const colorPieces = color + "Pieces";
     const enemyColor = color === "white" ? "black" : "white";
     const enemyColorPieces = enemyColor + "Pieces";
-
+    console.log(colorPieces)
+    console.log(pieceKey)
+    console.log(piecesPosition[colorPieces][pieceKey]);
     // Temporarily make the move
     piecesPosition[colorPieces][pieceKey] &= ~(1n << BigInt(fromSquare));
 
@@ -814,7 +819,7 @@ function gameLogic(pointer){
         // returns the sudo valid moves a piece could have 
             
             if (pieceType){
-                moveLogic(pieceType, pointerSquare, row, col, turn)
+                avalablemoves = moveLogic(pieceType, pointerSquare, row, col, turn)
                 let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
                 highlight.setAlpha(0.5); // 0 = fully transparent, 1 = fully opaque
                 highlights.push(highlight)
@@ -849,7 +854,7 @@ function gameLogic(pointer){
                             const y = row * squareSize + squareSize / 2;
                             addCircles(squareIndex, validLocations, x, y);
                             
-                }}}
+        }}}
             
             fromSquareNotation = `${files[col]}${8-row}`
                 
@@ -1050,7 +1055,7 @@ function findNthBitLocation(bitboard, n){ // finds the nth bits location on a bi
 
 function looping(){
     //curent position
-    
+    turn = "black"
     for(let i = 6; i< 12; i++){//loops through all the bitboards only white for now so you must play balck
         const pieceType = allPiecesNames[i]; // e.g. 'blackKing'
         const pieceBitboard = piecesPosition.blackPieces[pieceType];
@@ -1058,16 +1063,18 @@ function looping(){
         for(let i = 0; i< pieceCount; i++){ //loops through a given amount deepending on how many pieces there are of that kind
             piecesBit = findNthBitLocation(pieceBitboard, i)
             console.log(`Location ${pieceType} ${piecesBit}`)
-            row = Math.floor(piecesBit / 8 );
-            col = Math.floor(piecesBit % 8);
-            pointerSquare = (7 - row) * 8 + col;
-            moveLogic(pieceType, pointerSquare, row, col, turn)
-            allMoves.push(avalablemoves)
+            col = piecesBit % 8;
+            row = Math.floor(piecesBit / 8);
+            pieceSquare = (row)*8 + col;
+            console.log(pieceSquare)
+            pieceMoves = moveLogic(pieceType, pieceSquare, (7-row), col, turn)
+            validLocations = []
+            allMoves.push(pieceType, pieceMoves)
             //loop through avalable moves 
             //console avalable moves 
         }
     }
-    console.log(avalablemoves)
+    console.log(allMoves)
     
 }
 looping()
