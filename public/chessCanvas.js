@@ -113,6 +113,9 @@ function create() {
     let row = null 
     let pointerSquare = null
     let pieceCount =  null
+    let newEval = null
+    let oldEval = 0
+    let clonedPiecesPositon =  null
 
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
@@ -632,21 +635,20 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
     }
     return avalablemoves;
 }
-
-function isLegalMove(fromSquare, toSquare, color, pieceKey) {
-    console.log(fromSquare, toSquare, color, pieceKey)
-    
-    // Deep clone using BigInt-safe method
-    const cloneBitboards = (bitboards) => {
-        const clone = {};
-        for (const key in bitboards) {
-            clone[key] = {};
-            for (const piece in bitboards[key]) {
-                clone[key][piece] = bitboards[key][piece];
-            }
+// Deep clone using BigInt-safe method
+function cloneBitboards(bitboards) {
+    const clone = {};
+    for (const key in bitboards) {
+        clone[key] = {};
+        for (const piece in bitboards[key]) {
+            clone[key][piece] = bitboards[key][piece];
         }
-        return clone;
-    };
+    }
+    return clone;
+};
+function isLegalMove(fromSquare, toSquare, color, pieceKey) {
+    
+    
 
     const originalPiecesPosition = cloneBitboards(piecesPosition);
     const originalAllWhite = allWhitePiecesBitboard;
@@ -655,9 +657,6 @@ function isLegalMove(fromSquare, toSquare, color, pieceKey) {
     const colorPieces = color + "Pieces";
     const enemyColor = color === "white" ? "black" : "white";
     const enemyColorPieces = enemyColor + "Pieces";
-    console.log(colorPieces)
-    console.log(pieceKey)
-    console.log(piecesPosition[colorPieces][pieceKey]);
     // Temporarily make the move
     piecesPosition[colorPieces][pieceKey] &= ~(1n << BigInt(fromSquare));
 
@@ -781,6 +780,8 @@ if(avalablemoves.includes(squareIndex)) {
 }
 }
 function gameLogic(pointer){
+            
+
             updateboard()
             // Takes the square and figures out what piece is on the square
             col = Math.floor(pointer.x / squareSize);
@@ -1033,10 +1034,6 @@ function positionEvaluation(piecesPosition) {
         blackEval += pieceCount * pieceValues[i-6]
     }
     let finalEval = whiteEval - blackEval;
-
-    console.log(`Total Black Pieces value: ${blackEval}`)
-    console.log(`Total white Pieces value: ${whiteEval}`)
-    console.log(`Final Eval: ${finalEval}`)
     return finalEval
 }
 
@@ -1057,27 +1054,35 @@ function looping(){
     //curent position
     turn = "black"
     for(let i = 6; i< 12; i++){//loops through all the bitboards only white for now so you must play balck
-        const pieceType = allPiecesNames[i]; // e.g. 'blackKing'
-        const pieceBitboard = piecesPosition.blackPieces[pieceType];
+        const pieceType = allPiecesNames[i]; // e.g. 'blackKing
+        let pieceBitboard = piecesPosition.blackPieces[pieceType];
         const pieceCount = popcount(pieceBitboard) // calculates the amount of pieces
         for(let i = 0; i< pieceCount; i++){ //loops through a given amount deepending on how many pieces there are of that kind
             piecesBit = findNthBitLocation(pieceBitboard, i)
-            console.log(`Location ${pieceType} ${piecesBit}`)
             col = piecesBit % 8;
             row = Math.floor(piecesBit / 8);
             pieceSquare = (row)*8 + col;
-            console.log(pieceSquare)
             pieceMoves = moveLogic(pieceType, pieceSquare, (7-row), col, turn)
-            validLocations = []
-            allMoves.push(pieceType, pieceMoves)
+            pieceMoves.forEach(move => {
+                clonedPiecesPositon = cloneBitboards(piecesPosition)
+                pieceBitboard = clonedPiecesPositon.blackPieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+                pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(move));
+                newEval = positionEvaluation(clonedPiecesPositon)
+                
+                if(newEval > oldEval){
+                savedMove = pieceBitboard
+                console.log(newEval) // Bigger eval
+                console.log(move, piecesBit) // what pieces moved and for where
+                oldEval = newEval
+                }
+            });
             //loop through avalable moves 
             //console avalable moves 
         }
     }
-    console.log(allMoves)
-    
+    updateboard()
 }
-looping()
+
     
         
    
@@ -1140,6 +1145,7 @@ looping()
                     }
                 }
         }else {
+            looping()
             gameLogic(pointer)
         }
         });
