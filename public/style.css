@@ -116,6 +116,8 @@ border-radius: 10px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
   margin-left: 5%;
+  display: flexbox;
+  align-items: center;
 }
 #top-bar{
   background-image: linear-gradient(var(--acentColor), var(--forgroundColor));
@@ -127,6 +129,7 @@ border-radius: 10px;
   background: var(--forgroundColor);
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
+  left: 16.5%;
 }
 #bottom-bar{
   background-image: linear-gradient(var(--acentColor), var(--forgroundColor));
@@ -274,6 +277,7 @@ border-radius: 10px;
   background-color: var(--backgroundColor);
   border-radius: 5px;
   padding: 5px;
+  color: var(--fontColor);
   
 }
 .moveHistory ul {
@@ -282,39 +286,43 @@ border-radius: 10px;
   background-color: var(--backgroundColor);
   padding: 10px;
   border-radius: 5px;
-  max-height: 240px;
+  max-height: 11rem;
   flex-direction: column;
   flex-wrap: wrap;
   overflow: auto;
   align-content: flex-start;
 }
 
-.game-timers{
-  width:60%;
-  display: flex;
-  position: fixed;
-  top: 74%;
-  
-}
-.game-timers h1{
+.timer h1{
   padding: 10px 20px;
   background-color: var(--fontColor);
   margin: 10px;
   border-radius: 5px;
 }
 
-.timer-words{
+.timer{
   width:60%;
   display: flex;
-  position: fixed;
-  top: 67%;
-}
-.timer-words h2{
+  padding: 4%;
+  padding-top: 10%;
   
+}
+#whiteTimerBox{
+  top: 76%;
+  padding: 0%;
+  position: fixed;
+}
+
+#blackTimerBox{
+  padding: 8% 0% 7% 0%;
+}
+
+.timer h2{
   padding: 10px 52px 10px 52px;
   margin: 10px;
   background-color: var(--backgroundColor);
   border-radius: 5px;
+  color: var(--fontColor);
 }
 
 /* This section is for the join or create page for online games*/
@@ -440,4 +448,57 @@ border-radius: 10px;
   gap: 10px;   
   background-color: var(--fontColor);
   height: 20%;
+}
+
+#endScreen{
+  display: none;
+  position: absolute;
+  background-color: var(--fontColor);
+  border: 2px solid var(--backgroundColor);
+  z-index: 10;
+  left: 33.8% ;
+  top: 27%;
+  padding: 2%;
+  border-radius: 20px;
+  width: 12%;
+ 
+}
+#endScreen h1{
+  font-size: x-large;
+}
+#endScreen h2{
+  color: var(--backgroundColor);
+  font-size: large;
+}
+#endScreen p{
+  font-size: small  ;
+  color: var(--fontColor);
+  background-color: var(--backgroundColor);
+  width: 95%;
+  min-height: 100px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  overflow: hidden;
+}
+
+#endScreen a{
+  display:flex;
+  width: 95%;
+  border-radius: 10px;
+  gap: 10px;
+  color: var(--fontColor);
+  background-color: var(--backgroundColor);
+  padding: 5%;
+  text-decoration: none;
+  margin-top: 10px;
+}
+#endScreen a:hover{
+  background-color: var(--acentColor);
+}
+#endScreen.show {
+  display: block;
+  opacity: 1;
 }

@@ -116,7 +116,7 @@ function create() {
     let newEval = null
     let oldEval = 0
     let clonedPiecesPositon =  null
-
+    const endScreen = document.getElementById('endScreen')
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
         // All of the white pieces
@@ -182,27 +182,41 @@ function create() {
     }
 
     // The win screen for the players
-    function winScreenWhite() {
-        scene.input.enabled = false;
-        const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
-        border.setDepth(10)
-        const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
-        box.setDepth(11)
-        const text = scene.add.text(258,300,"white wins")
-        text.setDepth(12)
-    }
-
-    function winScreenBlack() {
-        scene.input.enabled = false;
-        const border = scene.add.rectangle(300, 300, 305, 205, lightSquaresColor, 1)
-        border.setDepth(10)
-        const box = scene.add.rectangle(300, 300, 300, 200, darkSquaresColor, 1)
-        box.setDepth(11)
-        const text = scene.add.text(260,300,"cheakmate",)
-        text.setDepth(12)
-    }
 
     
+    function winScreen(winner, message) {
+        
+
+        console.log(winner, message)
+
+        const gameOverH1 = document.createElement('h1')
+        gameOverH1.innerText = "gameOver"
+        endScreen.appendChild(gameOverH1);
+
+        const winnerTitleH2 = document.createElement('h2')
+        winnerTitleH2.innerText = (`${winner} wins`)
+        endScreen.appendChild(winnerTitleH2);
+
+        const messageP = document.createElement('p')
+        messageP.innerText = message
+        endScreen.appendChild(messageP);
+
+        const homeLink = document.createElement('a')
+        homeLink.innerText = "Home"
+        homeLink.href = "index.html"
+        endScreen.appendChild(homeLink);
+
+        const gameLink = document.createElement('a')
+        gameLink.innerText = "Exit"
+        gameLink.href = ("gamePage.html")
+        endScreen.appendChild(gameLink);
+        endScreen.classList.add('show');
+
+
+    }
+
+
+
     function hexToSquares(bitboard) {
         const pieceIndexes = [];
         for (let i = 0n; i < 64n; i++) {
@@ -974,9 +988,9 @@ function gameLogic(pointer){
                     checkmateSound.currentTime = 0; // Rewind to start
                     checkmateSound.play();
                     if(turn === "white"){
-                        winScreenBlack()
+                        winScreen("White", "this is a test output")
                     }else{
-                        winScreenWhite()
+                        winScreen("Black", "this is a test output")
                     }
                 } else {
                     checkSound.currentTime = 0; // Rewind to start
@@ -1145,7 +1159,6 @@ function looping(){
                     }
                 }
         }else {
-            looping()
             gameLogic(pointer)
         }
         });
@@ -1169,8 +1182,7 @@ function looping(){
             remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
             if (remaining <= 0) {
                 
-                turn === 'white' ? winScreenBlack() : winScreenWhite()
-                
+                turn === 'white' ? winScreen("White", "this is a test output") : winScreen("White", "this is a test output")
                 clearInterval(clockInterval);
             }
             // inline DOM update:
