@@ -71,6 +71,12 @@ io.on('connection', socket => {
           socket.on('turnFliperSend', ({ room, playersTurn, whiteTime, blackTime }) => {
                io.to(room).emit('turnFliperReseve', playersTurn, whiteTime, blackTime);
           });
+
+          socket.on('gameOverSend', ({ room, winner, message}) => {
+               io.to(room).emit('gameOverReceive', winner, message);
+          });
+
+
           socket.on('positionDataSend', ({ room, piecesPosition }) => {
                
                io.to(room).emit('positionDataReseve', piecesPosition);

@@ -116,6 +116,10 @@ function create() {
     let newEval = null
     let oldEval = 0
     let clonedPiecesPositon =  null
+    let gameEnd = false
+
+
+
     const endScreen = document.getElementById('endScreen')
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
@@ -185,8 +189,7 @@ function create() {
 
     
     function winScreen(winner, message) {
-        
-
+        gameEnd = true
         console.log(winner, message)
 
         const gameOverH1 = document.createElement('h1')
@@ -988,9 +991,18 @@ function gameLogic(pointer){
                     checkmateSound.currentTime = 0; // Rewind to start
                     checkmateSound.play();
                     if(turn === "white"){
-                        winScreen("White", "White wins by cheakmate, black is a sucker")
+                        if(isOnline === true){
+                            socket.emit("gameOverSend", { room: roomId, winner:"Black", message:"Black wins by cheakmate, white is a loser"});
+                        }else{
+                            winScreen("Black", "Black wins by cheakmate, white is a loser")
+                        }
                     }else{
-                        winScreen("Black", "Black wins by cheakmate, white is a loser")
+                        
+                        if(isOnline === true){
+                            socket.emit("gameOverSend", { room: roomId, winner:"White", message:"White wins by cheakmate, white is a loser"});
+                        }else{
+                            winScreen("White", "White wins by cheakmate, white is a loser")
+                        }
                     }
                 } else {
                     checkSound.currentTime = 0; // Rewind to start
@@ -1097,7 +1109,9 @@ function looping(){
     updateboard()
 }
 
-    
+    socket.on('gameOverReceive', (winner, message) =>{
+        winScreen(winner, message)
+    })
         
    
     socket.on('turnFliperReseve', (playersTurn, gameTimerWhite, gameTimerBlack) => {
@@ -1173,7 +1187,7 @@ function looping(){
     
 
     const clockInterval = setInterval(() => {
-        if(turn === "black" & StartTimer === false){
+        if(turn === "black" & StartTimer === false || gameEnd === true){
         StartTimer = true
         turnStart = Date.now()
         }
@@ -1184,7 +1198,20 @@ function looping(){
             remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
             if (remaining <= 0) {
                 
-                turn === 'white' ? winScreen("White", "Black timed out, your just to slow") : winScreen("Black", "White timed out, you need to lock in")
+                //End screen for time outs
+                if(turn === 'white'){
+                    if(isOnline === true){
+                        socket.emit("gameOverSend", { room: roomId, winner:"White", message:"Black timed out, your just to slow"});
+                    }else{
+                        winScreen("White", "Black timed out, your just to slow")
+                    }
+                } else{
+                    if(isOnline === true){
+                        socket.emit("gameOverSend", { room: roomId, winner:"Black", message:"White timed out, you need to lock in"});
+                    }else{
+                        winScreen("Black", "White timed out, you need to lock in")
+                    }
+                }
                 clearInterval(clockInterval);
             }
             // inline DOM update:
