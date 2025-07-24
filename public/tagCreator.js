@@ -4,6 +4,8 @@ let timerName = null
 let lastroomCeatedTime = Date.now()
 const joinBox = document.getElementById('join-box');
 
+
+
 // Create a room tag in the lobby UI
 function createRoomTag(room) {
   if(timerOption){
@@ -140,6 +142,9 @@ const buttons = document.querySelectorAll('button.btn');
 
 buttons.forEach(button => {
   button.addEventListener('click', () => {
+
+    buttons.forEach(btn => btn.classList.remove('activated'));
+    button.classList.add('activated')
     timerOption = button.dataset.value
     timerName = button.textContent
     

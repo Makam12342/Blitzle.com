@@ -21,8 +21,8 @@ const indicatorsColor = 0xd67327
 // All of the game data
 const config = {
     type: Phaser.AUTO,
-    width: 600,
-    height: 600,
+    width: 510,
+    height: 510,
     backgroundColor: lightSquaresColor,
     parent: 'canvas',
     scene: {
@@ -66,7 +66,7 @@ function create() {
     
     const rows = 8;
     const cols = 8;
-    const squareSize = 75;
+    const squareSize = 63.75;
     const scene = this;
 
     let pieceType = null;
@@ -245,7 +245,7 @@ function create() {
 
         //places pieces on board
         pieces.forEach(([row, col]) => {
-            const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(70, 70);
+            const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(60, 60);
             object.setInteractive({cursor: "pointer" });
             object.setDepth(2);
             pieceIcons.push(object);
@@ -776,7 +776,7 @@ function addCircles(squareIndex, validLocations, x, y){
 if(avalablemoves.includes(squareIndex)) {
     if(turn === "white"){  
     if (((allWhitePiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-        let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+        let object = scene.add.circle(x, y , 8 ,indicatorsColor , 0.8)
         object.setDepth(5)
         moveIndicators.push(object)
         validLocations.push(squareIndex)
@@ -785,7 +785,7 @@ if(avalablemoves.includes(squareIndex)) {
 
     }else{
         if (((allBlackPiecesBitboard >> BigInt(squareIndex)) & 1n) === 0n){
-            let object = scene.add.circle(x, y , 10 ,indicatorsColor , 0.8)
+            let object = scene.add.circle(x, y , 8 ,indicatorsColor , 0.8)
             object.setDepth(5)
             moveIndicators.push(object)
             validLocations.push(squareIndex)

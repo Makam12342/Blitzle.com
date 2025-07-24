@@ -1,4 +1,5 @@
 
+
 :root{
   --backgroundColor: #201e1c;
   --forgroundColor: #393E465F;
@@ -17,13 +18,13 @@ body {
   font-family: 'Google Sans Code', monospace;
 }
 p{
-  font-size: 14.315px;
+  font-size: 13px;
 }
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 10px; 
+  font-size: 9px; 
   line-height: 1;
   letter-spacing:0cap;
   text-transform: none;
@@ -51,7 +52,7 @@ body {
 .sidebar {
     margin: 0;
     padding: 0;
-    width: 200px;
+    width: 180px;
     background-image: linear-gradient(var(--acentColor), var(--forgroundColor));
     position: fixed;
     height: 98%;
@@ -65,13 +66,15 @@ body {
 .sidebar a {
     display: block;
     color: 	var(--fontColor);
-    padding: 16px;
+    padding: 14.5px;
     text-decoration: none;
 }
 
 /*Active links */
 .sidebar a.active{
     background-color: var(--fontColor);
+    padding-top:0%;
+    padding-bottom: 0%;
 }
 .sidebar img{
   padding: 0%;
@@ -85,13 +88,13 @@ body {
 }
 /* Page content. The value of the margin left should match the sidebars width value*/
 div.content {
-    margin-left: 200px;
-    padding: 1px 16px;
+    margin-left: 180px;
+    padding: 1px 14.5px;
     height: 100%;
 }
 
 /* On screens that are less than 700px wide, make the sidebar into a topbar */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 630px) {
   .sidebar {
     width: 100%;
     height: auto;
@@ -102,7 +105,7 @@ div.content {
 }
 
 /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 360px) {
   .sidebar a {
     text-align: center;
     float: none;
@@ -113,7 +116,7 @@ div.content {
 canvas {
 position: absolute;
 left: 20%;
-top: 10%;
+top: 12%;
 border-radius: 10px;
 }
 #info-container{
@@ -122,8 +125,8 @@ border-radius: 10px;
   background-color: var(--forgroundColor);
   left: 62%;
   top: 10%;
-  width: 400px;
-  height: 600px;
+  width: 360px;
+  height: 540px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
   margin-left: 5%;
@@ -136,7 +139,7 @@ border-radius: 10px;
   padding: 0;
   margin: 0;
   width: 80%;
-  height: 50px;
+  height: 45px;
   background: var(--forgroundColor);
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
@@ -148,7 +151,7 @@ border-radius: 10px;
   padding: 0;
   margin: 0;
   width: 80%;
-  height: 50px;
+  height: 45px;
   background: var(--forgroundColor);
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
@@ -167,8 +170,8 @@ border-radius: 10px;
   display: flex;
   align-items: center;
   border: 1px solid var(--fontColor);
-  padding: 12px;
-  max-width: 600px;
+  padding: 11px;
+  max-width: 540px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   background-color: var(--forgroundColor);
@@ -176,7 +179,7 @@ border-radius: 10px;
 }
 
 .product-card img {
-  width: 150px;
+  width: 135px;
   height: auto;
   margin-right: 20%;
   border-radius: 6px;
@@ -188,19 +191,19 @@ border-radius: 10px;
   
 }
 .product-info h2 {
-  margin: 0 0 10px;
+  margin: 0 0 9px;
   color: var(--fontColor);
 }
 .product-info p {
-  margin: 0 0 10px;
+  margin: 0 0 9px;
   color: var(--fontColor);
-  padding-bottom: 10px;
+  padding-bottom: 9px;
 }
 
 .select button {
   background-color: var(--hoverColor);
   color: white;
-  padding: 10px 16px;
+  padding: 9px 14.5px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -217,8 +220,8 @@ border-radius: 10px;
   background-color: var(--forgroundColor);
   left: 62%;
   top: 13.5%;
-  width: 400px;
-  height: 600px;
+  width: 360px;
+  height: 540px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
   margin-left: 6%;
@@ -282,7 +285,7 @@ border-radius: 10px;
   padding: 5%;
   background-color: var(--acentColor);
   border-radius: 10px;
-  margin:10px;
+  margin: 9px;
 }
 .moveHistory p{
   background-color: var(--backgroundColor);
@@ -295,7 +298,7 @@ border-radius: 10px;
   list-style-type: none;
   color: var(--fontColor);
   background-color: var(--backgroundColor);
-  padding: 10px;
+  padding: 9px;
   border-radius: 5px;
   max-height: 11rem;
   flex-direction: column;
@@ -305,10 +308,11 @@ border-radius: 10px;
 }
 
 .timer h1{
-  padding: 10px 20px;
+  padding: 9px 18px;
   background-color: var(--fontColor);
-  margin: 10px;
+  margin: 9px;
   border-radius: 5px;
+  font-size: 28px;
 }
 
 .timer{
@@ -319,9 +323,11 @@ border-radius: 10px;
   
 }
 #whiteTimerBox{
-  top: 76%;
+  bottom: 0;
   padding: 0%;
-  position: fixed;
+  margin: 7%;
+  position: absolute;
+  left: -7%;
 }
 
 #blackTimerBox{
@@ -329,8 +335,8 @@ border-radius: 10px;
 }
 
 .timer h2{
-  padding: 10px 52px 10px 52px;
-  margin: 10px;
+  padding: 9px 47px 9px 47px;
+  margin: 9px;
   background-color: var(--backgroundColor);
   border-radius: 5px;
   color: var(--fontColor);
@@ -343,8 +349,8 @@ border-radius: 10px;
   background-color: var(--forgroundColor);
   left: 12%;
   top: 13.5%;
-  width: 600px;
-  height: 600px;
+  width: 540px;
+  height: 540px;
   border-radius: 10px;
   border: 1px solid var(--fontColor);
   margin-left: 6%;
@@ -355,8 +361,8 @@ border-radius: 10px;
   background-color: var(--forgroundColor);
   left: 60%;
   top: 13.5%;
-  width: 400px;
-  height: 600px;
+  width: 360px;
+  height: 540px;
   border-radius: 10px;
   border: 1px, solid, var(--fontColor);
   margin-left: 6%;
@@ -392,7 +398,7 @@ border-radius: 10px;
 .tag p{
   padding: 2.5% 0%;
   font-size:x-small;
-  width: 400px;
+  width: 360px;
 }
 
 
@@ -405,7 +411,7 @@ border-radius: 10px;
   display: flex;
   flex-direction: column;   
   align-items: center;     
-  gap: 10px;                
+  gap: 9px;                
 }
 #create-box h1{
   padding: 3%;
@@ -414,7 +420,7 @@ border-radius: 10px;
   display: flex;
   flex-direction: column;   
   align-items: center;      
-  gap: 10px;   
+  gap: 9px;   
   background-color: var(--fontColor);         
 }
 .submit{
@@ -426,22 +432,22 @@ border-radius: 10px;
   display: flex;
   flex-direction: column;   
   align-items: center;      
-  gap: 10px;   
+  gap: 9px;   
   background-color: var(--fontColor);         
 }
 
 .timerButtons button{
   width: 27%;
-  height: 40px;
+  height: 36px;
   border-radius: 10px;
-  margin: 10px 5px;    
-  gap: 10px;
+  margin: 9px 5px;    
+  gap: 9px;
   color: var(--backgroundColor);
 }
 .product-info a {
   text-decoration: none;
-  border-radius: 10px;
-  padding: 10px 5px;    
+  border-radius: 9px;
+  padding: 9px 5px;    
   background-color: var(--fontColor);  
   color: var(--backgroundColor);
 }
@@ -456,7 +462,7 @@ border-radius: 10px;
   display: flexbox;
   flex-direction: row;   
   align-content: center;
-  gap: 10px;   
+  gap: 9px;   
   background-color: var(--fontColor);
   height: 20%;
 }
@@ -470,7 +476,7 @@ border-radius: 10px;
   left: 33.8% ;
   top: 27%;
   padding: 2%;
-  border-radius: 20px;
+  border-radius: 18px;
   width: 12%;
  
 }
@@ -486,8 +492,8 @@ border-radius: 10px;
   color: var(--fontColor);
   background-color: var(--backgroundColor);
   width: 95%;
-  min-height: 100px;
-  border-radius: 10px;
+  min-height: 90px;
+  border-radius: 9px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -499,12 +505,12 @@ border-radius: 10px;
   display:flex;
   width: 95%;
   border-radius: 10px;
-  gap: 10px;
+  gap: 9px;
   color: var(--fontColor);
   background-color: var(--backgroundColor);
   padding: 5%;
   text-decoration: none;
-  margin-top: 10px;
+  margin-top: 9px;
 }
 #endScreen a:hover{
   background-color: var(--acentColor);
@@ -512,4 +518,13 @@ border-radius: 10px;
 #endScreen.show {
   display: block;
   opacity: 1;
+}
+
+a.active:hover img {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+  opacity: 0.8;
+}
+.btn.activated {
+  background-color: var(--forgroundColor);
 }
