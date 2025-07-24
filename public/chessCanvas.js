@@ -1100,10 +1100,13 @@ function looping(){
     
         
    
-    socket.on('turnFliperReseve', (playersTurn) => {
+    socket.on('turnFliperReseve', (playersTurn, gameTimerWhite, gameTimerBlack) => {
             turn = playersTurn
-            
-             
+
+            //game timers
+            whiteTime = gameTimerWhite
+            blackTime = gameTimerBlack
+
         })
     socket.on('positionDataReseve', (enemyPiecesPosition) => {
         piecesPosition = materializeBigInts(enemyPiecesPosition)
@@ -1151,7 +1154,7 @@ function looping(){
                     if(playersColor === turn){
                         gameLogic(pointer)
                         playersTurn = turn  
-                        socket.emit("turnFliperSend", { room: roomId, playersTurn });
+                        socket.emit("turnFliperSend", { room: roomId, playersTurn, whiteTime, blackTime });
                         const piecesPositionSerialized = serializeBigInts(piecesPosition);
                         socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
 

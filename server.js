@@ -68,8 +68,8 @@ io.on('connection', socket => {
                     allRooms.splice(index, 1);
                }
           }
-          socket.on('turnFliperSend', ({ room, playersTurn }) => {
-               io.to(room).emit('turnFliperReseve', playersTurn);
+          socket.on('turnFliperSend', ({ room, playersTurn, whiteTime, blackTime }) => {
+               io.to(room).emit('turnFliperReseve', playersTurn, whiteTime, blackTime);
           });
           socket.on('positionDataSend', ({ room, piecesPosition }) => {
                
