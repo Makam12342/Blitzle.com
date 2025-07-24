@@ -8,6 +8,17 @@
 
 }
 
+
+body {
+  font-family: 'Google Sans Code', monospace;
+}
+
+* {
+  font-family: 'Google Sans Code', monospace;
+}
+p{
+  font-size: 14.315px;
+}
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;

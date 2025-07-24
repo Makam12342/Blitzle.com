@@ -988,9 +988,9 @@ function gameLogic(pointer){
                     checkmateSound.currentTime = 0; // Rewind to start
                     checkmateSound.play();
                     if(turn === "white"){
-                        winScreen("White", "this is a test output")
+                        winScreen("White", "White wins by cheakmate, black is a sucker")
                     }else{
-                        winScreen("Black", "this is a test output")
+                        winScreen("Black", "Black wins by cheakmate, white is a loser")
                     }
                 } else {
                     checkSound.currentTime = 0; // Rewind to start
@@ -1130,7 +1130,6 @@ function looping(){
             ul.appendChild(li);          // add the new move to the list
             // optional scroll:
             li.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
         })
 
    
@@ -1182,7 +1181,7 @@ function looping(){
             remaining = (turn === 'white' ? whiteTime : blackTime) - elapsed;
             if (remaining <= 0) {
                 
-                turn === 'white' ? winScreen("White", "this is a test output") : winScreen("White", "this is a test output")
+                turn === 'white' ? winScreen("White", "Black timed out, your just to slow") : winScreen("Black", "White timed out, you need to lock in")
                 clearInterval(clockInterval);
             }
             // inline DOM update:
