@@ -190,6 +190,7 @@ function create() {
     
     function winScreen(winner, message) {
         gameEnd = true
+        scene.input.enabled = false;
         console.log(winner, message)
 
         const gameOverH1 = document.createElement('h1')
