@@ -61,8 +61,8 @@ function preload() {
 }
 
 function create() {
-    //to find
-    this.cameras.main.rotation += Phaser.Math.DegToRad(180); // Rotate by 1 degree
+    
+    
     //Constants
     
     const rows = 8;
@@ -220,7 +220,7 @@ function create() {
 
 
     }
-
+    
 
 
     function hexToSquares(bitboard) {
@@ -252,7 +252,9 @@ function create() {
         //places pieces on board
         pieces.forEach(([row, col]) => {
             const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(60, 60);
+            if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
             object.setAngle(180);
+            }
             object.setInteractive({cursor: "pointer" });
             object.setDepth(2);
             pieceIcons.push(object);
@@ -263,6 +265,14 @@ function create() {
     
     // Adds all the pieces to the board
     function updateboard() {
+
+    //to find
+    if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
+        scene.cameras.main.rotation = Phaser.Math.DegToRad(180);
+    }else{
+        scene.cameras.main.rotation = Phaser.Math.DegToRad(0);
+    }
+
     pieceIcons.forEach(sprite => sprite.destroy())
     allWhitePiecesBitboard = 0x0000000000000000
     allBlackPiecesBitboard = 0x0000000000000000
@@ -805,8 +815,13 @@ function gameLogic(pointer){
             
             updateboard()
             // Takes the square and figures out what piece is on the square
-            col = Math.floor((510-pointer.x) / squareSize);
-            row = Math.floor((510-pointer.y) / squareSize);
+            if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
+                col = Math.floor((510-pointer.x) / squareSize);
+                row = Math.floor((510-pointer.y) / squareSize);
+            }else{
+                col = Math.floor((pointer.x) / squareSize);
+                row = Math.floor((pointer.y) / squareSize);
+            }
             pointerSquare = (7 - row) * 8 + col;
             
             if(pointerDown === 'select'){
