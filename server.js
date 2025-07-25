@@ -105,6 +105,9 @@ io.on('connection', socket => {
           // including its own socket ID (which we ignore)
           for (const room of socket.rooms) {
           if (room === socket.id) continue; // skip personal room
+          
+          io.to(room).emit('gameOverReceive', "Nobody", "Your oponent disconected");
+
 
           const roomInfo = io.sockets.adapter.rooms.get(room);
           const newCount = roomInfo ? roomInfo.size - 1 : 0;
