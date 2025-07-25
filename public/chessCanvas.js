@@ -121,6 +121,7 @@ function create() {
 
 
     const endScreen = document.getElementById('endScreen')
+    const gameInfo = document.getElementById("info-container")
     //Holds all of the diferent pieces with there corosponding bitboard
     let piecesPosition = {
         // All of the white pieces
@@ -1239,18 +1240,24 @@ function looping(){
                     const whiteTimeString = `${mmWhite}:${ssWhite}`; 
                     const blackTimeString = `${mmBlack}:${ssBlack}`;
 
-                    const whiteTimer = document.getElementById("whiteTimer");
-                    whiteTimer.innerHTML = blackTimeString;
+                    const blackTimer = document.getElementById("whiteTimer");
+                    blackTimer.innerHTML = blackTimeString;
                     
-                    const blackTimer = document.getElementById("blackTimer");
-                    blackTimer.innerHTML = whiteTimeString;
+                    const whiteTimer = document.getElementById("blackTimer");
+                    whiteTimer.innerHTML = whiteTimeString;
+
+
+                
+
 
                     if(turn === "white"){
                     whiteTimer.style.color = '#d67327';
                     blackTimer.style.color = 'black';
+                    gameInfo.style.backgroundColor = '#fbf5f120'
                     } else{
                     whiteTimer.style.color = 'black';
                     blackTimer.style.color = '#d67327';
+                    gameInfo.style.backgroundColor = '#1c1b1a35'
                     }
 
 
