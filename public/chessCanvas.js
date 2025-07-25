@@ -42,20 +42,20 @@ function preload() {
     // Loads all of the pieces icons
 
     // White pieces
-    this.load.image('whiteKing', 'chessPieces/whiteKing.png');
-    this.load.image('whiteQueen', 'chessPieces/whiteQueen.png');
-    this.load.image('whiteRook', 'chessPieces/whiteRook.png');
-    this.load.image('whiteKnight', 'chessPieces/whiteKnight.png');
-    this.load.image('whiteBishop', 'chessPieces/whiteBishop.png');
-    this.load.image('whitePawn', 'chessPieces/whitePawn.png');
+    this.load.image('whiteKing', 'chessPieces/Chess_klt45.svg');
+    this.load.image('whiteQueen', 'chessPieces/Chess_qlt45.svg');
+    this.load.image('whiteRook', 'chessPieces/Chess_rlt45.svg');
+    this.load.image('whiteKnight', 'chessPieces/Chess_nlt45.svg');
+    this.load.image('whiteBishop', 'chessPieces/Chess_blt45.svg');
+    this.load.image('whitePawn', 'chessPieces/Chess_plt45.svg');
 
     // Black pieces
-    this.load.image('blackKing', 'chessPieces/blackKing.png');
-    this.load.image('blackQueen', 'chessPieces/blackQueen.png');
-    this.load.image('blackRook', 'chessPieces/blackRook.png');
-    this.load.image('blackKnight', 'chessPieces/blackKnight.png');
-    this.load.image('blackBishop', 'chessPieces/blackBishop.png');
-    this.load.image('blackPawn', 'chessPieces/blackPawn.png');
+    this.load.image('blackKing', 'chessPieces/Chess_kdt45 (1).svg');
+    this.load.image('blackQueen', 'chessPieces/Chess_qdt45.svg');
+    this.load.image('blackRook', 'chessPieces/Chess_rdt45.svg');
+    this.load.image('blackKnight', 'chessPieces/Chess_ndt45.svg');
+    this.load.image('blackBishop', 'chessPieces/Chess_bdt45.svg');
+    this.load.image('blackPawn', 'chessPieces/Chess_pdt45.svg');
 
 
 }
