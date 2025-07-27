@@ -118,10 +118,19 @@ function create() {
     let oldEval = 0
     let clonedPiecesPositon =  null
     let gameEnd = false
-    let enPassant = false
-    let enPassantRow = null
-    let enPussantCol = null 
-    let enPassantSquare =  null
+
+
+
+    let enPassantWhite = false
+    let enPassantRowWhite = null
+    let enPassantColWhite = null 
+    let enPassantSquareWhite =  null
+
+    let enPassantBlack = false
+    let enPassantRowBlack = null
+    let enPassantColBlack = null 
+    let enPassantSquareBlack =  null
+
     const fromSquare =  null
     let pieceMovedFrom = null
 
@@ -292,21 +301,27 @@ function create() {
         }else{
         piecesPosition.whitePieces[whitePieceskeys[i]] = BigInt(piecesPosition.whitePieces[whitePieceskeys[i]]) & ~ BigInt(allBlackPiecesBitboard)
         }
-
-        if (enPassant === true && pointerSquare === enPassantSquare) {
-            if (turn === "black") {
-                // Remove white pawn one rank below the en passant square
-                piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(pointerSquare + 8));
-            } else {
-                // Remove black pawn one rank above the en passant square
-                piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(pointerSquare - 8));
-            }
-        }
-
-
-
     }
     
+console.log(enPassantBlack, enPassantWhite);
+    // en passun square is the square behind the piece
+    // Black is currently moving → check if black's en passant square is being captured
+    console.log(pointerSquare, enPassantSquareBlack, enPassantSquareWhite)
+    if (turn === "white" && enPassantBlack && pointerSquare === enPassantSquareBlack) {
+        console.log("Black performs en passant capture");
+        // Black's pawn is 1 rank behind the enPassant square
+        piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(enPassantSquareBlack + 8));
+    }
+
+    // White is currently moving → check if white's en passant square is being captured
+    else if (turn === "black" && enPassantWhite && pointerSquare === enPassantSquareWhite) {
+        console.log("White performs en passant capture");
+        // White's pawn is 1 rank ahead of the enPassant square
+        piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(enPassantSquareWhite - 8));
+    }
+
+
+
      for(let i = 0; i < 6 ; i++){
         let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
         let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
@@ -658,12 +673,15 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
         }
 
 
-        if(enPassant){
-            if((row === enPassantRow)){
-                if(col === (enPussantCol - 1)){
-                    moves.push(+9)
-                } else if(col === (enPussantCol + 1)){
-                    moves.push (+7)
+        if (enPassantWhite) {
+            if (row === enPassantRowWhite) {
+                // Left capture
+                if (col === enPassantColWhite - 1 && col >= 0) {
+                    moves.push(+9); // diagonally right (from white's perspective)
+                }
+                // Right capture
+                else if (col === enPassantColWhite + 1 && col <= 7) {
+                    moves.push(+7); // diagonally left
                 }
             }
         }
@@ -690,15 +708,16 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
         moves.push(-7)
         }
 
-        if(enPassant){
-            if((row === enPassantRow)){
-                if(col === (enPussantCol + 1)){
-                    moves.push(-7)
-                } else if(col === (enPussantCol - 1)){
-                    moves.push (-9)
+        if (enPassantBlack) {
+            if (row === enPassantRowBlack) {
+                if (col === enPassantColBlack - 1 && col >= 0) {
+                    moves.push(-7); // forward-left for black
+                } else if (col === enPassantColBlack + 1 && col <= 7) {
+                    moves.push(-9); // forward-right for black
                 }
             }
         }
+
 
 
 
@@ -992,22 +1011,26 @@ function gameLogic(pointer){
 
 
             // to find
-            enPassant = false
+            
             if(pieceType.includes("Pawn")){
-                if(turn === "white" && row === 3 && Math.floor(pieceMovedFrom/ 8) === 6 ){
-                    // white logic
-                    enPassant = true;
-                    enPassantRow = 3;
-                    enPussantCol = col;
-                    enPassantSquare = pointerSquare - 8; // Square passed over
-
-                } else if(turn === "black" && row === 4 && Math.floor(pieceMovedFrom/ 8) === 1){
-                    // black logic
-                    enPassant = true;
-                    enPassantRow = 4;
-                    enPussantCol = col;
-                    enPassantSquare = pointerSquare + 8; // Square passed over
-
+                if(turn === "white"){
+                    enPassantWhite = false
+                    if(row === 3 && Math.floor(pieceMovedFrom/ 8) === 6 ){
+                        // white logic
+                        enPassantWhite = true;
+                        enPassantRowWhite = 3;
+                        enPassantColWhite = col;
+                        enPassantSquareWhite = pointerSquare + 8; // Square passed over
+                    }
+                } else if(turn === "black"){
+                    enPassantBlack = false
+                    if(row === 4 && Math.floor(pieceMovedFrom/ 8) === 1){
+                        // black logic
+                        enPassantBlack = true;
+                        enPassantRowBlack = 4;
+                        enPassantColBlack = col;
+                        enPassantSquareBlack = pointerSquare - 8; // Square passed over
+                    }
                 }
             }
 
