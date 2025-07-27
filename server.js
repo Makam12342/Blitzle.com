@@ -95,9 +95,12 @@ io.on('connection', socket => {
           socket.to(data.room).emit('opponentMove', data);
      });
 
-     socket.on('sendMessage', (message) =>{
-          io.emit("reseveMessage", message)
-     })
+     socket.on('sendMessage', (data) => {
+     io.emit('receiveMessage', {
+     username: data.username,
+     message: data.message
+     });
+     });
 
      socket.on('disconnecting', () => { 
           // `socket.rooms` is a Set containing all rooms this socket is currently in,
