@@ -118,8 +118,12 @@ function create() {
     let oldEval = 0
     let clonedPiecesPositon =  null
     let gameEnd = false
-
-
+    let enPassant = false
+    let enPassantRow = null
+    let enPussantCol = null 
+    let enPassantSquare =  null
+    const fromSquare =  null
+    let pieceMovedFrom = null
 
     const endScreen = document.getElementById('endScreen')
     const gameInfo = document.getElementById("info-container")
@@ -266,7 +270,7 @@ function create() {
     // Adds all the pieces to the board
     function updateboard() {
 
-    //to find
+
     if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
         scene.cameras.main.rotation = Phaser.Math.DegToRad(180);
     }else{
@@ -288,7 +292,21 @@ function create() {
         }else{
         piecesPosition.whitePieces[whitePieceskeys[i]] = BigInt(piecesPosition.whitePieces[whitePieceskeys[i]]) & ~ BigInt(allBlackPiecesBitboard)
         }
+
+        if (enPassant === true && pointerSquare === enPassantSquare) {
+            if (turn === "black") {
+                // Remove white pawn one rank below the en passant square
+                piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(pointerSquare + 8));
+            } else {
+                // Remove black pawn one rank above the en passant square
+                piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(pointerSquare - 8));
+            }
+        }
+
+
+
     }
+    
      for(let i = 0; i < 6 ; i++){
         let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
         let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
@@ -481,7 +499,7 @@ function create() {
             const bitboard = pieceSet[pieceKey];
             const pieceIndices = hexToSquares(bitboard);
 
-            for (const fromSquare of pieceIndices) {
+            for (fromSquare of pieceIndices) {
                 let possibleMoves = [];
 
                 if (pieceKey.includes("Queen")) {
@@ -638,11 +656,21 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
         if(((allBlackPiecesBitboard >> BigInt(pointerSquare + 7)) & 1n) !== 0n & col - 1 > 0 ){
         moves.push(+7)
         }
+
+
+        if(enPassant){
+            if((row === enPassantRow)){
+                if(col === (enPussantCol - 1)){
+                    moves.push(+9)
+                } else if(col === (enPussantCol + 1)){
+                    moves.push (+7)
+                }
+            }
+        }
+
         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white')
         movmentType = "stepper"
-
-
-        
+ 
     } else if(pieceType.includes("blackPawn")){
         pieceNotation = "P"
         moves = [...movedirections.stepPieces.pawnMovementsBlack];
@@ -661,6 +689,19 @@ function moveLogic(pieceType, pointerSquare, row, col, turn){
         if(((allWhitePiecesBitboard >> BigInt(pointerSquare - 7)) & 1n) !== 0n && col + 1 < 8){
         moves.push(-7)
         }
+
+        if(enPassant){
+            if((row === enPassantRow)){
+                if(col === (enPussantCol + 1)){
+                    moves.push(-7)
+                } else if(col === (enPussantCol - 1)){
+                    moves.push (-9)
+                }
+            }
+        }
+
+
+
         avalablemoves = validMovesStepper(pointerSquare, moves, turn === 'white' )
         movmentType = "stepper"
     }
@@ -860,16 +901,7 @@ function gameLogic(pointer){
                 let highlight = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, indicatorsColor); // Change colour at the end
                 highlight.setAlpha(0.5); // 0 = fully transparent, 1 = fully opaque
                 highlights.push(highlight)
-                
-            
             }
-
-
-
-            
-            
-
-
             let squareIndex = 0
             validLocations = []
             for (let row = 0; row < rows; row++) {
@@ -892,7 +924,7 @@ function gameLogic(pointer){
                             addCircles(squareIndex, validLocations, x, y);
                             
         }}}
-            
+            pieceMovedFrom = pointerSquare
             fromSquareNotation = `${files[col]}${8-row}`
                 
             pointerDown = 'place'
@@ -922,8 +954,9 @@ function gameLogic(pointer){
             }
             if(pieceNotation === "K" & pointerSquare === 58 & blackCanCastleQueenSide === true){
                 piecesPosition.blackPieces.blackRook = (piecesPosition.blackPieces.blackRook & ~(1n << BigInt(56))) | (1n << BigInt(59));
-
             }
+
+           
 
             
             // removes the circles
@@ -955,10 +988,28 @@ function gameLogic(pointer){
             
             // removes old piece and places new piece on selected square when board updates
             
-            //Cheaks if player can castle
+            // en pasuant captures
 
-            
-            
+
+            // to find
+            enPassant = false
+            if(pieceType.includes("Pawn")){
+                if(turn === "white" && row === 3 && Math.floor(pieceMovedFrom/ 8) === 6 ){
+                    // white logic
+                    enPassant = true;
+                    enPassantRow = 3;
+                    enPussantCol = col;
+                    enPassantSquare = pointerSquare - 8; // Square passed over
+
+                } else if(turn === "black" && row === 4 && Math.floor(pieceMovedFrom/ 8) === 1){
+                    // black logic
+                    enPassant = true;
+                    enPassantRow = 4;
+                    enPussantCol = col;
+                    enPassantSquare = pointerSquare + 8; // Square passed over
+
+                }
+            }
 
 
 
