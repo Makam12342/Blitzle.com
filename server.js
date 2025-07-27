@@ -95,10 +95,9 @@ io.on('connection', socket => {
           socket.to(data.room).emit('opponentMove', data);
      });
 
-     // messages show up in console for now
-     socket.emit('message', 'Welcome to Blitzle.com');
-     socket.broadcast.emit( 'message', 'A user has joined the chat');
-
+     socket.on('sendMessage', (message) =>{
+          io.emit("reseveMessage", message)
+     })
 
      socket.on('disconnecting', () => { 
           // `socket.rooms` is a Set containing all rooms this socket is currently in,

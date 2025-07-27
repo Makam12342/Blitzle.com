@@ -1068,7 +1068,6 @@ function gameLogic(pointer){
             }else{
             li.textContent = algabraicNotation;       // set the move text
             ul.appendChild(li);          // add the new move to the list
-            // optional scroll:
             li.scrollIntoView({ behavior: 'smooth', block: 'end' });
             }
             

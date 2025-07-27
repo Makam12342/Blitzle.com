@@ -307,6 +307,49 @@ border-radius: 10px;
   align-content: flex-start;
 }
 
+
+.textOutput{
+  background-image: linear-gradient(var(--acentColor), var(--hoverColor));
+  padding: 5%;
+  background-color: var(--acentColor);
+  border-radius: 10px;
+  margin: 9px;
+}
+.textOutput p{
+  background-color: var(--backgroundColor);
+  border-radius: 5px;
+  padding: 5px;
+  color: var(--fontColor);
+  
+}
+.textOutput ul {
+  list-style-type: none;
+  color: var(--fontColor);
+  background-color: var(--backgroundColor);
+  padding: 9px;
+  border-radius: 5px;
+  max-height: 15rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: auto;
+  align-content: flex-start;
+}
+
+#sendMessages{
+  background-image: linear-gradient(var(--acentColor), var(--hoverColor));
+  padding: 5%;
+  background-color: var(--acentColor);
+  border-radius: 10px;
+  margin: 9px;
+}
+
+
+
+
+
+
+
+
 .timer h1{
   padding: 9px 18px;
   background-color: var(--fontColor);
