@@ -603,3 +603,17 @@ a.active:hover img {
   margin-left: 1.3%;
   padding: 5px;
 }
+.sidebar ul{
+    padding: 0;
+}
+.sidebar ul li{
+  color: antiquewhite;
+  text-decoration: none;
+  list-style-type: none;
+  background-color: var(--backgroundColor);
+  padding: 0% 10%;
+  margin: 2%;
+  display: flex;
+  border-radius: 10px;
+  margin-left: 0;
+}

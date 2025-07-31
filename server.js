@@ -2,6 +2,7 @@
 // start server is npm run dev
 const allRooms = []
 const roomsData = []
+const messageList = []
 let roomData = null
 const path = require('path')
 const http = require('http')
@@ -24,6 +25,10 @@ io.on('connection', socket => {
      
      // Sends all existing rooms to the new user
      socket.emit('existingRooms', allRooms);
+
+     // Sends all existing messages to messages.js
+     socket.emit('createMessages', messageList)
+
 
 
      // exacutes when new room is created
@@ -96,10 +101,11 @@ io.on('connection', socket => {
      });
 
      socket.on('sendMessage', (data) => {
-     io.emit('receiveMessage', {
-     username: data.username,
-     message: data.message
-     });
+          messageList.push(data)
+          io.emit('receiveMessage', {
+               username: data.username,
+               message: data.message
+          });
      });
 
      socket.on('disconnecting', () => { 

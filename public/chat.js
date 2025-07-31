@@ -12,7 +12,8 @@ form.addEventListener('submit', (e) => {
   messageInput.value = '';  // optional: clear input
 });
 
-socket.on('receiveMessage', (data) => {
+
+function messageCreate(data) {
   const msgText = data.message;
   const userName = data.username;
 
@@ -27,4 +28,17 @@ socket.on('receiveMessage', (data) => {
 
   ul.appendChild(li);
   li.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+socket.on('receiveMessage', (data) => {
+  messageCreate(data)
+  messageList.push(data)
 });
+
+socket.on('createMessages', (list) =>{
+  list.forEach(element => {
+     messageCreate(element)
+  })
+})
+
+
