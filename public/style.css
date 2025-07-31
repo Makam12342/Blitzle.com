@@ -398,7 +398,10 @@ border-radius: 10px;
   border: 1px solid var(--fontColor);
   margin-left: 6%;
 }
-
+#data-room{
+  max-height:  40rem;
+  overflow: hidden;
+}
 #create-box{
   position: absolute;
   background-color: var(--forgroundColor);

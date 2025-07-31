@@ -514,7 +514,7 @@ console.log(enPassantBlack, enPassantWhite);
             const bitboard = pieceSet[pieceKey];
             const pieceIndices = hexToSquares(bitboard);
 
-            for (fromSquare of pieceIndices) {
+            for (const fromSquare of pieceIndices) {
                 let possibleMoves = [];
 
                 if (pieceKey.includes("Queen")) {
