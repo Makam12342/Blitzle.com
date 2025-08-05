@@ -5,6 +5,46 @@ let lastroomCeatedTime = Date.now()
 const joinBox = document.getElementById('join-box');
 
 
+function createPaswordPopUp(room){
+ const joinConformation = document.createElement('div');
+  joinConformation.classList.add('tag');
+  joinConformation.setAttribute('data-room', room.name);
+  joinConformation.id = "join-com"
+
+  const roomNameP = document.createElement('p');
+  roomNameP.innerText = `Room: ${room.name}`;
+  joinConformation.appendChild(roomNameP);
+
+  const hostP = document.createElement('p');
+  hostP.innerText = `User: ${room.host}`;
+  joinConformation.appendChild(hostP);
+
+  const timerP = document.createElement('p');
+  timerP.innerText = `Timer: ${room.timeN}`;
+  joinConformation.appendChild(timerP);
+
+  const playersP = document.createElement('p');
+  playersP.innerText = `Players: ${room.currentPlayers}/${room.maxPlayers}`;
+  playersP.classList.add('players-count');
+  joinConformation.appendChild(playersP);
+
+  const input = document.createElement('input');
+  input.placeholder = 'Password';
+  joinConformation.appendChild(input);
+
+
+  const joinLink = document.createElement('a');
+  joinLink.href = room.link || '#';
+  joinLink.innerText = 'Join';
+  joinConformation.appendChild(joinLink);
+
+  joinBox.appendChild(joinConformation);
+
+}
+
+
+
+
 
 // Create a room tag in the lobby UI
 function createRoomTag(room) {
@@ -38,10 +78,13 @@ function createRoomTag(room) {
   playersP.classList.add('players-count');
   tagDiv.appendChild(playersP);
 
-  const joinLink = document.createElement('a');
-  joinLink.href = room.link || '#';
-  joinLink.innerText = 'Join';
-  tagDiv.appendChild(joinLink);
+  const joinButton = document.createElement('button');
+  joinButton.href = room.link || '#';
+  joinButton.innerText = 'Join';
+  joinButton.onclick = function () {
+    createPaswordPopUp(room)
+  } 
+  tagDiv.appendChild(joinButton);
 
   joinBox.appendChild(tagDiv);
   
@@ -129,14 +172,7 @@ form.addEventListener('submit', (e) => {
 });
 
 
-/* Add latter removes rooms
-setInterval(() =>{
-  if(Date.now() - lastroomCeatedTime >1000){
-  allRoomsId.forEach(roomId => {
-    removeRoomTag(roomId);
-  });
-}},100)
-*/
+
 
 const buttons = document.querySelectorAll('button.btn');
 
