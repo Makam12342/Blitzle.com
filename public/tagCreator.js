@@ -166,7 +166,7 @@ form.addEventListener('submit', (e) => {
   e.preventDefault();
 
   console.log("Form submitted");
-
+  
   const roomTag = {
     name: roomNameInput.value,
     host: usernameInput.value,
@@ -181,7 +181,9 @@ form.addEventListener('submit', (e) => {
 
   socket.emit('roomCreated', roomTag);
   document.getElementById('createRoom').reset();
-  createRoomTag(roomTag);  
+  
+  window.location.href = `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
+  createRoomTag(roomTag);
 });
 
 
