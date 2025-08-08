@@ -27,17 +27,30 @@ function createPaswordPopUp(room){
   playersP.innerText = `Players: ${room.currentPlayers}/${room.maxPlayers}`;
   playersP.classList.add('players-count');
   joinConformation.appendChild(playersP);
-
+  const form = document.createElement('form');
   const input = document.createElement('input');
   input.placeholder = 'Password';
-  joinConformation.appendChild(input);
+  form.appendChild(input);
 
-
-  const joinLink = document.createElement('a');
-  joinLink.href = room.link || '#';
+  // make this into a button that reads the form and figures out if its corectif not it refreshes
+  const joinLink = document.createElement('button');
+  joinLink.id = "join-button"
   joinLink.innerText = 'Join';
-  joinConformation.appendChild(joinLink);
+  form.appendChild(joinLink);
 
+  joinConformation.appendChild(form)
+  joinLink.onclick = function (event) {
+    event.preventDefault(); 
+    if(input.value === room.password){
+      window.location.href = room.link || '#'
+    } else{
+      joinLink.innerText = 'incorrect';
+      joinLink.style.color = "red"
+    }
+
+  }
+  console.log(room.password)
+  
   joinBox.appendChild(joinConformation);
 
 }
@@ -79,7 +92,6 @@ function createRoomTag(room) {
   tagDiv.appendChild(playersP);
 
   const joinButton = document.createElement('button');
-  joinButton.href = room.link || '#';
   joinButton.innerText = 'Join';
   joinButton.onclick = function () {
     createPaswordPopUp(room)
@@ -162,6 +174,7 @@ form.addEventListener('submit', (e) => {
     timeN: timerName,
     currentPlayers: 0,
     maxPlayers: 2,
+    password: password.value,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
   };
   console.log(roomTag.time)

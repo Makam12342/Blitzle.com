@@ -442,11 +442,27 @@ border-radius: 10px;
 }
 
 
+
 .tag button{
   display: inline-block;
   vertical-align: middle;
   line-height: 1;
-  text-decoration: none; /* optional: removes underline */
+  text-decoration: none;
+  padding: 2% 10%;
+  background-color: var(--fontColor);
+  color: var(--backgroundColor);
+  margin: 2%;
+  border-radius: 10px;
+  max-height: fit-content;
+
+
+}
+
+#join-box button{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
   padding: 2% 10%;
   background-color: var(--fontColor);
   color: var(--backgroundColor);
@@ -455,6 +471,16 @@ border-radius: 10px;
   max-height: fit-content;
 
 }
+#join-box button:hover{
+  background-color: var(--hoverColor);
+  color: var(--backgroundColor);
+}
+
+#join-button{
+  width: 200px;
+  background-color: var(--backgroundColor);
+}
+
 .tag button:hover{
   background-color: var(--hoverColor);
   color: var(--fontColor);
@@ -472,16 +498,16 @@ border-radius: 10px;
   box-sizing: border-box;
   padding: 3%;
   border-radius: 10px;
-  margin: 5% 10%;
+  margin: 2% 10%;
   display: flex;
   flex-direction: column;   
   align-items: center;     
-  gap: 9px;                
+  gap: 5px;                
 }
 #create-box h1{
   padding: 3%;
   border-radius: 10px;
-  margin: 10% 10% 5% 10%;
+  margin: 5% 10% 5% 10%;
   display: flex;
   flex-direction: column;   
   align-items: center;      
@@ -641,21 +667,22 @@ a.active:hover img {
 }
 
 #join-com{
-  padding-top: 60px ;
+  padding-top: 30px ;
+  padding-bottom: 30px;
   display: flex;
   position: absolute;
   background-color: var(--fontColor);
   border: 2px solid var(--backgroundColor);
   z-index: 10;
   left: 26% ;
-  top: 13%;
+  top: 12%;
   border-radius: 18px;
   width: 40%;
   height: 60%;
   flex-direction: column;
   align-items: center;
   align-content: center;
-  gap: 20px;
+  gap: 30px;
 }
 #join-com p{
   margin: 0px;
