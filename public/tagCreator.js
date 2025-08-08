@@ -38,7 +38,6 @@ function createPaswordPopUp(room){
   joinLink.innerText = 'Join';
   form.appendChild(joinLink);
 
-  joinConformation.appendChild(form)
   joinLink.onclick = function (event) {
     event.preventDefault(); 
     if(input.value === room.password){
@@ -51,6 +50,15 @@ function createPaswordPopUp(room){
   }
   console.log(room.password)
   
+  const exit = document.createElement('button');
+  exit.id = "join-button"
+  exit.innerText = 'exit';
+  form.appendChild(exit);
+  exit.onclick = function () {
+    location.reload()
+  }
+
+  joinConformation.appendChild(form)
   joinBox.appendChild(joinConformation);
 
 }
