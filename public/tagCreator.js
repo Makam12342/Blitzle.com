@@ -37,7 +37,7 @@ function createPaswordPopUp(room){
   joinLink.id = "join-button"
   joinLink.innerText = 'Join';
   form.appendChild(joinLink);
-
+  
   joinLink.onclick = function (event) {
     event.preventDefault(); 
     if(input.value === room.password){

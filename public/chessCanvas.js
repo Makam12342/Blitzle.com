@@ -137,6 +137,7 @@ function create() {
     const endScreen = document.getElementById('endScreen')
     const gameInfo = document.getElementById("info-container")
     //Holds all of the diferent pieces with there corosponding bitboard
+    
     let piecesPosition = {
         // All of the white pieces
         whitePieces: {
@@ -303,19 +304,15 @@ function create() {
         }
     }
     
-console.log(enPassantBlack, enPassantWhite);
     // en passun square is the square behind the piece
     // Black is currently moving → check if black's en passant square is being captured
-    console.log(pointerSquare, enPassantSquareBlack, enPassantSquareWhite)
     if (turn === "white" && enPassantBlack && pointerSquare === enPassantSquareBlack) {
-        console.log("Black performs en passant capture");
         // Black's pawn is 1 rank behind the enPassant square
         piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(enPassantSquareBlack + 8));
     }
 
     // White is currently moving → check if white's en passant square is being captured
     else if (turn === "black" && enPassantWhite && pointerSquare === enPassantSquareWhite) {
-        console.log("White performs en passant capture");
         // White's pawn is 1 rank ahead of the enPassant square
         piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(enPassantSquareWhite - 8));
     }
@@ -1171,7 +1168,7 @@ function findNthBitLocation(bitboard, n){ // finds the nth bits location on a bi
 function looping(){
     //curent position
     turn = "black"
-    for(let i = 6; i< 12; i++){//loops through all the bitboards only white for now so you must play balck
+    for(let i = 6; i< 12; i++){// loops through all the bitboards only white for now so you must play balck
         const pieceType = allPiecesNames[i]; // e.g. 'blackKing
         let pieceBitboard = piecesPosition.blackPieces[pieceType];
         const pieceCount = popcount(pieceBitboard) // calculates the amount of pieces
@@ -1187,10 +1184,10 @@ function looping(){
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(move));
                 newEval = positionEvaluation(clonedPiecesPositon)
                 
-                if(newEval > oldEval){
+                if(newEval >= oldEval){
                 savedMove = pieceBitboard
-                console.log(newEval) // Bigger eval
-                console.log(move, piecesBit) // what pieces moved and for where
+                console.log(`Ai's new saved evaluation: ${newEval}`) // Bigger eval
+                console.log(`Ai's new saved move: ${savedMove}, ${piecesBit}`) // what pieces moved and from where
                 oldEval = newEval
                 }
             });
@@ -1198,6 +1195,9 @@ function looping(){
             //console avalable moves 
         }
     }
+    console.log(`Best move evaluation: ${oldEval}`)
+    console.log(`Best move square form square: ${savedMove}, ${piecesBit}`)
+    piecesPosition.blackPieces.blackPawn = savedMove
     updateboard()
 }
 
@@ -1251,24 +1251,7 @@ function looping(){
 
     this.input.on('pointerdown', function (pointer){
         
-        
-        
-        //all of the game logic
-        if(isOnline === true ){
-                if(gameStart === true || turn === "black"){
-                    updateboard()
-                    if(playersColor === turn){
-                        gameLogic(pointer)
-                        playersTurn = turn  
-                        socket.emit("turnFliperSend", { room: roomId, playersTurn, whiteTime, blackTime });
-                        const piecesPositionSerialized = serializeBigInts(piecesPosition);
-                        socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
-
-                    }
-                }
-        }else {
-            gameLogic(pointer)
-        }
+        looping()
         });
     let StartTimer = false
     //formats timmer at start
