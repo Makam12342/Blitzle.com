@@ -2,6 +2,7 @@
 // Gamemode
 const urlParams = new URLSearchParams(window.location.search);
 const isOnline = urlParams.has('username') && urlParams.has('room');
+const playerVsAI = urlParams.has('gamemode')
 let roomId = null;
 if (isOnline) {
     roomId = urlParams.get("room");
@@ -118,7 +119,7 @@ function create() {
     let oldEval = 0
     let clonedPiecesPositon =  null
     let gameEnd = false
-
+    let savedMove = null
 
 
     let enPassantWhite = false
@@ -130,6 +131,7 @@ function create() {
     let enPassantRowBlack = null
     let enPassantColBlack = null 
     let enPassantSquareBlack =  null
+    let savedPieceType = null
 
     const fromSquare =  null
     let pieceMovedFrom = null
@@ -266,7 +268,7 @@ function create() {
         //places pieces on board
         pieces.forEach(([row, col]) => {
             const object = scene.add.sprite(col * squareSize + squareSize / 2, (7 - row) * squareSize + squareSize / 2, image).setDisplaySize(60, 60);
-            if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
+            if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black" && playerVsAI === false){
             object.setAngle(180);
             }
             object.setInteractive({cursor: "pointer" });
@@ -281,50 +283,52 @@ function create() {
     function updateboard() {
 
 
-    if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black"){
-        scene.cameras.main.rotation = Phaser.Math.DegToRad(180);
-    }else{
-        scene.cameras.main.rotation = Phaser.Math.DegToRad(0);
-    }
-
-    pieceIcons.forEach(sprite => sprite.destroy())
-    allWhitePiecesBitboard = 0x0000000000000000
-    allBlackPiecesBitboard = 0x0000000000000000
-    for(let i = 0; i < 6; i ++){
-    // creates a bitboard for the white and black pieces
-    allWhitePiecesBitboard  = BigInt(allWhitePiecesBitboard)  | BigInt(piecesPosition.whitePieces[whitePieceskeys[i]])
-    allBlackPiecesBitboard  = BigInt(allBlackPiecesBitboard)  | BigInt(piecesPosition.blackPieces[blackPieceskeys[i]])
-    }
-    // removes any captured pieces
-    for(let i = 0; i < 6; i ++){
-        if(turn === "black"){
-        piecesPosition.blackPieces[blackPieceskeys[i]] = BigInt(piecesPosition.blackPieces[blackPieceskeys[i]]) & ~ BigInt(allWhitePiecesBitboard)
+        if((isOnline === true & playersColor === "black") || isOnline != true & turn === "black" && playerVsAI === false){
+            scene.cameras.main.rotation = Phaser.Math.DegToRad(180);
         }else{
-        piecesPosition.whitePieces[whitePieceskeys[i]] = BigInt(piecesPosition.whitePieces[whitePieceskeys[i]]) & ~ BigInt(allBlackPiecesBitboard)
+            scene.cameras.main.rotation = Phaser.Math.DegToRad(0);
         }
-    }
-    
-    // en passun square is the square behind the piece
-    // Black is currently moving → check if black's en passant square is being captured
-    if (turn === "white" && enPassantBlack && pointerSquare === enPassantSquareBlack) {
-        // Black's pawn is 1 rank behind the enPassant square
-        piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(enPassantSquareBlack + 8));
-    }
 
-    // White is currently moving → check if white's en passant square is being captured
-    else if (turn === "black" && enPassantWhite && pointerSquare === enPassantSquareWhite) {
-        // White's pawn is 1 rank ahead of the enPassant square
-        piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(enPassantSquareWhite - 8));
-    }
+        pieceIcons.forEach(sprite => sprite.destroy())
+        allWhitePiecesBitboard = 0x0000000000000000
+        allBlackPiecesBitboard = 0x0000000000000000
+        for(let i = 0; i < 6; i ++){
+        // creates a bitboard for the white and black pieces
+        allWhitePiecesBitboard  = BigInt(allWhitePiecesBitboard)  | BigInt(piecesPosition.whitePieces[whitePieceskeys[i]])
+        allBlackPiecesBitboard  = BigInt(allBlackPiecesBitboard)  | BigInt(piecesPosition.blackPieces[blackPieceskeys[i]])
+        }
+        // removes any captured pieces
+        for(let i = 0; i < 6; i ++){
+            if(turn === "black"){
+                console.log("this should remove white pieces")
+            piecesPosition.blackPieces[blackPieceskeys[i]] = BigInt(piecesPosition.blackPieces[blackPieceskeys[i]]) & ~ BigInt(allWhitePiecesBitboard)
+            }else{
+                console.log("this should remove black pieces")
+            piecesPosition.whitePieces[whitePieceskeys[i]] = BigInt(piecesPosition.whitePieces[whitePieceskeys[i]]) & ~ BigInt(allBlackPiecesBitboard)
+            }
+        }
+        
+        // en passun square is the square behind the piece
+        // Black is currently moving check if black's en passant square is being captured
+        if (turn === "white" && enPassantBlack && pointerSquare === enPassantSquareBlack) {
+            // Black's pawn is 1 rank behind the enPassant square
+            piecesPosition.whitePieces.whitePawn &= ~(1n << BigInt(enPassantSquareBlack + 8));
+        }
+
+        // White is currently moving check if white's en passant square is being captured
+        else if (turn === "black" && enPassantWhite && pointerSquare === enPassantSquareWhite) {
+            // White's pawn is 1 rank ahead of the enPassant square
+            piecesPosition.blackPieces.blackPawn &= ~(1n << BigInt(enPassantSquareWhite - 8));
+        }
 
 
 
-     for(let i = 0; i < 6 ; i++){
-        let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
-        let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
-        bitboardToDisplay(whiteValue, allPiecesNames[i])
-        bitboardToDisplay(blackValue, allPiecesNames[i+6]) //Plus 6 is ofsets so it selects white pieces(whiteValue, allPiecesNames[i])
-    }
+        for(let i = 0; i < 6 ; i++){
+            let blackValue = piecesPosition.blackPieces[blackPieceskeys[i]]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+            let whiteValue = piecesPosition.whitePieces[whitePieceskeys[i]];
+            bitboardToDisplay(whiteValue, allPiecesNames[i])
+            bitboardToDisplay(blackValue, allPiecesNames[i+6]) //Plus 6 is ofsets so it selects white pieces(whiteValue, allPiecesNames[i])
+        }
     }
     updateboard()
     // intentifies the squares the a piece could move to from a give square
@@ -1167,28 +1171,44 @@ function findNthBitLocation(bitboard, n){ // finds the nth bits location on a bi
 
 function looping(){
     //curent position
+    oldEval = 0
     turn = "black"
+    updateboard()
     for(let i = 6; i< 12; i++){// loops through all the bitboards only white for now so you must play balck
         const pieceType = allPiecesNames[i]; // e.g. 'blackKing
         let pieceBitboard = piecesPosition.blackPieces[pieceType];
         const pieceCount = popcount(pieceBitboard) // calculates the amount of pieces
-        for(let i = 0; i< pieceCount; i++){ //loops through a given amount deepending on how many pieces there are of that kind
-            piecesBit = findNthBitLocation(pieceBitboard, i)
+        for(let j = 0; j< pieceCount; j++){ //loops through a given amount deepending on how many pieces there are of that kind
+            piecesBit = findNthBitLocation(pieceBitboard, j)
             col = piecesBit % 8;
             row = Math.floor(piecesBit / 8);
             pieceSquare = (row)*8 + col;
             pieceMoves = moveLogic(pieceType, pieceSquare, (7-row), col, turn)
             pieceMoves.forEach(move => {
-                clonedPiecesPositon = cloneBitboards(piecesPosition)
-                pieceBitboard = clonedPiecesPositon.blackPieces[pieceType]; //Takes the list of keys ["whitePawn"] and outputs the corosponding bitboard
+                clonedPiecesPositon = cloneBitboards(piecesPosition);
+
+                // Move the black piece
+                let pieceBitboard = clonedPiecesPositon.blackPieces[pieceType];
                 pieceBitboard = (pieceBitboard & ~(1n << BigInt(pieceSquare))) | (1n << BigInt(move));
-                newEval = positionEvaluation(clonedPiecesPositon)
+                clonedPiecesPositon.blackPieces[pieceType] = pieceBitboard;
+
+                // Remove captured white pieces from destination square
+                let captureMask = ~(1n << BigInt(move));
+                for(let k = 0; k < 6; k++){
+                    const whitePieceType = allPiecesNames[k]; // white pieces 0-5
+                    clonedPiecesPositon.whitePieces[whitePieceType] &= captureMask;
+                }
+
+                // Now evaluate this new position
+                newEval = positionEvaluation(clonedPiecesPositon);
                 
                 if(newEval >= oldEval){
                 savedMove = pieceBitboard
                 console.log(`Ai's new saved evaluation: ${newEval}`) // Bigger eval
                 console.log(`Ai's new saved move: ${savedMove}, ${piecesBit}`) // what pieces moved and from where
                 oldEval = newEval
+                savedPieceType = pieceType
+                console.log(pieceType)
                 }
             });
             //loop through avalable moves 
@@ -1196,8 +1216,8 @@ function looping(){
         }
     }
     console.log(`Best move evaluation: ${oldEval}`)
-    console.log(`Best move square form square: ${savedMove}, ${piecesBit}`)
-    piecesPosition.blackPieces.blackPawn = savedMove
+    console.log(`Best move square form square: ${savedPieceType}, ${savedMove}, ${piecesBit}`)
+    piecesPosition.blackPieces[savedPieceType] = savedMove
     updateboard()
 }
 
@@ -1250,9 +1270,29 @@ function looping(){
     })
 
     this.input.on('pointerdown', function (pointer){
+                
         
-        looping()
-        });
+        //all of the game logic
+        if(isOnline === true ){
+                if(gameStart === true || turn === "black"){
+                    updateboard()
+                    if(playersColor === turn){
+                        gameLogic(pointer)
+                        playersTurn = turn  
+                        socket.emit("turnFliperSend", { room: roomId, playersTurn, whiteTime, blackTime });
+                        const piecesPositionSerialized = serializeBigInts(piecesPosition);
+                        socket.emit("positionDataSend", { room: roomId, piecesPosition: piecesPositionSerialized });
+
+                    }
+                }
+        }else if (playerVsAI === true && turn === 'black'){
+            looping()
+            turn = 'white'
+            gameLogic(pointer)
+        }else{
+            gameLogic(pointer)
+        }
+    });
     let StartTimer = false
     //formats timmer at start
     const whiteTimer = document.getElementById("whiteTimer");
