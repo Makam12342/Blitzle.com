@@ -190,7 +190,7 @@ form.addEventListener('submit', (e) => {
   socket.emit('roomCreated', roomTag);
   document.getElementById('createRoom').reset();
   
-  window.location.href = `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
+  window.location.href = roomTag.link || '#'
   createRoomTag(roomTag);
 });
 
