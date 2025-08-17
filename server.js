@@ -44,7 +44,6 @@ io.on('connection', socket => {
      socket.on('joinRoom', (room) => {
           socket.join(room);
           
-          
                          
           // Get the room info from Socket.IO's adapter
           const roomInfo = io.sockets.adapter.rooms.get(room);
@@ -52,7 +51,7 @@ io.on('connection', socket => {
           socket.emit('roomJoined', room);
           let color = playerCount === 1 ? "white" : "black"
           socket.emit('colorAssigned', color)
-
+          
           
           if (playerCount === 2) {
                roomsData.forEach(roomD => {

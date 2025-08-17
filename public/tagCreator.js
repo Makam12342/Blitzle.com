@@ -41,7 +41,9 @@ function createPaswordPopUp(room){
   joinLink.onclick = function (event) {
     event.preventDefault(); 
     if(input.value === room.password){
+      
       window.location.href = room.link || '#'
+      playersP.innerText = `Players: ${2}/${room.maxPlayers}`;
     } else{
       joinLink.innerText = 'incorrect';
       joinLink.style.color = "red"
@@ -180,7 +182,7 @@ form.addEventListener('submit', (e) => {
     host: usernameInput.value,
     time: timerOption,
     timeN: timerName,
-    currentPlayers: 0,
+    currentPlayers: 1,
     maxPlayers: 2,
     password: password.value,
     link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
@@ -196,7 +198,7 @@ form.addEventListener('submit', (e) => {
 
 
 
-
+// for timer buttons
 const buttons = document.querySelectorAll('button.btn');
 
 buttons.forEach(button => {
