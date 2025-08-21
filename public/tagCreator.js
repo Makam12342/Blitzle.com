@@ -185,7 +185,7 @@ form.addEventListener('submit', (e) => {
     currentPlayers: 1,
     maxPlayers: 2,
     password: password.value,
-    link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}`
+    link: `gamePage.html?username=${encodeURIComponent(usernameInput.value)}&room=${encodeURIComponent(roomNameInput.value)}&password=${encodeURIComponent(password.value)}`
   };
   console.log(roomTag.time)
 

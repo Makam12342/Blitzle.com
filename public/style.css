@@ -718,3 +718,20 @@ a.active:hover img {
 #join-com a:hover{
   background-color: var(--hoverColor);
 }
+
+#passwordBar{
+  width: 41%;
+  height: 8%;
+  background-color: var(--forgroundColor);
+  border: 1px solid var(--fontColor);
+  position: absolute;
+  left: 20%;
+  top: 88%;
+  border-radius: 10px;
+}
+#passwordBar h3{
+  justify-content: center;
+  display: flex;
+  margin-top: 3%;
+  color: var(--fontColor)
+}

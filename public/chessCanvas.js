@@ -236,7 +236,14 @@ function create() {
 
 
     }
-    
+    if( isOnline){
+        const password = urlParams.get("password");
+        const passwordDisplay = document.getElementById("passwordBar")
+        passwordDisplay.innerHTML = `<h3>Password: ${password}</h3>`
+    } else{
+        const passwordDisplay = document.getElementById("passwordBar")
+        passwordDisplay.innerHTML = `<h3>White to Start</h3>`
+    }
 
 
     function hexToSquares(bitboard) {
@@ -1353,7 +1360,7 @@ function looping(){
                     const whiteTimeString = `${mmWhite}:${ssWhite}`; 
                     const blackTimeString = `${mmBlack}:${ssBlack}`;
 
-                    const blackTimer = document.getElementById("whiteTimer");
+                    ;
                     blackTimer.innerHTML = blackTimeString;
                     
                     const whiteTimer = document.getElementById("blackTimer");
