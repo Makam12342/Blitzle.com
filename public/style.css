@@ -629,6 +629,7 @@ a.active:hover img {
   background-color: var(--hoverColor);
   border-radius: 5px;
   font-size: xx-small;
+  margin-top: 10px;
 }
 
 #messageList li p {

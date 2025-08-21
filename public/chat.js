@@ -10,7 +10,7 @@ form.addEventListener('submit', (e) => {
     username: usernameInput.value
   });
   messageInput.value = '';  // optional: clear input
-});
+}); 
 
 
 function messageCreate(data) {
