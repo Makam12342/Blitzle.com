@@ -1372,22 +1372,28 @@ function looping(){
 
 
                     if(turn === "white"){
-                        if(whiteTime < 30){
+                        blackTimer.style.backgroundColor = '#ece5da'
+                        if(whiteTime < 30 && (Math.floor(whiteTime*2) % 2) === 1){
                             whiteTimer.style.backgroundColor = '#a20d0dff'
+                        } else{
+                            whiteTimer.style.backgroundColor = '#ece5da'
                         }
-                    whiteTimer.style.color = '#d67327';
-                    blackTimer.style.color = 'black';
-                    gameInfo.style.backgroundColor = '#fbf5f120'
-                    passwordDisplay.innerHTML = `<h3>Whites Turn</h3>`
+                        whiteTimer.style.color = '#d67327';
+                        blackTimer.style.color = 'black';
+                        gameInfo.style.backgroundColor = '#fbf5f120'
+                        passwordDisplay.innerHTML = `<h3>Whites Turn</h3>`
                     
                     } else{
-                        if(blackTime < 30){
+                        whiteTimer.style.backgroundColor = '#ece5da'
+                        if(blackTime < 30 && (Math.floor(blackTime*2) % 2) === 1){
                             blackTimer.style.backgroundColor = '#a20d0dff'
+                        }else{
+                            blackTimer.style.backgroundColor = '#ece5da'
                         }
-                    whiteTimer.style.color = 'black';
-                    blackTimer.style.color = '#d67327';
-                    gameInfo.style.backgroundColor = '#1c1b1a35'
-                    passwordDisplay.innerHTML = `<h3>Blacks Turn</h3>`
+                        whiteTimer.style.color = 'black';
+                        blackTimer.style.color = '#d67327';
+                        gameInfo.style.backgroundColor = '#1c1b1a35'
+                        passwordDisplay.innerHTML = `<h3>Blacks Turn</h3>`
                     }
                     
 
