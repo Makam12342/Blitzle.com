@@ -741,7 +741,7 @@ a.active:hover img {
 }
 .title{
   text-decoration:dotted;
-  font-size: 15px;
+  font-size: 15p  x;
 }
 .sidebar ul li{
   color: var(--fontColor);
