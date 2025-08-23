@@ -18,6 +18,7 @@ if (isOnline) {
 const lightSquaresColor = 0xfcf1df
 const darkSquaresColor = 0x393E46
 const indicatorsColor = 0xd67327
+const warningColor = 0xa20d0d
 
 
 
@@ -1108,6 +1109,8 @@ function gameLogic(pointer){
                 } else {
                     checkSound.currentTime = 0; // Rewind to start
                     checkSound.play();
+                    let checkIndicator = scene.add.rectangle( col * squareSize + squareSize / 2, row * squareSize + squareSize / 2, squareSize, squareSize, warningColor); // Change colour at the end
+                    moveIndicators.push(checkIndicator)
                 }
             } else{
                 moveSound.currentTime = 0; // Rewind to start

@@ -31,6 +31,7 @@ p{
   display: inline-block;
   white-space: nowrap;
   direction: ltr;
+  vertical-align: -5px;
 
   
   font-variation-settings:
@@ -68,6 +69,18 @@ body {
     color: 	var(--fontColor);
     padding: 14.5px;
     text-decoration: none;
+}
+
+summary{
+  display: block;
+  color: 	var(--fontColor);
+  padding: 14.5px;
+  text-decoration: none;
+}
+summary:hover{
+    background-color: var(--hoverColor);
+    color: rgb(255, 255, 255);
+    border: 2px solid var(--fontColor);
 }
 
 /*Active links */
@@ -657,18 +670,9 @@ a.active:hover img {
 }
 .sidebar ul{
     padding: 0;
+    margin: 0%;
 }
-.sidebar ul li{
-  color: antiquewhite;
-  text-decoration: none;
-  list-style-type: none;
-  background-color: var(--backgroundColor);
-  padding: 0% 10%;
-  margin: 2%;
-  display: flex;
-  border-radius: 10px;
-  margin-left: 0;
-}
+
 
 #join-com{
   padding-top: 30px ;
@@ -734,4 +738,18 @@ a.active:hover img {
   display: flex;
   margin-top: 3%;
   color: var(--fontColor)
+}
+.title{
+  text-decoration:dotted;
+  font-size: 15px;
+}
+.sidebar ul li{
+  color: var(--fontColor);
+  text-decoration: none;
+  list-style-type: none;
+  padding: 0% 10%;
+  margin: 0%;
+  display: flex;
+  margin-left: 0;
+  font-size: 5px;
 }
