@@ -139,6 +139,8 @@ function create() {
     const fromSquare =  null
     let pieceMovedFrom = null
 
+    let winCounter = 0
+
     const endScreen = document.getElementById('endScreen')
     const gameInfo = document.getElementById("info-container")
     //Holds all of the diferent pieces with there corosponding bitboard
@@ -210,6 +212,11 @@ function create() {
 
     
     function winScreen(winner, message) {
+        winCounter ++
+
+        if(winCounter > 1){
+            return
+        }
         gameEnd = true
         scene.input.enabled = false;
         console.log(winner, message)
@@ -1307,7 +1314,7 @@ function looping(){
     let StartTimer = false
     //formats timmer at start
     const whiteTimer = document.getElementById("whiteTimer");
-    whiteTimer.innerHTML = ".Ready.";
+    whiteTimer.innerHTML = "Waiting";
     const blackTimer = document.getElementById("blackTimer");
     blackTimer.innerHTML = "Waiting";
     
